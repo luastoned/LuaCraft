@@ -1,40 +1,61 @@
+/*
+// For those who want the bleeding edge
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
+*/
 
-apply plugin: 'forge'
+// for people who want stable
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
 
+version = "1.2"
+group= "com.luacraft" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LuaCraft"
-group = "com.luacraft"
-version = baseVersion
 ext.modId = "luacraft"
 
 if (Boolean.valueOf(isSnapshot))
     version += '-SNAPSHOT'
 if (System.getenv().containsKey('BUILD_NUMBER'))
     version += "-b${System.getenv('BUILD_NUMBER')}"
-	
-//sourceCompatibility = 1.7
-//targetCompatibility = 1.7
-
 minecraft {
-    version = "1.7.2-10.12.1.1060"
-    assetDir = "eclipse/assets"
+    version = "1.8-11.14.3.1562"
 }
 
+dependencies {
+    // you may put jars on which you depend on in ./libs
+    // or you may define them like so..
+    //compile "some.group:artifact:version:classifier"
+    //compile "some.group:artifact:version"
+      
+    // real examples
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
+    // except that these dependencies get remapped to your current MCP mappings
+    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+
+    // for more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+}
 jar {
 	manifest {
 		attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
@@ -43,9 +64,10 @@ jar {
 }
 
 println 'Building LuaCraft - version ' + project.version + " for Minecraft " + project.minecraft.version
-defaultTasks 'clean', 'packJar'
+defaultTasks 'clean' //, 'packJar'
 
-processResources {
+processResources
+{
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -55,7 +77,7 @@ processResources {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version, 'name': project.archivesBaseName, 'modId': project.modId
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
