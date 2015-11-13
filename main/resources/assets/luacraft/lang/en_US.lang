@@ -1,0 +1,8 @@
+luacraft.console=Console
+luacraft.state.client=Client
+luacraft.state.server=Server
+luacraft.state.shared=Shared
+luacraft.state.notinit=Lua state not initialized
+luacraft.state.changed=Switched Lua state to %s
+
+commands.lua.usage=/lua <Lua Script> | <reload, switch>
