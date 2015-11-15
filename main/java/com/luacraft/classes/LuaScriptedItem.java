@@ -1,9 +1,12 @@
 package com.luacraft.classes;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
@@ -85,13 +88,44 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	};
 	
 	public static void Init(LuaState l ) {
+
+		l.pushInteger(EnumAction.NONE.ordinal());
+		l.setGlobal("ITEM_ACTION_NONE");
+		l.pushInteger(EnumAction.EAT.ordinal());
+		l.setGlobal("ITEM_ACTION_EAT");
+		l.pushInteger(EnumAction.DRINK.ordinal());
+		l.setGlobal("ITEM_ACTION_DRINK");
+		l.pushInteger(EnumAction.BLOCK.ordinal());
+		l.setGlobal("ITEM_ACTION_BLOCK");
+		l.pushInteger(EnumAction.BOW.ordinal());
+		l.setGlobal("ITEM_ACTION_BOW");
+
+		l.pushInteger(EnumRarity.COMMON.ordinal());
+		l.setGlobal("ITEM_RARITY_DRINK");
+		l.pushInteger(EnumRarity.UNCOMMON.ordinal());
+		l.setGlobal("ITEM_RARITY_BLOCK");
+		l.pushInteger(EnumRarity.RARE.ordinal());
+		l.setGlobal("ITEM_RARITY_BOW");
+		l.pushInteger(EnumRarity.EPIC.ordinal());
+		l.setGlobal("ITEM_RARITY_BOW");
+		
 		l.newMetatable("ScriptedItem");
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			l.pushInteger(64);
 			l.setField(-2, "MaxStackSize");
+			l.pushInteger(0);
+			l.setField(-2, "MaxDamage");
+			l.pushBoolean(false);
+			l.setField(-2, "Full3D");
+			l.pushInteger(EnumAction.NONE.ordinal());
+			l.setField(-2, "UseAction");
+			l.pushInteger(0);
+			l.setField(-2, "UseDuration");
+			l.pushInteger(6000);
+			l.setField(-2, "Lifespan");
 
 			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "GetModel");
@@ -102,7 +136,19 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "OnItemRightClick");
 			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "OnLeftClickEntity");
+			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "OnHitEntity");
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "OnBlockDestroyed");
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "CanInteractWithEntity");
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "OnUpdate");
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "OnCreated");
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "OnDroppedByPlayer");
 		}
 		l.pop(1);
 		
@@ -146,6 +192,20 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.remove(-2);
 		}
 	}
+
+	@Override
+	public int getMaxDamage(ItemStack stack)
+    {
+		pushValue("GetMaxDamage");
+		{
+			pushSelf();
+			l.pushUserdataWithMeta(stack, "ItemStack");
+		}
+		l.call(2, 1);
+		int ret  = l.toInteger(1);
+		l.setTop(0);
+		return ret;
+    }
 	
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
@@ -155,8 +215,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 		return ret;
 	}
 	
-    @SideOnly(Side.CLIENT)
 	@Override
+    @SideOnly(Side.CLIENT)
     public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
     {
     	synchronized (l)
@@ -171,6 +231,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.call(4, 1);
 			
 			ModelResourceLocation ret = null;
+			
 			if (l.isUserdata(1, ModelResourceLocation.class))
 				ret = (ModelResourceLocation) l.toUserdata(1);
 			
@@ -195,8 +256,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
 			l.call(7, 1);
-				boolean ret = l.toBoolean(1);
-				
+			boolean ret = l.toBoolean(1);
 			l.setTop(0);
 			return ret;
 		}
@@ -215,7 +275,9 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				LuaUserdataManager.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
+			
 			ItemStack ret = stack;
+			
 			if (l.isUserdata(1, ItemStack.class))
 				ret = (ItemStack) l.toUserdata(1);
 			
@@ -237,10 +299,31 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				LuaUserdataManager.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
+			
 			ItemStack ret = itemStackIn;
+			
 			if (l.isUserdata(1, ItemStack.class))
 				ret = (ItemStack) l.toUserdata(1);
 			
+			l.setTop(0);
+			return ret;
+		}
+    }
+
+	@Override
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
+    {
+    	synchronized (l)
+		{
+			pushValue("OnLeftClickEntity");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdataManager.PushUserdata(l, entity);
+			}
+			l.call(4, 1);
+			boolean ret = l.toBoolean(1);
 			l.setTop(0);
 			return ret;
 		}
@@ -259,12 +342,163 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				LuaUserdataManager.PushUserdata(l, attacker);
 			}
 			l.call(4, 1);
-			boolean ret = false;
-			if (l.isBoolean(1))
-				ret = l.toBoolean(1);
-			
+			boolean ret = l.toBoolean(1);
 			l.setTop(0);
 			return ret;
 		}
+    }
+	
+	@Override
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)
+    {
+		synchronized (l)
+		{
+			pushValue("OnBlockDestroyed");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, blockIn);
+				LuaUserdataManager.PushUserdata(l, playerIn);
+			}
+			l.call(5, 1);
+			boolean ret = l.toBoolean(1);
+			l.setTop(0);
+			return ret;
+		}
+    }
+
+	@Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target)
+    {
+		synchronized (l)
+		{
+			pushValue("CanInteractWithEntity");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdataManager.PushUserdata(l, target);
+			}
+			l.call(4, 1);
+			boolean ret = l.toBoolean(1);
+			l.setTop(0);
+			return ret;
+		}
+    }
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public boolean isFull3D()
+    {
+		pushValue("Full3D");
+		boolean ret = l.toBoolean(-1);
+		l.pop(1);
+        return ret;
+    }
+	
+	@Override
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
+	{
+		pushValue("OnUpdate");
+		{
+			pushSelf();
+			l.pushUserdataWithMeta(stack, "ItemStack");
+			LuaUserdataManager.PushUserdata(l, worldIn);
+			LuaUserdataManager.PushUserdata(l, entityIn);
+			l.pushInteger(itemSlot);
+			l.pushBoolean(isSelected);
+		}
+		l.call(6, 0);
+	}
+
+	@Override
+    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+	{
+		pushValue("OnCreated");
+		{
+			pushSelf();
+			l.pushUserdataWithMeta(stack, "ItemStack");
+			LuaUserdataManager.PushUserdata(l, worldIn);
+			LuaUserdataManager.PushUserdata(l, playerIn);
+		}
+		l.call(4, 0);
+	}
+
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack)
+    {
+		pushValue("UseAction");
+		int ret = l.toInteger(-1);
+		l.pop(1);
+		
+		switch(ret) {
+        case 0:
+            return EnumAction.NONE;
+        case 1:
+            return EnumAction.EAT;
+        case 2:
+            return EnumAction.DRINK;
+        case 3:
+            return EnumAction.BLOCK;
+        case 4:
+            return EnumAction.BOW;
+        }
+		
+		return EnumAction.values()[ret];
+    }
+
+	@Override
+    public int getMaxItemUseDuration(ItemStack stack)
+    {
+		pushValue("UseDuration");
+		int ret = l.toInteger(-1);
+		l.pop(1);
+        return ret;
+    }
+	
+
+    public EnumRarity getRarity(ItemStack stack)
+    {
+    	pushValue("Rarity");
+		int ret = l.toInteger(-1);
+		l.pop(1);
+		
+		switch(ret) {
+	    case 0:
+	        return EnumRarity.COMMON;
+	    case 1:
+	        return EnumRarity.UNCOMMON;
+	    case 2:
+	        return EnumRarity.RARE;
+	    case 3:
+	        return EnumRarity.EPIC;
+	    }
+		
+		return EnumRarity.values()[ret];
+    }
+    
+	@Override
+	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
+	{
+		pushValue("OnDroppedByPlayer");
+		{
+			pushSelf();
+			l.pushUserdataWithMeta(item, "ItemStack");
+			LuaUserdataManager.PushUserdata(l, player);
+		}
+		l.call(3, 1);
+		boolean ret = l.toBoolean(1);
+		l.pop(1);
+		return ret;
+	}
+
+	@Override
+    public int getEntityLifespan(ItemStack itemStack, World world)
+    {
+		pushValue("Lifespan");
+		int ret = l.toInteger(-1);
+		l.pop(1);
+        return ret;
     }
 }
