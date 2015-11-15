@@ -1,5 +1,6 @@
 package com.luacraft.classes;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +11,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.luacraft.LuaUserdataManager;
 import com.naef.jnlua.JavaFunction;
@@ -19,11 +22,9 @@ import com.naef.jnlua.LuaUserdata;
 
 public class LuaScriptedItem extends Item implements LuaUserdata {
 	public LuaState l;
-	int tableRef;
 	
-	public LuaScriptedItem(LuaState l, int tableRef){
+	public LuaScriptedItem(LuaState l){
 		this.l = l;
-		this.tableRef = tableRef;
 	}
 	
 	public static JavaFunction __tostring = new JavaFunction()
@@ -43,13 +44,35 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.checkType(1, LuaType.TABLE);
 			String classname = l.checkString(2);
 			
-			l.newMetatable("ScriptedItemReferences");
-			l.pushValue(1);
-			int tableRef = l.ref(-2);
+			LuaScriptedItem item = new LuaScriptedItem(l);
+			item.setUnlocalizedName(classname);
 			
-			LuaScriptedItem item = new LuaScriptedItem(l, tableRef);
-			GameRegistry.registerItem(item.setUnlocalizedName(classname), classname);
+			l.newMetatable("ScriptedItemsRegistry");
+			l.pushString(item.getUnlocalizedName());
+			l.pushValue(1);
+			l.setTable(-3);
+			
+			GameRegistry.registerItem(item, classname);
 			return 0;
+		}
+	};
+	
+	public static JavaFunction GetTable = new JavaFunction()
+	{
+		public int invoke(LuaState l)
+		{
+			l.newMetatable("ScriptedItemsRegistry");
+			return 1;
+		}
+	};
+	
+	public static JavaFunction Get = new JavaFunction()
+	{
+		public int invoke(LuaState l)
+		{
+			l.newMetatable("ScriptedItemsRegistry");
+			l.getField(-1, l.checkString(1));
+			return 1;
 		}
 	};
 	
@@ -71,6 +94,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setField(-2, "MaxStackSize");
 
 			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "GetModel");
+			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "OnItemUse");
 			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "OnItemUseFinish");
@@ -85,10 +110,15 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 		{
 			l.pushJavaFunction(Register);
 			l.setField(-2, "Register");
+			l.pushJavaFunction(GetTable);
+			l.setField(-2, "GetTable");
+			l.pushJavaFunction(Get);
+			l.setField(-2, "Get");
 		}
 		l.setGlobal("item");
 		
-		l.newMetatable("ScriptedItemReferences");
+		l.newMetatable("ScriptedItemsRegistry");
+		l.pop(1);
 	}
 	
 	@Override
@@ -98,23 +128,19 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	
 	private void pushSelf()
 	{
-		l.pushUserdataWithMeta(this, "ScriptedItem");
-	}
-	
-	private void pushItemTable()
-	{
-		l.newMetatable("ScriptedItemReferences");
-		l.rawGet(-1, tableRef);
+		l.newMetatable("ScriptedItemsRegistry");
+		l.getField(-1, getUnlocalizedName());
 		l.remove(-2);
 	}
 	
 	private void pushValue(String name) {
-		pushItemTable();
+		pushSelf();
 		l.getField(-1, name);
 		l.remove(-2);
 		
 		if (l.isNil(-1)) // Fallback to metatable defaults
 		{
+			l.pop(1);
 			l.newMetatable("ScriptedItem");
 			l.getField(-1, name);
 			l.remove(-2);
@@ -125,78 +151,120 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	public int getItemStackLimit(ItemStack stack) {
 		pushValue("MaxStackSize");
 		int ret = l.toInteger(-1);
-		l.setTop(0);
-		return ret;
-	}
-	
-	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-		pushValue("OnItemUse");
-		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, playerIn);
-			LuaUserdataManager.PushUserdata(l, worldIn);
-			LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
-			l.pushInteger(side.ordinal());
-			l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
-		}
-		l.call(7, 1);
-			boolean ret = l.toBoolean(1);
 		l.pop(1);
 		return ret;
 	}
 	
+    @SideOnly(Side.CLIENT)
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-		pushValue("OnItemUseFinish");
+    public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
+    {
+    	synchronized (l)
 		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, worldIn);
-			LuaUserdataManager.PushUserdata(l, playerIn);
+	    	pushValue("GetModel");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, player);
+				l.pushInteger(useRemaining);
+			}
+			l.call(4, 1);
+			
+			ModelResourceLocation ret = null;
+			if (l.isUserdata(1, ModelResourceLocation.class))
+				ret = (ModelResourceLocation) l.toUserdata(1);
+			
+			l.setTop(0);
+			return ret;
 		}
-		l.call(4, 1);
-		ItemStack ret = stack;
-		if (l.isUserdata(1, ItemStack.class))
-			ret = (ItemStack) l.toUserdata(1);
-		l.pop(1);
-		return ret;
+    }
+	
+	@Override
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
+	{
+    	synchronized (l)
+		{
+			pushValue("OnItemUse");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
+				l.pushInteger(side.ordinal());
+				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
+			}
+			l.call(7, 1);
+				boolean ret = l.toBoolean(1);
+				
+			l.setTop(0);
+			return ret;
+		}
+	}
+	
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
+	{
+    	synchronized (l)
+		{
+			pushValue("OnItemUseFinish");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, playerIn);
+			}
+			l.call(4, 1);
+			ItemStack ret = stack;
+			if (l.isUserdata(1, ItemStack.class))
+				ret = (ItemStack) l.toUserdata(1);
+			
+			l.setTop(0);
+			return ret;
+		}
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
     {
-		pushValue("OnItemRightClick");
+    	synchronized (l)
 		{
-			pushSelf();
-			l.pushUserdataWithMeta(itemStackIn, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, worldIn);
-			LuaUserdataManager.PushUserdata(l, playerIn);
+			pushValue("OnItemRightClick");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(itemStackIn, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, playerIn);
+			}
+			l.call(4, 1);
+			ItemStack ret = itemStackIn;
+			if (l.isUserdata(1, ItemStack.class))
+				ret = (ItemStack) l.toUserdata(1);
+			
+			l.setTop(0);
+			return ret;
 		}
-		l.call(4, 1);
-		ItemStack ret = itemStackIn;
-		if (l.isUserdata(1, ItemStack.class))
-			ret = (ItemStack) l.toUserdata(1);
-		l.pop(1);
-        return ret;
     }
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
     {
-		pushValue("OnHitEntity");
+    	synchronized (l)
 		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, target);
-			LuaUserdataManager.PushUserdata(l, attacker);
+			pushValue("OnHitEntity");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, target);
+				LuaUserdataManager.PushUserdata(l, attacker);
+			}
+			l.call(4, 1);
+			boolean ret = false;
+			if (l.isBoolean(1))
+				ret = l.toBoolean(1);
+			
+			l.setTop(0);
+			return ret;
 		}
-		l.call(4, 1);
-		boolean ret = false;
-		if (l.isBoolean(1))
-			ret = l.toBoolean(1);
-		l.pop(1);
-        return ret;
     }
 }

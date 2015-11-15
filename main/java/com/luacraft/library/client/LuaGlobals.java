@@ -1,6 +1,7 @@
 package com.luacraft.library.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
@@ -115,6 +116,26 @@ public class LuaGlobals
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @function ModelResource
+	 * Creates a new [[ModelResource]] object
+	 * @arguments [[String]]:path, [ [[String]]:modid ]
+	 * @return [[ModelResource]]:resource
+	 */
+
+	public static JavaFunction ModelResource = new JavaFunction()
+	{
+		public int invoke(LuaState l)
+		{
+			if (l.getTop() > 1)
+				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1), l.checkString(2)), "ModelResource");
+			else
+				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1)), "ModelResource");
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaCraftState l)
 	{
 		client = l.getMinecraft();
@@ -133,5 +154,8 @@ public class LuaGlobals
 
 		l.pushJavaFunction(LocalPlayer);
 		l.setGlobal("LocalPlayer");
+
+		l.pushJavaFunction(ModelResource);
+		l.setGlobal("ModelResource");
 	}
 }

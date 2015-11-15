@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -153,7 +154,7 @@ public class LuaGlobals
 	 * @author Jake
 	 * @function Resource
 	 * Creates a new [[Resource]] object
-	 * @arguments [[String]]:location
+	 * @arguments [[String]]:path, [ [[String]]:modid ]
 	 * @return [[Resource]]:resource
 	 */
 	
@@ -161,8 +162,10 @@ public class LuaGlobals
 	{
 		public int invoke(LuaState l)
 		{
-			ResourceLocation resource = new ResourceLocation(l.checkString(1));
-			l.pushUserdataWithMeta(resource, "Resource");
+			if (l.getTop() > 1)
+				l.pushUserdataWithMeta(new ResourceLocation(l.checkString(1), l.checkString(2)), "Resource");
+			else
+				l.pushUserdataWithMeta(new ResourceLocation(l.checkString(1)), "Resource");
 			return 1;
 		}
 	};
