@@ -681,7 +681,7 @@ public class LuaByteBuf
 	 * @author Jake
 	 * @function ReadData
 	 * Reads raw data from the buffer as a string
-	 * @arguments [ [[Number]]:start, [[Number]]:end ]
+	 * @arguments [ [[Number]]:length ]
 	 * @return [[String]]:string
 	 */
 

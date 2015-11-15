@@ -17,7 +17,7 @@ public class LuaLibThread
 	 * @library thread
 	 * @function NewThread
 	 * Create a new thread
-	 * @arguments nil
+	 * @arguments [[String]]:filename
 	 * @return [[Thread]]:thread
 	 */
 

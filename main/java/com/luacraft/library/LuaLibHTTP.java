@@ -18,7 +18,6 @@ public class LuaLibHTTP {
 				
 				LuaJavaHTTPRequest request = new LuaJavaHTTPRequest(l, url, 2);
 				request.connection.setRequestMethod("GET");
-				request.start();
 				
 				if (l.isTable(3)) {
 					l.pushNil();
@@ -30,6 +29,8 @@ public class LuaLibHTTP {
 						l.pop(1);
 					}
 				}
+				
+				request.start();
 				
 				l.pushBoolean(true);
 				return 1;

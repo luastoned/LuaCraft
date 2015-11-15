@@ -2,6 +2,7 @@ package com.luacraft;
 
 import net.minecraftforge.common.MinecraftForge;
 
+import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
 import com.luacraft.library.LuaLibHTTP;
 import com.luacraft.library.LuaLibSQL;
@@ -135,6 +136,7 @@ public class LuaShared
 		LuaEntity.Init(l);
 		LuaEntityDamageSource.Init(l);
 		LuaEntityItem.Init(l);
+		LuaScriptedItem.Init(l);
 		LuaItemStack.Init(l);
 		LuaLiving.Init(l);
 		LuaLivingBase.Init(l);

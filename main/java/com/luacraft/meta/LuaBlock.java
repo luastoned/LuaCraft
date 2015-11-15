@@ -28,7 +28,7 @@ public class LuaBlock
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
 
 			int id = Block.getIdFromBlock(self.block);
-			int meta = Block.getStateId((IBlockState) self.getState());
+			int meta = Block.getStateId(self.blockWorld.getBlockState(self.getPos()));
 
 			l.pushString(String.format("%s [%d, %d, %d][%d %d]", self.block.getLocalizedName(), self.x, self.z, self.y, id, meta));
 			return 1;
@@ -162,7 +162,7 @@ public class LuaBlock
 		public int invoke(LuaState l)
 		{
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushInteger(Block.getStateId((IBlockState) self.getState()));
+			l.pushInteger(Block.getStateId(self.blockWorld.getBlockState(self.getPos())));
 			return 1;
 		}
 	};
