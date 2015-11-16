@@ -20,27 +20,37 @@ public class LuaPacketManager {
 
 	@SubscribeEvent
 	public void onClientPacket(ClientCustomPacketEvent event) {
-		try {
-			PacketBuffer buffer = new PacketBuffer(event.packet.payload());
-			l.pushIncomingNet();
-			l.pushUserdataWithMeta(buffer, "ByteBuf");
-			l.call(1, 0);
-		} catch (LuaException e) {
-			l.handleException(e);
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+			
+			try {
+				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
+				l.pushIncomingNet();
+				l.pushUserdataWithMeta(buffer, "ByteBuf");
+				l.call(1, 0);
+			} catch (LuaException e) {
+				l.handleException(e);
+			}
 		}
 	}
 
 	@SubscribeEvent
 	public void onServerPacket(ServerCustomPacketEvent event) {
-		try {
-			PacketBuffer buffer = new PacketBuffer(event.packet.payload());
-			EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
-			l.pushIncomingNet();
-			l.pushUserdataWithMeta(buffer, "ByteBuf");
-			l.pushUserdataWithMeta(player, "Player");
-			l.call(2, 0);
-		} catch (LuaException e) {
-			l.handleException(e);
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+			
+			try {
+				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
+				EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
+				l.pushIncomingNet();
+				l.pushUserdataWithMeta(buffer, "ByteBuf");
+				l.pushUserdataWithMeta(player, "Player");
+				l.call(2, 0);
+			} catch (LuaException e) {
+				l.handleException(e);
+			}
 		}
 	}
 }

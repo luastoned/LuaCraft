@@ -77,11 +77,19 @@ public class LuaJavaChannel extends Stack implements LuaUserdata {
 	}
 
 	public synchronized void peek(LuaState l) {
+		if (empty()) {
+			l.pushNil();
+			return;
+		}
 		LuaChannelObject object = (LuaChannelObject) peek();
 		pushStackItem(l, object);
 	}
 
 	public synchronized void pop(LuaState l) {
+		if (empty()) {
+			l.pushNil();
+			return;
+		}
 		LuaChannelObject object = (LuaChannelObject) pop();
 		pushStackItem(l, object);
 	}
@@ -89,6 +97,11 @@ public class LuaJavaChannel extends Stack implements LuaUserdata {
 	public synchronized void push(LuaState l, int index) {
 		LuaChannelObject object = getObject(l, index);
 		push(object);
+	}
+
+	public synchronized int Search(LuaState l, int index) {
+		LuaChannelObject object = getObject(l, index);
+		return search(object);
 	}
 
 }

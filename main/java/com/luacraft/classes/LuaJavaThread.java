@@ -10,27 +10,31 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaThread extends Thread implements LuaUserdata {
 	private LuaCraftState l = null;
-	private File file = null;
+	private String file = null;
 
 	public LuaJavaThread(LuaCraftState state, String f) {
 		l = new LuaCraftState();
-		file = new File(f);
+		file = f;
 
-		if (state.getSide() == Side.CLIENT)
+		l.setSideOverride(state.getSideOverride());
+
+		if (state.getActualSide() == Side.CLIENT)
 			LuaCraft.clientLibs.Initialize(l);
 		else
 			LuaCraft.serverLibs.Initialize(l);
-
-		l.setSideOverride(state.getSide());
 	}
 
 	public void run() {
-		if (l.isOpen()) {
+		if (l.isOpen() && file != null) {
 			try {
 				l.includeFile(file);
 			} catch (Exception e) {
 				l.handleException(e);
 			} finally {
+				if (l.getActualSide() == Side.CLIENT)
+					LuaCraft.clientLibs.Shutdown();
+				else
+					LuaCraft.serverLibs.Shutdown();
 				l.close();
 			}
 		}

@@ -155,28 +155,9 @@ public class LuaCraftState extends LuaState {
 			includeFiles(file);
 	}
 
-	public void includeFiles(File base) {
-		for (File file : base.listFiles()) {
-			if (!file.getName().endsWith(".lua"))
-				continue;
-
-			InputStream in = null;
-			try {
-				in = new FileInputStream(file);
-				includeFileStream(in, file.getName());
-			} catch (FileNotFoundException e) {
-				throw new LuaRuntimeException("Cannot open " + file
-						+ ": No such file or directory");
-			} catch (Exception e) {
-				handleException(e);
-			} finally {
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	public void includeFile(String f) {
+		File file = FileMount.GetFile("lua/" + f);
+		includeFile(file);
 	}
 
 	public void includePackedFile(String file) {
@@ -198,9 +179,16 @@ public class LuaCraftState extends LuaState {
 		}
 	}
 
+	public void includeFiles(File base) {
+		for (File file : base.listFiles()) {
+			includeFile(file);
+		}
+	}
+
 	public void includeFile(File file) {
 		if (!file.getName().endsWith(".lua"))
-			return;
+			throw new LuaRuntimeException("Cannot open " + file.getName()
+					+ ": File is not a lua file");
 
 		InputStream in = null;
 		try {
@@ -209,8 +197,14 @@ public class LuaCraftState extends LuaState {
 		} catch (FileNotFoundException e) {
 			throw new LuaRuntimeException("Cannot open " + file.getName()
 					+ ": No such file or directory");
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			handleException(e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

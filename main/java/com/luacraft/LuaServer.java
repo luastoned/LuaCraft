@@ -15,6 +15,7 @@ public class LuaServer extends LuaShared {
 
 	public void Autorun(final LuaCraftState l) {
 		super.Autorun(l);
+		l.print("Loading autorun/server");
 		l.autorun("server"); // Load all files within autorun/server
 	}
 

@@ -17,7 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
-import com.luacraft.classes.FileMount;
+import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
@@ -43,6 +43,8 @@ public class LuaCraft {
 
 	@SidedProxy(clientSide = "com.luacraft.LuaClient", serverSide = "com.luacraft.LuaServer")
 	public static LuaShared luaProxy;
+	
+	public static HashMap<String, LuaJavaChannel> threadChannels = new HashMap<String, LuaJavaChannel>();
 
 	public static LuaServer serverLibs = new LuaServer();
 	public static LuaClient clientLibs = new LuaClient();
@@ -174,7 +176,6 @@ public class LuaCraft {
 			}
 
 		}
-
 		return extractedFile;
 	}
 
@@ -194,7 +195,7 @@ public class LuaCraft {
 			LuaCraftState newState = new LuaCraftState();
 
 			synchronized (newState) {
-				newState.setSideOverride(state.getSide());
+				newState.setSideOverride(state.getSideOverride());
 
 				luaStates.put(side, newState);
 

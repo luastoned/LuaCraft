@@ -30,6 +30,7 @@ public class LuaClient extends LuaShared {
 
 	public void Autorun(final LuaCraftState l) {
 		super.Autorun(l);
+		l.print("Loading autorun/client");
 		l.autorun("client"); // Load all files within autorun/client
 	}
 

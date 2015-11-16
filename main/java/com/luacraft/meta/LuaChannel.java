@@ -50,6 +50,15 @@ public class LuaChannel {
 		}
 	};
 
+	public static JavaFunction Search = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaChannel self = (LuaJavaChannel) l.checkUserdata(1,
+					LuaJavaChannel.class, "Channel");
+			l.pushInteger(self.Search(l, 2));
+			return 1;
+		}
+	};
+
 	public static void Init(LuaState l) {
 		l.newMetatable("Channel");
 		{
@@ -67,7 +76,8 @@ public class LuaChannel {
 			l.setField(-2, "Pop");
 			l.pushJavaFunction(Push);
 			l.setField(-2, "Push");
-
+			l.pushJavaFunction(Search);
+			l.setField(-2, "Search");
 		}
 		l.pop(1);
 	}

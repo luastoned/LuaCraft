@@ -44,6 +44,7 @@ public class LuaShared {
 		luaEvent = new LuaEventManager(l);
 
 		LoadLibraries(l);
+		LoadExtensions(l);
 
 		LuaCraft.channel.register(packet);
 		MinecraftForge.EVENT_BUS.register(luaEvent);
@@ -59,6 +60,11 @@ public class LuaShared {
 	}
 
 	public void Autorun(final LuaCraftState l) {
+		l.print("Loading autorun");
+		l.autorun("shared"); // Load all files within autorun
+	}
+	
+	private static void LoadExtensions(final LuaCraftState l) {
 		// Load all packed modules from our Jar
 		l.includePackedFile("/lua/modules/hook.lua");
 		l.includePackedFile("/lua/modules/net.lua");
@@ -70,7 +76,6 @@ public class LuaShared {
 		l.includePackedFile("/lua/extensions/table.lua");
 
 		l.includeDirectory("extensions"); // Load any extensions a user made
-		l.autorun("shared"); // Load all files within autorun
 	}
 
 	private static void LoadLibraries(final LuaCraftState l) {

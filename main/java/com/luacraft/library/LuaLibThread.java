@@ -1,7 +1,11 @@
 package com.luacraft.library;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
+import net.minecraftforge.fml.relauncher.Side;
+
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaThread;
@@ -9,8 +13,7 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 public class LuaLibThread {
-	private static HashMap<String, LuaJavaChannel> channels = new HashMap<String, LuaJavaChannel>();
-
+	
 	/**
 	 * @author Jake
 	 * @library thread
@@ -25,30 +28,32 @@ public class LuaLibThread {
 			LuaJavaThread thread = new LuaJavaThread((LuaCraftState) l, file);
 			thread.setName(file);
 			l.pushUserdataWithMeta(thread, "Thread");
-			return 0;
+			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
 	 * @library thread
-	 * @function CreateChannel Create a new channel
+	 * @function GetChannel Create a new channel
 	 * @arguments nil
-	 * @return [Thread]:thread
+	 * @return [[Channel]]:channel
 	 */
 
 	public static JavaFunction GetChannel = new JavaFunction() {
 		public int invoke(LuaState l) {
-			String name = l.checkString(1);
-			LuaJavaChannel channel = channels.get(name);
-
-			if (channel == null) {
-				channel = new LuaJavaChannel();
-				channels.put(name, channel);
+			synchronized (LuaCraft.threadChannels) {
+				String name = l.checkString(1);
+				LuaJavaChannel channel = LuaCraft.threadChannels.get(name);
+				
+				if (channel == null) {
+					channel = new LuaJavaChannel();
+					LuaCraft.threadChannels.put(name, channel);
+				}
+	
+				l.pushUserdataWithMeta(channel, "Channel");
+				return 1;
 			}
-
-			l.pushUserdataWithMeta(channel, "Channel");
-			return 1;
 		}
 	};
 

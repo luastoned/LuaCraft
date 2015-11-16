@@ -424,9 +424,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn,
-			int itemSlot, boolean isSelect
-			l.pushInteger(EnumRarity.COMMON.ordinal());
-			l.setField(-2, "Rarity");ed) {
+			int itemSlot, boolean isSelected) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
