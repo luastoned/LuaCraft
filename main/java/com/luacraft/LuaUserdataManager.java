@@ -11,10 +11,8 @@ import com.luacraft.classes.LuaJavaBlock;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaUserdataManager
-{
-	private static boolean RecursiveBaseMetaCheck(LuaState l)
-	{
+public class LuaUserdataManager {
+	private static boolean RecursiveBaseMetaCheck(LuaState l) {
 		// Check self
 		l.pushValue(2); // Push the key for lookup in the meta
 		l.getTable(-2);
@@ -31,10 +29,8 @@ public class LuaUserdataManager
 		return false;
 	}
 
-	public static JavaFunction __index = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __index = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Object self = l.checkUserdata(1);
 
 			l.getMetatable(1); // Push our metatable
@@ -56,14 +52,12 @@ public class LuaUserdataManager
 		}
 	};
 
-	public static JavaFunction __newindex = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __newindex = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Object self = l.checkUserdata(1);
 			String index = getUniqueID(self);
 
-			newUserdataCache(l,index);
+			newUserdataCache(l, index);
 			l.pushValue(2); // Push the given key
 			l.pushValue(3); // Push the given value
 			l.setTable(-3);
@@ -71,11 +65,10 @@ public class LuaUserdataManager
 		}
 	};
 
-	private static void newUserdataCache(LuaState l, String index)
-	{
+	private static void newUserdataCache(LuaState l, String index) {
 		l.newMetatable("PersistantData");
 		l.getField(-1, index);
-		
+
 		if (l.isNil(-1)) {
 			l.pop(1);
 			l.newTable();
@@ -85,8 +78,7 @@ public class LuaUserdataManager
 		l.remove(-2);
 	}
 
-	private static String getUniqueID(Object obj)
-	{
+	private static String getUniqueID(Object obj) {
 		if (obj instanceof EntityPlayer)
 			return ((EntityPlayer) obj).getGameProfile().getId().toString();
 		if (obj instanceof Entity)
@@ -95,10 +87,8 @@ public class LuaUserdataManager
 		return Integer.toString(obj.hashCode());
 	}
 
-	public static void PushUserdata(LuaState l, Object obj)
-	{
-		if (obj == null)
-		{
+	public static void PushUserdata(LuaState l, Object obj) {
+		if (obj == null) {
 			l.pushNil();
 			return;
 		}
@@ -107,8 +97,7 @@ public class LuaUserdataManager
 		l.pushUserdataWithMeta(obj, meta);
 	}
 
-	private static String GetMetatableForObject(Object ent)
-	{
+	private static String GetMetatableForObject(Object ent) {
 		if (ent instanceof LuaJavaBlock)
 			return "Block";
 		else if (ent instanceof EntityPlayer)
@@ -123,17 +112,14 @@ public class LuaUserdataManager
 			return "EntityItem";
 
 		/*
-		else if (ent instanceof EntityWolf)
-			return "Wolf";
-		else if (ent instanceof LuaHuman)
-			return "NPC";
+		 * else if (ent instanceof EntityWolf) return "Wolf"; else if (ent
+		 * instanceof LuaHuman) return "NPC";
 		 */
 
 		return "Entity"; // Default
 	}
 
-	public static void SetupMetaMethods(LuaState l)
-	{
+	public static void SetupMetaMethods(LuaState l) {
 		l.pushJavaFunction(__index);
 		l.setField(-2, "__index");
 		l.pushJavaFunction(__newindex);

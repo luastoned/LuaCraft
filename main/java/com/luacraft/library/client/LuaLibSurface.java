@@ -15,26 +15,23 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
-public class LuaLibSurface
-{
+public class LuaLibSurface {
 	private static Minecraft client;
 
 	public static ResourceLocation currentTexture = null;
 	public static Color drawColor = new Color(255, 255, 255, 255);
-	
+
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function GetDefaultFont
-	 * Gets the default font object that minecraft uses to draw text
+	 * @function GetDefaultFont Gets the default font object that minecraft uses
+	 *           to draw text
 	 * @arguments nil
 	 * @return [[Font]]:font
 	 */
 
-	public static JavaFunction GetDefaultFont = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetDefaultFont = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushUserdataWithMeta(client.fontRendererObj, "Font");
 			return 1;
 		}
@@ -43,19 +40,20 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function CreateFont
-	 * Creates a font object that can be used for drawing text to the screen
-	 * @arguments [[String]]:fileResource, [ [[Number]]:size, [[Boolean]]:unicode ]
+	 * @function CreateFont Creates a font object that can be used for drawing
+	 *           text to the screen
+	 * @arguments [[String]]:fileResource, [ [[Number]]:size,
+	 *            [[Boolean]]:unicode ]
 	 * @return [[Font]]:font
 	 */
 
-	public static JavaFunction CreateFont = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction CreateFont = new JavaFunction() {
+		public int invoke(LuaState l) {
 			ResourceLocation resource = new ResourceLocation(l.checkString(1));
-			
-			FontRenderer newFont = new FontRenderer(client.gameSettings, resource, client.getTextureManager(), l.checkBoolean(3, false));
+
+			FontRenderer newFont = new FontRenderer(client.gameSettings,
+					resource, client.getTextureManager(), l.checkBoolean(3,
+							false));
 			newFont.FONT_HEIGHT = l.checkInteger(2, newFont.FONT_HEIGHT);
 
 			l.pushUserdataWithMeta(newFont, "Font");
@@ -66,16 +64,13 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function GetDrawColor
-	 * Gets the current drawing color
+	 * @function GetDrawColor Gets the current drawing color
 	 * @arguments nil
 	 * @return [[Color]]:color
 	 */
 
-	public static JavaFunction GetDrawColor = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetDrawColor = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushUserdataWithMeta(drawColor, "Color");
 			return 1;
 		}
@@ -84,27 +79,25 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function SetDrawColor
-	 * Sets the current drawing color
-	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR [[Color]]:color
+	 * @function SetDrawColor Sets the current drawing color
+	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR
+	 *            [[Color]]:color
 	 * @return nil
 	 */
 
-	public static JavaFunction SetDrawColor = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetDrawColor = new JavaFunction() {
+		public int invoke(LuaState l) {
 			if (l.isUserdata(1, Color.class))
 				drawColor = (Color) l.checkUserdata(1, Color.class, "Color");
-			else if (l.isNumber(1))
-			{
+			else if (l.isNumber(1)) {
 				int r = l.checkInteger(1);
 				int g = l.checkInteger(2);
 				int b = l.checkInteger(3);
 				int a = l.checkInteger(4, 255);
 				drawColor = new Color(r, g, b, a);
 			} else
-				throw new LuaRuntimeException("surface.SetDrawColor: No valid color passed");
+				throw new LuaRuntimeException(
+						"surface.SetDrawColor: No valid color passed");
 			return 0;
 		}
 	};
@@ -112,16 +105,14 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function DrawRect
-	 * Draws a rectangle
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height
+	 * @function DrawRect Draws a rectangle
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
+	 *            [[Number]]:height
 	 * @return nil
 	 */
 
-	public static JavaFunction DrawRect = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DrawRect = new JavaFunction() {
+		public int invoke(LuaState l) {
 			int x = l.checkInteger(1);
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
@@ -130,8 +121,10 @@ public class LuaLibSurface
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA,
+					GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
+					drawColor.b / 255.f, drawColor.a / 255.f);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
@@ -152,16 +145,14 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function DrawGradientRect
-	 * Draws a rectangle with a gradient
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height, [[Color]]:fadeto
+	 * @function DrawGradientRect Draws a rectangle with a gradient
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
+	 *            [[Number]]:height, [[Color]]:fadeto
 	 * @return nil
 	 */
 
-	public static JavaFunction DrawGradientRect = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DrawGradientRect = new JavaFunction() {
+		public int invoke(LuaState l) {
 			int x = l.checkInteger(1);
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
@@ -172,16 +163,19 @@ public class LuaLibSurface
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA,
+					GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
 			renderer.startDrawingQuads();
-			renderer.setColorRGBA(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+			renderer.setColorRGBA(drawColor.r, drawColor.g, drawColor.b,
+					drawColor.a);
 			renderer.addVertex(x + w, y, 0);
 			renderer.addVertex(x, y, 0);
-			renderer.setColorRGBA(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
+			renderer.setColorRGBA(fadeColor.r, fadeColor.g, fadeColor.b,
+					fadeColor.a);
 			renderer.addVertex(x, y + h, 0);
 			renderer.addVertex(x + w, y + h, 0);
 			tInstance.draw();
@@ -198,17 +192,15 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function SetTexture
-	 * Sets a texture ID for to be used when drawing
+	 * @function SetTexture Sets a texture ID for to be used when drawing
 	 * @arguments [[Resource]]:file
 	 * @return nil
 	 */
 
-	public static JavaFunction SetTexture = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			currentTexture = (ResourceLocation) l.checkUserdata(1, ResourceLocation.class, "Resource");
+	public static JavaFunction SetTexture = new JavaFunction() {
+		public int invoke(LuaState l) {
+			currentTexture = (ResourceLocation) l.checkUserdata(1,
+					ResourceLocation.class, "Resource");
 			return 0;
 		}
 	};
@@ -216,25 +208,24 @@ public class LuaLibSurface
 	/**
 	 * @author Jake
 	 * @library surface
-	 * @function DrawTexturedRect
-	 * Draws a textured rectangle
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height
+	 * @function DrawTexturedRect Draws a textured rectangle
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
+	 *            [[Number]]:height
 	 * @return nil
 	 */
 
-	public static JavaFunction DrawTexturedRect = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DrawTexturedRect = new JavaFunction() {
+		public int invoke(LuaState l) {
 			if (currentTexture == null)
 				return 0;
-			
+
 			int x = l.checkInteger(1);
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
 
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
+					drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			client.renderEngine.bindTexture(currentTexture);
@@ -252,8 +243,7 @@ public class LuaLibSurface
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
 
 		l.newTable();

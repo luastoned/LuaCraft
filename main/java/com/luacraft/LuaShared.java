@@ -35,34 +35,30 @@ import com.naef.jnlua.LuaState.Library;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class LuaShared
-{
+public class LuaShared {
 	private static LuaEventManager luaEvent = null;
 	private static LuaPacketManager packet = null;
-	
-	public void Initialize(final LuaCraftState l)
-	{
+
+	public void Initialize(final LuaCraftState l) {
 		packet = new LuaPacketManager(l);
 		luaEvent = new LuaEventManager(l);
-		
+
 		LoadLibraries(l);
-		
+
 		LuaCraft.channel.register(packet);
 		MinecraftForge.EVENT_BUS.register(luaEvent);
 		FMLCommonHandler.instance().bus().register(luaEvent);
 	}
-	
-	public void Shutdown()
-	{
+
+	public void Shutdown() {
 		LuaCraft.channel.unregister(packet);
 		MinecraftForge.EVENT_BUS.unregister(luaEvent);
 		FMLCommonHandler.instance().bus().unregister(luaEvent);
 		packet = null;
 		luaEvent = null;
 	}
-	
-	public void Autorun(final LuaCraftState l)
-	{
+
+	public void Autorun(final LuaCraftState l) {
 		// Load all packed modules from our Jar
 		l.includePackedFile("/lua/modules/hook.lua");
 		l.includePackedFile("/lua/modules/net.lua");
@@ -72,15 +68,14 @@ public class LuaShared
 		l.includePackedFile("/lua/extensions/player.lua");
 		l.includePackedFile("/lua/extensions/string.lua");
 		l.includePackedFile("/lua/extensions/table.lua");
-		
+
 		l.includeDirectory("extensions"); // Load any extensions a user made
 		l.autorun("shared"); // Load all files within autorun
 	}
 
-	private static void LoadLibraries(final LuaCraftState l)
-	{
+	private static void LoadLibraries(final LuaCraftState l) {
 		l.print("Loading Shared LuaState...");
-		
+
 		l.openLib(Library.BASE);
 		l.openLib(Library.PACKAGE);
 		l.openLib(Library.TABLE);
@@ -107,13 +102,15 @@ public class LuaShared
 
 		// Set the package path to the correct location
 		l.getGlobal("package");
-		l.pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua + "modules/?/init.lua");
+		l.pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua
+				+ "modules/?/init.lua");
 		l.setField(-2, "path");
 		l.pop(1);
 
 		// Set the package path to the correct location
 		l.getGlobal("package");
-		l.pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua + "modules/bin/loadall.dll");
+		l.pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua
+				+ "modules/bin/loadall.dll");
 		l.setField(-2, "cpath");
 		l.pop(1);
 

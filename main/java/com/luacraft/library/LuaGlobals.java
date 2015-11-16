@@ -33,173 +33,157 @@ import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
-public class LuaGlobals
-{
+public class LuaGlobals {
 	/**
 	 * @author Jake
-	 * @function Angle
-	 * Creates a new [[Angle]] object
+	 * @function Angle Creates a new [[Angle]] object
 	 * @arguments [ [[Number]]:p, [[Number]]:y, [[Number]]:r ]
 	 * @return [[Angle]]:angle
 	 */
-	
-	public static JavaFunction Angle = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			Angle ang = new Angle(l.checkNumber(1, 0), l.checkNumber(2, 0), l.checkNumber(3, 0));
+
+	public static JavaFunction Angle = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Angle ang = new Angle(l.checkNumber(1, 0), l.checkNumber(2, 0),
+					l.checkNumber(3, 0));
 			ang.push(l);
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function ByteBuf
-	 * Creates a new [[ByteBuf]] object
+	 * @function ByteBuf Creates a new [[ByteBuf]] object
 	 * @arguments [ [[Number]]:limit ]
 	 * @return [[ByteBuf]]:buffer
 	 */
 
-	public static JavaFunction ByteBuf = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer(l.checkInteger(1,32766)));
+	public static JavaFunction ByteBuf = new JavaFunction() {
+		public int invoke(LuaState l) {
+			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer(l
+					.checkInteger(1, 32766)));
 			l.pushUserdataWithMeta(buffer, "ByteBuf");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function Color
-	 * Creates a new [[Color]] object
-	 * @arguments [[Number]]:red, [[Number]]:green, [[Number]]:blue, [ [[Number]]:alpha ]
+	 * @function Color Creates a new [[Color]] object
+	 * @arguments [[Number]]:red, [[Number]]:green, [[Number]]:blue, [
+	 *            [[Number]]:alpha ]
 	 * @return [[Color]]:color
 	 */
 
-	public static JavaFunction Color = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			Color self = new Color(l.checkInteger(1), l.checkInteger(2), l.checkInteger(3), l.checkInteger(4,255));
+	public static JavaFunction Color = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Color self = new Color(l.checkInteger(1), l.checkInteger(2),
+					l.checkInteger(3), l.checkInteger(4, 255));
 			l.pushUserdataWithMeta(self, "Color");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function DamageSource
-	 * Creates a new [[DamageSource]] object
+	 * @function DamageSource Creates a new [[DamageSource]] object
 	 * @arguments [[String]]:type, [ [[Entity]]:source ]
 	 * @return [[DamageSource]]:damagesource
 	 */
 
-	public static JavaFunction DamageSource = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DamageSource = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String type = l.checkString(1);
-			
+
 			if (l.isUserdata(2, Entity.class))
-				l.pushUserdataWithMeta(new EntityDamageSource(type, (Entity) l.checkUserdata(2, Entity.class, "Entity")), "EntityDamageSource");
+				l.pushUserdataWithMeta(
+						new EntityDamageSource(type, (Entity) l.checkUserdata(
+								2, Entity.class, "Entity")),
+						"EntityDamageSource");
 			else
 				l.pushUserdataWithMeta(new DamageSource(type), "DamageSource");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function ItemStack
-	 * Creates a new [[ItemStack]] object
+	 * @function ItemStack Creates a new [[ItemStack]] object
 	 * @arguments [ [[Number]]:id, [[Number]]:size, [[Number]]:damage ]
 	 * @return [[ItemStack]]:item
 	 */
-	
-	public static JavaFunction ItemStack = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction ItemStack = new JavaFunction() {
+		public int invoke(LuaState l) {
 			int itemID = l.checkInteger(1, 1);
 			int stackSize = l.checkInteger(2, 1);
 			int stackDamage = l.checkInteger(3, 0);
-			
-			ItemStack self = new ItemStack(Item.getItemById(itemID), stackSize, stackDamage);
+
+			ItemStack self = new ItemStack(Item.getItemById(itemID), stackSize,
+					stackDamage);
 			l.pushUserdataWithMeta(self, "ItemStack");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function NBTTag
-	 * Creates a new [[NBTTag]] object
+	 * @function NBTTag Creates a new [[NBTTag]] object
 	 * @arguments nil
 	 * @return [[NBTTag]]:tag
 	 */
-	
-	public static JavaFunction NBTTag = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction NBTTag = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushUserdataWithMeta(new NBTTagCompound(), "NBTTag");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function Resource
-	 * Creates a new [[Resource]] object
+	 * @function Resource Creates a new [[Resource]] object
 	 * @arguments [[String]]:path, [ [[String]]:modid ]
 	 * @return [[Resource]]:resource
 	 */
-	
-	public static JavaFunction Resource = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction Resource = new JavaFunction() {
+		public int invoke(LuaState l) {
 			if (l.getTop() > 1)
-				l.pushUserdataWithMeta(new ResourceLocation(l.checkString(1), l.checkString(2)), "Resource");
+				l.pushUserdataWithMeta(
+						new ResourceLocation(l.checkString(1), l.checkString(2)),
+						"Resource");
 			else
-				l.pushUserdataWithMeta(new ResourceLocation(l.checkString(1)), "Resource");
+				l.pushUserdataWithMeta(new ResourceLocation(l.checkString(1)),
+						"Resource");
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function Vector
-	 * Creates a new [[Vector]] object
+	 * @function Vector Creates a new [[Vector]] object
 	 * @arguments [ [[Number]]:x, [[Number]]:y, [[Number]]:z ]
 	 * @return [[Vector]]:vector
 	 */
-	
-	public static JavaFunction Vector = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			Vector vec = new Vector(l.checkNumber(1, 0), l.checkNumber(2, 0), l.checkNumber(3, 0));
+
+	public static JavaFunction Vector = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Vector vec = new Vector(l.checkNumber(1, 0), l.checkNumber(2, 0),
+					l.checkNumber(3, 0));
 			vec.push(l);
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
-	 * @function IsFunction
-	 * Returns if the argument is a function
+	 * @function IsFunction Returns if the argument is a function
 	 * @arguments arg
 	 * @return [[Boolean]]:function
 	 */
 
-	public static JavaFunction IsFunction = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsFunction = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isFunction(1));
 			return 1;
 		}
@@ -207,16 +191,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function IsNumber
-	 * Returns if the argument is a number
+	 * @function IsNumber Returns if the argument is a number
 	 * @arguments arg
 	 * @return [[Boolean]]:number
 	 */
 
-	public static JavaFunction IsNumber = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsNumber = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isNumber(1));
 			return 1;
 		}
@@ -224,16 +205,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function IsString
-	 * Returns if the argument is a string
+	 * @function IsString Returns if the argument is a string
 	 * @arguments arg
 	 * @return [[Boolean]]:string
 	 */
 
-	public static JavaFunction IsString = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsString = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isString(1));
 			return 1;
 		}
@@ -241,16 +219,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function IsBool
-	 * Returns if the argument is a bool
+	 * @function IsBool Returns if the argument is a bool
 	 * @arguments arg
 	 * @return [[Boolean]]:bool
 	 */
 
-	public static JavaFunction IsBool = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsBool = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isBoolean(1));
 			return 1;
 		}
@@ -258,16 +233,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function IsTable
-	 * Returns if the argument is a table
+	 * @function IsTable Returns if the argument is a table
 	 * @arguments arg
 	 * @return [[Boolean]]:table
 	 */
 
-	public static JavaFunction IsTable = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsTable = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isTable(1));
 			return 1;
 		}
@@ -275,16 +247,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Gregor
-	 * @function IsBlock
-	 * Returns if the argument is a block
+	 * @function IsBlock Returns if the argument is a block
 	 * @arguments arg
 	 * @return [[Boolean]]:block
 	 */
 
-	public static JavaFunction IsBlock = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsBlock = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, World.class));
 			return 1;
 		}
@@ -292,16 +261,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function IsThread
-	 * Returns if the argument is a thread
+	 * @function IsThread Returns if the argument is a thread
 	 * @arguments arg
 	 * @return [[Boolean]]:thread
 	 */
 
-	public static JavaFunction IsThread = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsThread = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, LuaJavaThread.class));
 			return 1;
 		}
@@ -309,16 +275,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Gregor
-	 * @function IsVector
-	 * Check if the argument is an vector
+	 * @function IsVector Check if the argument is an vector
 	 * @arguments [[Vector]]:vec
 	 * @return [[Boolean]]:vec
 	 */
 
-	public static JavaFunction IsVector = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsVector = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, Vector.class));
 			return 1;
 		}
@@ -326,16 +289,13 @@ public class LuaGlobals
 
 	/**
 	 * @author Gregor
-	 * @function IsAngle
-	 * Check if the argument is an angle
+	 * @function IsAngle Check if the argument is an angle
 	 * @arguments [[Angle]]:angle
 	 * @return [[Boolean]]:angle
 	 */
 
-	public static JavaFunction IsAngle = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsAngle = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, Angle.class));
 			return 1;
 		}
@@ -343,46 +303,38 @@ public class LuaGlobals
 
 	/**
 	 * @author Jake
-	 * @function FindMetaTable
-	 * Returns the meta table for the given type
+	 * @function FindMetaTable Returns the meta table for the given type
 	 * @arguments [[String]]:meta
 	 * @return [[Table]]:table
 	 */
 
-	public static JavaFunction FindMetaTable = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction FindMetaTable = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String meta = l.checkString(1);
 			l.newMetatable(meta);
 			return 1;
 		}
 	};
 
-	private static JavaFunction loadfileInternal = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	private static JavaFunction loadfileInternal = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String fileName = l.checkString(1);
-			
+
 			if (!fileName.endsWith(".lua"))
 				throw new LuaRuntimeException("File must be a Lua file");
-			
-			File file = FileMount.GetFile("lua/"+fileName);
-			
+
+			File file = FileMount.GetFile("lua/" + fileName);
+
 			InputStream in = null;
-			try
-			{
+			try {
 				in = new FileInputStream(file);
-			} catch (FileNotFoundException e)
-			{
-				throw new LuaRuntimeException("Cannot open " + file.getName() + ": No such file or directory");
+			} catch (FileNotFoundException e) {
+				throw new LuaRuntimeException("Cannot open " + file.getName()
+						+ ": No such file or directory");
 			}
-			try
-			{
+			try {
 				l.load(in, file.getName());
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				throw new LuaRuntimeException(e.getMessage());
 			}
 			try {
@@ -394,26 +346,20 @@ public class LuaGlobals
 		}
 	};
 
-	public static JavaFunction dofile = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction dofile = new JavaFunction() {
+		public int invoke(LuaState l) {
 			loadfileInternal.invoke(l);
 			l.call(0, 0);
 			return 0;
 		}
 	};
 
-	public static JavaFunction loadfile = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			try
-			{
+	public static JavaFunction loadfile = new JavaFunction() {
+		public int invoke(LuaState l) {
+			try {
 				loadfileInternal.invoke(l);
 				return 1;
-			} catch (LuaException e)
-			{
+			} catch (LuaException e) {
 				l.pushNil();
 				l.pushString(e.getMessage());
 				return 2;
@@ -421,8 +367,7 @@ public class LuaGlobals
 		}
 	};
 
-	public static void Init(final LuaState l)
-	{
+	public static void Init(final LuaState l) {
 		l.pushJavaFunction(Angle);
 		l.setGlobal("Angle");
 		l.pushJavaFunction(ByteBuf);
@@ -497,10 +442,10 @@ public class LuaGlobals
 		l.setGlobal("vector_origin");
 		new Angle().push(l);
 		l.setGlobal("angle_zero");
-		
+
 		l.newTable();
 		{
-			new Color(0, 0, 0,255).push(l);
+			new Color(0, 0, 0, 255).push(l);
 			l.setField(-2, "Black");
 			new Color(255, 255, 255, 255).push(l);
 			l.setField(-2, "White");

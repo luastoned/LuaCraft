@@ -9,40 +9,38 @@ import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaLiving
-{
+public class LuaLiving {
 	/**
 	 * @author Gregor
-	 * @function LookAt
-	 * Forces the entity to look at the vector
-	 * @arguments [[Entity]]:ent, [ [[Number]]:yaw speed, [[Number]]:pitch speed ]
+	 * @function LookAt Forces the entity to look at the vector
+	 * @arguments [[Entity]]:ent, [ [[Number]]:yaw speed, [[Number]]:pitch speed
+	 *            ]
 	 * @return nil
 	 */
 
-	public static JavaFunction LookAt = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction LookAt = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			Entity other = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.faceEntity(other, (float) l.checkNumber(2,10), (float) l.checkNumber(3,40));
+			self.faceEntity(other, (float) l.checkNumber(2, 10),
+					(float) l.checkNumber(3, 40));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetExperienceValue
-	 * Returns how much the entity is worth, experience wise
+	 * @function GetExperienceValue Returns how much the entity is worth,
+	 *           experience wise
 	 * @arguments nil
 	 * @return [[Number]]:exp
 	 */
 
-	public static JavaFunction GetExperienceValue = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction GetExperienceValue = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			l.pushNumber(self.experienceValue);
 			return 1;
 		}
@@ -50,17 +48,16 @@ public class LuaLiving
 
 	/**
 	 * @author Jake
-	 * @function SetExperienceValue
-	 * Set how much the entity is worth, experience wise
+	 * @function SetExperienceValue Set how much the entity is worth, experience
+	 *           wise
 	 * @arguments [[Number]]:exp
 	 * @return nil
 	 */
 
-	public static JavaFunction SetExperienceValue = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction SetExperienceValue = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			self.experienceValue = l.checkInteger(2);
 			return 0;
 		}
@@ -68,17 +65,15 @@ public class LuaLiving
 
 	/**
 	 * @author Gregor
-	 * @function GetAttackTarget
-	 * Check if the entity is on a ladder
+	 * @function GetAttackTarget Check if the entity is on a ladder
 	 * @arguments nil
 	 * @return [[Entity]]:target
 	 */
 
-	public static JavaFunction GetAttackTarget = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction GetAttackTarget = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			LuaUserdataManager.PushUserdata(l, self.getAttackTarget());
 			return 1;
 		}
@@ -86,18 +81,17 @@ public class LuaLiving
 
 	/**
 	 * @author Jake
-	 * @function SetAttackTarget
-	 * Set the target entity to attack
+	 * @function SetAttackTarget Set the target entity to attack
 	 * @arguments [[Living]]:target
 	 * @return nil
 	 */
 
-	public static JavaFunction SetAttackTarget = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			EntityLiving other = (EntityLiving) l.checkUserdata(2, Entity.class, "Living");
+	public static JavaFunction SetAttackTarget = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			EntityLiving other = (EntityLiving) l.checkUserdata(2,
+					Entity.class, "Living");
 			self.setAttackTarget(other);
 			return 0;
 		}
@@ -105,197 +99,175 @@ public class LuaLiving
 
 	/**
 	 * @author Jake
-	 * @function GetAvoidSun
-	 * Return if this NPC keeps away from sunlight
+	 * @function GetAvoidSun Return if this NPC keeps away from sunlight
 	 * @arguments nil
 	 * @return [[Boolean]]:avoid sun
 	 */
 
-	public static JavaFunction GetAvoidSun = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//l.pushBoolean(self.shouldAvoidSun);
+	public static JavaFunction GetAvoidSun = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// l.pushBoolean(self.shouldAvoidSun);
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function SetAge
-	 * Set the entitys age
+	 * @function SetAge Set the entitys age
 	 * @arguments [[Number]]:age
 	 * @return nil
 	 */
 
-	public static JavaFunction SetAvoidSun = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//self.shouldAvoidSun = l.checkBoolean(2);
+	public static JavaFunction SetAvoidSun = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// self.shouldAvoidSun = l.checkBoolean(2);
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetAvoidWater
-	 * Return if this NPC keeps away from water
+	 * @function GetAvoidWater Return if this NPC keeps away from water
 	 * @arguments nil
 	 * @return [[Boolean]]:avoid water
 	 */
 
-	public static JavaFunction GetAvoidWater = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//l.pushBoolean(self.getNavigator().getAvoidsWater());
+	public static JavaFunction GetAvoidWater = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// l.pushBoolean(self.getNavigator().getAvoidsWater());
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function SetAvoidWater
-	 * Set if this NPC should keep away from water
+	 * @function SetAvoidWater Set if this NPC should keep away from water
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction SetAvoidWater = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//self.getNavigator().setAvoidsWater(l.checkBoolean(2));
+	public static JavaFunction SetAvoidWater = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// self.getNavigator().setAvoidsWater(l.checkBoolean(2));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetBreakDoors
-	 * Return if this NPC can break down doors
+	 * @function GetBreakDoors Return if this NPC can break down doors
 	 * @arguments nil
 	 * @return [[Boolean]]:door breaking
 	 */
 
-	public static JavaFunction GetBreakDoors = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//l.pushBoolean(self.getNavigator().getCanBreakDoors());
+	public static JavaFunction GetBreakDoors = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// l.pushBoolean(self.getNavigator().getCanBreakDoors());
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function SetBreakDoors
-	 * Set if this NPC should break down doors
+	 * @function SetBreakDoors Set if this NPC should break down doors
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction SetBreakDoors = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//self.getNavigator().setBreakDoors(l.checkBoolean(2));
+	public static JavaFunction SetBreakDoors = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// self.getNavigator().setBreakDoors(l.checkBoolean(2));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function SetCanSwim
-	 * Set if this NPC can swim
+	 * @function SetCanSwim Set if this NPC can swim
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction SetCanSwim = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//self.getNavigator().setCanSwim(l.checkBoolean(2));
+	public static JavaFunction SetCanSwim = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// self.getNavigator().setCanSwim(l.checkBoolean(2));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetCanSwim
-	 * Return if this NPC can swim
+	 * @function GetCanSwim Return if this NPC can swim
 	 * @arguments nil
 	 * @return [[Boolean]]:swimming
 	 */
 
-	public static JavaFunction GetCanSwim = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//l.pushBoolean(self.getNavigator().canSwim);
+	public static JavaFunction GetCanSwim = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// l.pushBoolean(self.getNavigator().canSwim);
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function SetEnterDoors
-	 * Set if this NPC can enter doors
+	 * @function SetEnterDoors Set if this NPC can enter doors
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction SetEnterDoors = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//self.getNavigator().setEnterDoors(l.checkBoolean(2));
+	public static JavaFunction SetEnterDoors = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// self.getNavigator().setEnterDoors(l.checkBoolean(2));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetMovementSpeed
-	 * Return how fast this NPC can move
+	 * @function GetMovementSpeed Return how fast this NPC can move
 	 * @arguments nil
 	 * @return [[Number]]: speed
 	 */
 
-	public static JavaFunction GetEnterDoors = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			//l.pushBoolean(self.getNavigator().canPassOpenWoodenDoors);
+	public static JavaFunction GetEnterDoors = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			// l.pushBoolean(self.getNavigator().canPassOpenWoodenDoors);
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetMovementSpeed
-	 * Return how fast this NPC can move
+	 * @function GetMovementSpeed Return how fast this NPC can move
 	 * @arguments nil
 	 * @return [[Number]]: speed
 	 */
 
-	public static JavaFunction GetMovementSpeed = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction GetMovementSpeed = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			l.pushNumber(self.getNavigator().speed);
 			return 1;
 		}
@@ -303,17 +275,15 @@ public class LuaLiving
 
 	/**
 	 * @author Jake
-	 * @function SetMovementSpeed
-	 * Set how fast this NPC will move
+	 * @function SetMovementSpeed Set how fast this NPC will move
 	 * @arguments [[Number]]: speed
 	 * @return nil
 	 */
 
-	public static JavaFunction SetMovementSpeed = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction SetMovementSpeed = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			self.getNavigator().setSpeed(l.checkNumber(2));
 			return 0;
 		}
@@ -321,44 +291,42 @@ public class LuaLiving
 
 	/**
 	 * @author Jake
-	 * @function MoveTo
-	 * Set a location this NPC should try to move to
+	 * @function MoveTo Set a location this NPC should try to move to
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction MoveTo = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
+	public static JavaFunction MoveTo = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
 			Vector pos = (Vector) l.checkUserdata(1, Vector.class, "Vector");
-			self.getNavigator().tryMoveToXYZ(pos.x, pos.z, pos.y, self.getNavigator().speed);
+			self.getNavigator().tryMoveToXYZ(pos.x, pos.z, pos.y,
+					self.getNavigator().speed);
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function MoveToEntity
-	 * Set an entity this NPC should try to move to
+	 * @function MoveToEntity Set an entity this NPC should try to move to
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
 
-	public static JavaFunction MoveToEntity = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			EntityLiving other = (EntityLiving) l.checkUserdata(2, Entity.class, "Living");
-			self.getNavigator().tryMoveToEntityLiving(other, self.getNavigator().speed);
+	public static JavaFunction MoveToEntity = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityLiving self = (EntityLiving) l.checkUserdata(1,
+					EntityLiving.class, "Living");
+			EntityLiving other = (EntityLiving) l.checkUserdata(2,
+					Entity.class, "Living");
+			self.getNavigator().tryMoveToEntityLiving(other,
+					self.getNavigator().speed);
 			return 0;
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Living");
 		{
 			l.pushJavaFunction(LuaEntity.__tostring);

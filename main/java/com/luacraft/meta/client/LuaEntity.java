@@ -8,22 +8,18 @@ import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaEntity
-{
+public class LuaEntity {
 	private static Minecraft client = null;
 
 	/**
 	 * @author Gregor
-	 * @function GetPos
-	 * Returns the entity position
+	 * @function GetPos Returns the entity position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
 
-	public static JavaFunction GetPos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetPos = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX);
 			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY);
@@ -37,16 +33,13 @@ public class LuaEntity
 
 	/**
 	 * @author Gregor
-	 * @function GetEyePos
-	 * Returns the entitys eye position
+	 * @function GetEyePos Returns the entitys eye position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
 
-	public static JavaFunction GetEyePos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetEyePos = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX);
 			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY);
@@ -58,8 +51,7 @@ public class LuaEntity
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
 
 		l.newMetatable("Entity");

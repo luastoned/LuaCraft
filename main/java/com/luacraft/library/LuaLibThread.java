@@ -8,23 +8,19 @@ import com.luacraft.classes.LuaJavaThread;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaLibThread
-{
-	private static HashMap<String, LuaJavaChannel> channels = new HashMap<String, LuaJavaChannel>();	
+public class LuaLibThread {
+	private static HashMap<String, LuaJavaChannel> channels = new HashMap<String, LuaJavaChannel>();
 
 	/**
 	 * @author Jake
 	 * @library thread
-	 * @function NewThread
-	 * Create a new thread
+	 * @function NewThread Create a new thread
 	 * @arguments [[String]]:filename
 	 * @return [[Thread]]:thread
 	 */
 
-	public static JavaFunction NewThread = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction NewThread = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String file = l.checkString(1);
 			LuaJavaThread thread = new LuaJavaThread((LuaCraftState) l, file);
 			thread.setName(file);
@@ -32,35 +28,31 @@ public class LuaLibThread
 			return 0;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @library thread
-	 * @function CreateChannel
-	 * Create a new channel
+	 * @function CreateChannel Create a new channel
 	 * @arguments nil
 	 * @return [Thread]:thread
 	 */
 
-	public static JavaFunction GetChannel = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetChannel = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String name = l.checkString(1);
 			LuaJavaChannel channel = channels.get(name);
-			
+
 			if (channel == null) {
 				channel = new LuaJavaChannel();
 				channels.put(name, channel);
 			}
-			
+
 			l.pushUserdataWithMeta(channel, "Channel");
 			return 1;
 		}
 	};
 
-	public static void Init(LuaState l)
-	{
+	public static void Init(LuaState l) {
 		l.newTable();
 		{
 			l.pushJavaFunction(NewThread);

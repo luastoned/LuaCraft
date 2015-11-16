@@ -14,16 +14,13 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function Start
-	 * Starts a profiler section
+	 * @function Start Starts a profiler section
 	 * @arguments [[String]]:name
 	 * @return nil
 	 */
 
-	public static JavaFunction Start = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Start = new JavaFunction() {
+		public int invoke(LuaState l) {
 			profiler.startSection(l.checkString(1));
 			return 0;
 		}
@@ -32,16 +29,13 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function End
-	 * Ends a profiler section
+	 * @function End Ends a profiler section
 	 * @arguments nil
 	 * @return nil
 	 */
 
-	public static JavaFunction End = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction End = new JavaFunction() {
+		public int invoke(LuaState l) {
 			profiler.endSection();
 			return 0;
 		}
@@ -50,23 +44,19 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function Clear
-	 * Clears all profilers
+	 * @function Clear Clears all profilers
 	 * @arguments nil
 	 * @return nil
 	 */
 
-	public static JavaFunction Clear = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Clear = new JavaFunction() {
+		public int invoke(LuaState l) {
 			profiler.clearProfiling();
 			return 0;
 		}
 	};
-	
-	public static void Init(final LuaCraftState l)
-	{
+
+	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
 		profiler = client.mcProfiler;
 

@@ -131,16 +131,16 @@ public class LuaConsole {
 					}
 					if (line.equals("go")) {
 						outWriter.flush();
-						InputStream in = new ByteArrayInputStream(out
-								.toByteArray());
+						InputStream in = new ByteArrayInputStream(
+								out.toByteArray());
 						runChunk(in);
 						continue chunk;
 					}
 					if (firstLine && line.startsWith("=")) {
 						outWriter.write("return " + line.substring(1));
 						outWriter.flush();
-						InputStream in = new ByteArrayInputStream(out
-								.toByteArray());
+						InputStream in = new ByteArrayInputStream(
+								out.toByteArray());
 						runChunk(in);
 						continue chunk;
 					}

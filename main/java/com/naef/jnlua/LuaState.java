@@ -522,7 +522,7 @@ public class LuaState {
 			throw new LuaMemoryAllocationException(e.getMessage());
 		}
 	}
-	
+
 	public synchronized void require(String moduleName) {
 		check();
 		getGlobal("require");
@@ -671,13 +671,14 @@ public class LuaState {
 		check();
 		getConverter().convertJavaObject(this, object);
 	}
-	
+
 	public synchronized void pushUserdata(Object object) {
 		check();
 		lua_pushuserdata(object);
 	}
-	
-	public synchronized void pushUserdataWithMeta(Object object, String metaTable) {
+
+	public synchronized void pushUserdataWithMeta(Object object,
+			String metaTable) {
 		pushUserdata(object);
 		newMetatable(metaTable);
 		setMetatable(-2);
@@ -923,20 +924,20 @@ public class LuaState {
 		check();
 		return lua_istable(index) != 0;
 	}
-	
+
 	public synchronized boolean isUserdata(int index) {
 		check();
 		return lua_isuserdata(index) != 0;
 	}
-	
+
 	public synchronized boolean isUserdata(int index, Class<?> formalType) {
 		check();
-		
+
 		Object object = toUserdata(index);
-		
+
 		if (object == null)
 			return false;
-		
+
 		Class<?> type = object.getClass();
 		return formalType.isAssignableFrom(type);
 	}
@@ -1116,7 +1117,7 @@ public class LuaState {
 		check();
 		return converter.convertLuaValue(this, index, type);
 	}
-	
+
 	public synchronized Object toUserdata(int index) {
 		check();
 		return lua_touserdata(index);
@@ -1366,7 +1367,7 @@ public class LuaState {
 		}
 		remove(-2);
 	}
-	
+
 	/**
 	 * Creates a new table and pushes it on the stack.
 	 */
@@ -1875,7 +1876,7 @@ public class LuaState {
 		}
 		return checkNumber(index);
 	}
-	
+
 	public synchronized JavaFunction checkJavaFunction(int index) {
 		check();
 		checkType(index, LuaType.FUNCTION);
@@ -2031,14 +2032,14 @@ public class LuaState {
 		return toUserdata(index);
 	}
 
-	public synchronized <T> Object checkUserdata(int index, Class<T> formalType, String expected) {
+	public synchronized <T> Object checkUserdata(int index,
+			Class<T> formalType, String expected) {
 		check();
 		Object userdata = toUserdata(index);
-		if (!isUserdata(index) || !formalType.isAssignableFrom(userdata.getClass())) {
-			throw getArgException(
-					index,
-					String.format("exptected %s, got %s",
-							expected, typeName(index)));
+		if (!isUserdata(index)
+				|| !formalType.isAssignableFrom(userdata.getClass())) {
+			throw getArgException(index, String.format("exptected %s, got %s",
+					expected, typeName(index)));
 		}
 		return userdata;
 	}
@@ -2225,7 +2226,7 @@ public class LuaState {
 	private native void lua_pushjavafunction(JavaFunction f);
 
 	private native void lua_pushjavaobject(Object object);
-	
+
 	private native void lua_pushuserdata(Object object);
 
 	private native void lua_pushnil();
@@ -2257,9 +2258,9 @@ public class LuaState {
 	private native int lua_istable(int index);
 
 	private native int lua_isthread(int index);
-	
+
 	private native int lua_isuserdata(int index);
-	
+
 	private native int lua_equal(int index1, int index2);
 
 	private native int lua_lessthan(int index1, int index2);
@@ -2277,7 +2278,7 @@ public class LuaState {
 	private native JavaFunction lua_tojavafunction(int index);
 
 	private native Object lua_tojavaobject(int index);
-	
+
 	private native Object lua_touserdata(int index);
 
 	private native double lua_tonumber(int index);

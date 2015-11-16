@@ -4,8 +4,7 @@ import org.apache.commons.lang3.SystemUtils;
 
 import com.naef.jnlua.NativeSupport.Loader;
 
-public class LuaLoader implements Loader
-{
+public class LuaLoader implements Loader {
 	public boolean isEclipse = false;
 
 	private String rootDir = null;
@@ -14,14 +13,13 @@ public class LuaLoader implements Loader
 
 	private String liblua = null;
 	private String libjnlua = null;
-	
+
 	private String libraryDir = "libraries/com/luacraft/";
-	
-	public LuaLoader(String dir)
-	{
+
+	public LuaLoader(String dir) {
 		rootDir = dir;
-		
-		if (rootDir.contains("eclipse")){
+
+		if (rootDir.contains("eclipse")) {
 			libraryDir = "../src/main/resources/bin/";
 			isEclipse = true;
 		}
@@ -35,7 +33,9 @@ public class LuaLoader implements Loader
 			liblua = "libluajit";
 			libjnlua = "libjnluajit";
 		} else {
-			LuaCraft.getLogger().error(String.format("Your OS (%s) is currently unsupported", System.getProperty("os.name")));
+			LuaCraft.getLogger().error(
+					String.format("Your OS (%s) is currently unsupported",
+							System.getProperty("os.name")));
 		}
 
 		if (SystemUtils.OS_ARCH.contains("64"))
@@ -43,19 +43,18 @@ public class LuaLoader implements Loader
 		else
 			archType = "32/";
 	}
-	
-	private void loadLib(String lib)
-	{
+
+	private void loadLib(String lib) {
 		if (isEclipse) {
 			System.load(rootDir + libraryDir + archType + lib + fileExt);
 		} else {
-			LuaCraft.extractFile("/bin/" + archType + lib + fileExt, libraryDir + lib + fileExt);
+			LuaCraft.extractFile("/bin/" + archType + lib + fileExt, libraryDir
+					+ lib + fileExt);
 			System.load(rootDir + libraryDir + lib + fileExt);
 		}
 	}
 
-	public void load()
-	{
+	public void load() {
 		loadLib(liblua);
 		loadLib(libjnlua);
 	}

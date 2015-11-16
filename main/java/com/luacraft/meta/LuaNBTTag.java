@@ -5,13 +5,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaNBTTag
-{	
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+public class LuaNBTTag {
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushString(String.format("NBTTag: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -19,17 +17,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function HasKey
-	 * Returns if the NBTTag has the key.
+	 * @function HasKey Returns if the NBTTag has the key.
 	 * @arguments [[String]]:key
 	 * @return [[Boolean]]:bool
 	 */
 
-	public static JavaFunction HasKey = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction HasKey = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushBoolean(self.hasKey(l.checkString(2)));
 			return 1;
 		}
@@ -37,17 +33,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetBool
-	 * Sets the keys bool.
+	 * @function SetBool Sets the keys bool.
 	 * @arguments [[String]]:key, [[Boolean]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetBool = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetBool = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setBoolean(l.checkString(2), l.checkBoolean(3));
 			return 0;
 		}
@@ -55,17 +49,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetBool
-	 * Return the property bool
+	 * @function GetBool Return the property bool
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetBool = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetBool = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushBoolean(self.getBoolean(l.checkString(2)));
 			return 1;
 		}
@@ -73,17 +65,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetByte
-	 * Sets the keys byte.
+	 * @function SetByte Sets the keys byte.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetByte = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetByte = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setByte(l.checkString(2), (byte) l.checkInteger(3));
 			return 0;
 		}
@@ -91,17 +81,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetByte
-	 * Return the property byte
+	 * @function GetByte Return the property byte
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetByte = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetByte = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushInteger(self.getByte(l.checkString(2)));
 			return 1;
 		}
@@ -109,17 +97,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetShort
-	 * Sets the keys short.
+	 * @function SetShort Sets the keys short.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetShort = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetShort = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setShort(l.checkString(2), (short) l.checkInteger(3));
 			return 0;
 		}
@@ -127,17 +113,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetShort
-	 * Return the property short
+	 * @function GetShort Return the property short
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetShort = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetShort = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushInteger(self.getShort(l.checkString(2)));
 			return 1;
 		}
@@ -145,17 +129,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetInteger
-	 * Sets the keys integer.
+	 * @function SetInteger Sets the keys integer.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetInteger = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetInteger = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setInteger(l.checkString(2), l.checkInteger(3));
 			return 0;
 		}
@@ -163,17 +145,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetInteger
-	 * Return the property integer
+	 * @function GetInteger Return the property integer
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetInteger = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetInteger = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushInteger(self.getInteger(l.checkString(2)));
 			return 1;
 		}
@@ -181,17 +161,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetLong
-	 * Sets the keys long.
+	 * @function SetLong Sets the keys long.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetLong = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetLong = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setLong(l.checkString(2), (long) l.checkNumber(3));
 			return 0;
 		}
@@ -199,17 +177,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetLong
-	 * Return the property long
+	 * @function GetLong Return the property long
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetLong = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetLong = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushNumber(self.getLong(l.checkString(2)));
 			return 1;
 		}
@@ -217,17 +193,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetFloat
-	 * Sets the keys float.
+	 * @function SetFloat Sets the keys float.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetFloat = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetFloat = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setFloat(l.checkString(2), (float) l.checkNumber(3));
 			return 0;
 		}
@@ -235,17 +209,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetFloat
-	 * Return the property float
+	 * @function GetFloat Return the property float
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetFloat = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetFloat = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushNumber(self.getFloat(l.checkString(2)));
 			return 1;
 		}
@@ -253,17 +225,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetDouble
-	 * Sets the keys double.
+	 * @function SetDouble Sets the keys double.
 	 * @arguments [[String]]:key, [[Number]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetDouble = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetDouble = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setDouble(l.checkString(2), l.checkNumber(3));
 			return 0;
 		}
@@ -271,17 +241,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetDouble
-	 * Return the property double
+	 * @function GetDouble Return the property double
 	 * @arguments [[String]]:key, [[Number]]:default
 	 * @return [[Number]]:value
 	 */
 
-	public static JavaFunction GetDouble = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetDouble = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushNumber(self.getDouble(l.checkString(2)));
 			return 1;
 		}
@@ -289,17 +257,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetString
-	 * Sets the keys string.
+	 * @function SetString Sets the keys string.
 	 * @arguments [[String]]:key, [[String]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetString = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetString = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			self.setString(l.checkString(2), l.checkString(3));
 			return 0;
 		}
@@ -307,17 +273,15 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetString
-	 * Return the property string
+	 * @function GetString Return the property string
 	 * @arguments [[String]]:key, [[String]]:default
 	 * @return [[String]]:value
 	 */
 
-	public static JavaFunction GetString = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetString = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushString(self.getString(l.checkString(2)));
 			return 1;
 		}
@@ -325,18 +289,17 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function SetTag
-	 * Sets the keys NBTTag
+	 * @function SetTag Sets the keys NBTTag
 	 * @arguments [[String]]:key, [[NBTTag]]:value
 	 * @return nil
 	 */
 
-	public static JavaFunction SetTag = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
-			NBTTagCompound other = (NBTTagCompound) l.checkUserdata(3, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction SetTag = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
+			NBTTagCompound other = (NBTTagCompound) l.checkUserdata(3,
+					NBTTagCompound.class, "NBTTag");
 			self.setTag(l.checkString(2), other);
 			return 0;
 		}
@@ -344,29 +307,26 @@ public class LuaNBTTag
 
 	/**
 	 * @author Matt
-	 * @function GetTag
-	 * Return the property CompoundTag
+	 * @function GetTag Return the property CompoundTag
 	 * @arguments [[String]]:key, [[NBTTag]]:default
 	 * @return [[NBTTag]]:value
 	 */
 
-	public static JavaFunction GetTag = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1, NBTTagCompound.class, "NBTTag");
+	public static JavaFunction GetTag = new JavaFunction() {
+		public int invoke(LuaState l) {
+			NBTTagCompound self = (NBTTagCompound) l.checkUserdata(1,
+					NBTTagCompound.class, "NBTTag");
 			l.pushUserdataWithMeta(self.getTag(l.checkString(2)), "NBTTag");
 			return 1;
 		}
 	};
 
-	public static void Init(LuaState l)
-	{		
+	public static void Init(LuaState l) {
 		l.newMetatable("NBTTag");
 		{
 			l.pushValue(-1);
 			l.setField(-2, "__index");
-			
+
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
 

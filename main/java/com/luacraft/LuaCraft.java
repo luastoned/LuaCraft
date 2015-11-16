@@ -37,8 +37,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = LuaCraft.MODID, version = LuaCraft.VERSION)
-public class LuaCraft
-{
+public class LuaCraft {
 	public static final String MODID = "luacraft";
 	public static final String VERSION = "1.1";
 
@@ -49,7 +48,8 @@ public class LuaCraft
 	public static LuaClient clientLibs = new LuaClient();
 
 	public static String luaDir = "lua" + File.separator;
-	public static String rootDir = System.getProperty("user.dir") + File.separator;
+	public static String rootDir = System.getProperty("user.dir")
+			+ File.separator;
 
 	private static Logger luaLogger;
 	private static LuaLoader luaLoader = new LuaLoader(rootDir);
@@ -58,21 +58,19 @@ public class LuaCraft
 	public static FMLEventChannel channel = null;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		ModContainer modContainer = FMLCommonHandler.instance().findContainerFor(this);
+	public void preInit(FMLPreInitializationEvent event) {
+		ModContainer modContainer = FMLCommonHandler.instance()
+				.findContainerFor(this);
 		luaLogger = LogManager.getLogger(modContainer.getName());
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
+	public void init(FMLInitializationEvent event) {
 		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("LuaCraft");
 
 		NativeSupport.getInstance().setLoader(luaLoader);
 		LuaCraftState luaState = new LuaCraftState();
-		synchronized(luaState)
-		{
+		synchronized (luaState) {
 			luaStates.put(event.getSide(), luaState);
 			luaProxy.Initialize(luaState);
 			luaProxy.Autorun(luaState);
@@ -80,21 +78,17 @@ public class LuaCraft
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
+	public void postInit(FMLPostInitializationEvent event) {
 		luaLogger.info(rootDir);
 	}
 
 	@EventHandler
-	public void serverStarting(FMLServerStartingEvent event)
-	{
+	public void serverStarting(FMLServerStartingEvent event) {
 		event.registerServerCommand(new LuaJavaRunCommand());
 
-		if (event.getSide().isClient() && luaStates.get(Side.SERVER) == null)
-		{
+		if (event.getSide().isClient() && luaStates.get(Side.SERVER) == null) {
 			LuaCraftState luaState = new LuaCraftState();
-			synchronized(luaState)
-			{
+			synchronized (luaState) {
 				luaState.setSideOverride(Side.CLIENT);
 				luaStates.put(Side.SERVER, luaState);
 				serverLibs.Initialize(luaState);
@@ -104,59 +98,51 @@ public class LuaCraft
 	}
 
 	@EventHandler
-	public void serverStarted(FMLServerStartedEvent event)
-	{
+	public void serverStarted(FMLServerStartedEvent event) {
 	}
 
 	@EventHandler
-	public void serverStopping(FMLServerStoppingEvent event)
-	{
+	public void serverStopping(FMLServerStoppingEvent event) {
 		LuaCraftState luaState = luaStates.get(Side.SERVER);
-		synchronized(luaState)
-		{
-			if (event.getSide().isClient() && luaState != null)
-			{
+		synchronized (luaState) {
+			if (event.getSide().isClient() && luaState != null) {
 				luaState.close();
 				luaStates.remove(Side.SERVER);
 			}
 		}
 	}
 
-	public static Logger getLogger()
-	{
+	public static Logger getLogger() {
 		return luaLogger;
 	}
 
-	public static LuaCraftState getLuaState(Side side)
-	{
+	public static LuaCraftState getLuaState(Side side) {
 		return luaStates.get(side);
 	}
 
-	public static String getMinecraftDirectory()
-	{
+	public static String getMinecraftDirectory() {
 		return rootDir;
 	}
 
-	public static String getRootLuaDirectory()
-	{
+	public static String getRootLuaDirectory() {
 		return getMinecraftDirectory() + luaDir;
 	}
 
 	@SuppressWarnings("resource")
-	public static InputStream getPackedFileInputStream(String file) throws FileNotFoundException
-	{
+	public static InputStream getPackedFileInputStream(String file)
+			throws FileNotFoundException {
 		InputStream in = null;
 		if (luaLoader.isEclipse)
-			in = new FileInputStream(new File(rootDir, "../src/main/resources/" + file));
+			in = new FileInputStream(new File(rootDir, "../src/main/resources/"
+					+ file));
 		else
 			in = LuaCraft.class.getResourceAsStream(file);
 
 		return in;
 	}
 
-	public static File extractFile(String strFrom, String strTo)
-	{
-		File extractedFile =  new File(rootDir, strTo);
+	public static File extractFile(String strFrom, String strTo) {
+		File extractedFile = new File(rootDir, strTo);
 		int lastSlash = extractedFile.toString().lastIndexOf(File.separator);
 		String filePath = extractedFile.toString().substring(0, lastSlash);
 
@@ -170,8 +156,7 @@ public class LuaCraft
 		InputStream fileInStream = null;
 		OutputStream fileOutStream = null;
 
-		try
-		{
+		try {
 			fileInStream = getPackedFileInputStream(strFrom);
 			fileOutStream = new FileOutputStream(extractedFile);
 
@@ -179,16 +164,12 @@ public class LuaCraft
 				fileOutStream.write(buffer, 0, readBytes);
 		} catch (Exception e) {
 			throw new Error(e.getMessage());
-		}
-		finally
-		{
-			try
-			{
+		} finally {
+			try {
 				fileOutStream.close();
 				fileInStream.close();
-			}
-			catch (Exception e) {
-				//throw new Error(e.getMessage());
+			} catch (Exception e) {
+				// throw new Error(e.getMessage());
 				e.printStackTrace();
 			}
 
@@ -197,26 +178,22 @@ public class LuaCraft
 		return extractedFile;
 	}
 
-	public static void reloadLuaStates()
-	{
-		for(Entry<Side, LuaCraftState> entry : luaStates.entrySet())
-		{
+	public static void reloadLuaStates() {
+		for (Entry<Side, LuaCraftState> entry : luaStates.entrySet()) {
 			Side side = entry.getKey();
 			LuaCraftState state = entry.getValue();
 
-			synchronized(state)
-			{
+			synchronized (state) {
 				if (side == Side.CLIENT)
 					LuaCraft.clientLibs.Shutdown();
 				else
 					LuaCraft.serverLibs.Shutdown();
 				state.close();
 			}
-			
+
 			LuaCraftState newState = new LuaCraftState();
 
-			synchronized(newState)
-			{
+			synchronized (newState) {
 				newState.setSideOverride(state.getSide());
 
 				luaStates.put(side, newState);
@@ -232,12 +209,11 @@ public class LuaCraft
 		}
 	}
 
-	public static void checkVersion()
-	{
-		try
-		{
+	public static void checkVersion() {
+		try {
 			URL requestURL = new URL("http://luacraft.com/update/" + VERSION);
-			HttpURLConnection httpCon = (HttpURLConnection) requestURL.openConnection();
+			HttpURLConnection httpCon = (HttpURLConnection) requestURL
+					.openConnection();
 
 			httpCon.setRequestMethod("GET");
 			httpCon.setRequestProperty("User-Agent", "Minecraft, LuaCraft");
@@ -245,7 +221,8 @@ public class LuaCraft
 			String inputLine;
 			StringBuffer resBuffer = new StringBuffer();
 			int responseCode = httpCon.getResponseCode();
-			BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					httpCon.getInputStream()));
 
 			while ((inputLine = in.readLine()) != null)
 				resBuffer.append(inputLine);
@@ -253,10 +230,10 @@ public class LuaCraft
 			in.close();
 			String webVersion = resBuffer.toString();
 			if (!webVersion.equals(VERSION))
-				LuaCraft.getLogger().info("A newer version of LuaCraft (" + webVersion + ") is available!");
-		}
-		catch (Exception e)
-		{
+				LuaCraft.getLogger().info(
+						"A newer version of LuaCraft (" + webVersion
+								+ ") is available!");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

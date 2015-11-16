@@ -45,8 +45,9 @@ public abstract class LuaException extends RuntimeException {
 	public LuaException(Throwable cause) {
 		super(cause);
 	}
-	
-	// This prevents the classname of the Exception from being printed in the error
+
+	// This prevents the classname of the Exception from being printed in the
+	// error
 	public String toString() {
 		return getMessage();
 	}

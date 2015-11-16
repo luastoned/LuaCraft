@@ -1,16 +1,12 @@
-
 package com.luacraft.meta;
 
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaVector
-{
-	public static JavaFunction __index = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+public class LuaVector {
+	public static JavaFunction __index = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			String key = l.checkString(2);
 
@@ -20,8 +16,7 @@ public class LuaVector
 				l.pushNumber(self.y);
 			else if (key.equals("z"))
 				l.pushNumber(self.z);
-			else
-			{
+			else {
 				l.newMetatable("Vector");
 				l.pushString(key);
 				l.rawGet(-2);
@@ -31,10 +26,8 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __newindex = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __newindex = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			String key = l.checkString(2);
 			double val = l.toNumber(3);
@@ -50,20 +43,16 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			l.pushString(self.toString());
 			return 1;
 		}
 	};
 
-	public static JavaFunction __eq = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			l.pushBoolean(self.equals(other));
@@ -71,10 +60,8 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __add = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __add = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			self.copy().add(other).push(l);
@@ -82,10 +69,8 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __sub = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __sub = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			self.copy().sub(other).push(l);
@@ -93,18 +78,15 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __mul = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __mul = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector ret = self.copy();
-			if (l.isUserdata(2, Vector.class))
-			{
-				Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
+			if (l.isUserdata(2, Vector.class)) {
+				Vector other = (Vector) l.checkUserdata(2, Vector.class,
+						"Vector");
 				ret.mul(other);
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				self.mul(other);
 			}
@@ -113,18 +95,15 @@ public class LuaVector
 		}
 	};
 
-	public static JavaFunction __div = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __div = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector ret = self.copy();
-			if (l.isUserdata(2, Vector.class))
-			{
-				Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
+			if (l.isUserdata(2, Vector.class)) {
+				Vector other = (Vector) l.checkUserdata(2, Vector.class,
+						"Vector");
 				ret.div(other);
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				ret.div(other);
 			}
@@ -135,16 +114,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function Length
-	 * Get the length of a vector
+	 * @function Length Get the length of a vector
 	 * @arguments nil
 	 * @return [[Number]]:len
 	 */
 
-	public static JavaFunction Length = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Length = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			l.pushNumber(self.length());
 			return 1;
@@ -153,16 +129,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function Distance
-	 * Get the distance between two vectors
+	 * @function Distance Get the distance between two vectors
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:distance
 	 */
 
-	public static JavaFunction Distance = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Distance = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			l.pushNumber(self.distance(other));
@@ -172,16 +145,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function DistanceSqr
-	 * Get the distance between two vectors, squared
+	 * @function DistanceSqr Get the distance between two vectors, squared
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:distance
 	 */
 
-	public static JavaFunction DistanceSqr = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DistanceSqr = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			l.pushNumber(self.distanceSqr(other));
@@ -191,16 +161,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function GetNormal
-	 * Get the normalized vector
+	 * @function GetNormal Get the normalized vector
 	 * @arguments nil
 	 * @return [[Vector]]:norm
 	 */
 
-	public static JavaFunction GetNormal = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetNormal = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			self.getNormal().push(l);
 			return 1;
@@ -209,16 +176,14 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function Normalize
-	 * Normalize the vector. Doesn't return anything, but it directly modifies the vector.
+	 * @function Normalize Normalize the vector. Doesn't return anything, but it
+	 *           directly modifies the vector.
 	 * @arguments nil
 	 * @return nil
 	 */
 
-	public static JavaFunction Normalize = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Normalize = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			self.normalize();
 			return 0;
@@ -227,16 +192,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function Dot
-	 * Get the dot product of a vector
+	 * @function Dot Get the dot product of a vector
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:dot
 	 */
 
-	public static JavaFunction DotProduct = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction DotProduct = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			l.pushNumber(self.dotProduct(other));
@@ -246,16 +208,13 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function Cross
-	 * Get the dot product of a vector
+	 * @function Cross Get the dot product of a vector
 	 * @arguments [[Vector]]:vector
 	 * @return [[Vector]]:cross
 	 */
 
-	public static JavaFunction Cross = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Cross = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			self.cross(other).push(l);
@@ -265,16 +224,14 @@ public class LuaVector
 
 	/**
 	 * @author Jake
-	 * @function RayQuadIntersect
-	 * Return a UV point on a plane
-	 * @arguments [[Vector]]:direction, [[Vector]]:plane, [[Vector]]:xcoord, [[Vector]]:ycoord
+	 * @function RayQuadIntersect Return a UV point on a plane
+	 * @arguments [[Vector]]:direction, [[Vector]]:plane, [[Vector]]:xcoord,
+	 *            [[Vector]]:ycoord
 	 * @return [[Number]]:u, [[Number]]:v
 	 */
 
-	public static JavaFunction RayQuadIntersect = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction RayQuadIntersect = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector dir = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			Vector plane = (Vector) l.checkUserdata(2, Vector.class, "Vector");
@@ -283,8 +240,7 @@ public class LuaVector
 
 			Vector result = self.rayQuadIntersect(dir, plane, x, y);
 
-			if (result != null)
-			{
+			if (result != null) {
 				l.pushNumber(result.x);
 				l.pushNumber(result.y);
 				return 2;
@@ -294,13 +250,12 @@ public class LuaVector
 		}
 	};
 
-	public static void Init(final LuaState l)
-	{
+	public static void Init(final LuaState l) {
 		l.newMetatable("Vector");
 		{
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
-			
+
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
 

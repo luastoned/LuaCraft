@@ -8,12 +8,11 @@ import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
 public class LuaSQLQuery {
-	
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1, LuaJavaQuery.class, "SQLQuery");
+
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1,
+					LuaJavaQuery.class, "SQLQuery");
 			l.pushString(String.format("SQLQuery: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -21,17 +20,15 @@ public class LuaSQLQuery {
 
 	/**
 	 * @author Jake
-	 * @function Start
-	 * Starts processing the query
+	 * @function Start Starts processing the query
 	 * @arguments nil
 	 * @return nil
 	 */
-	
-	public static JavaFunction Start = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1, LuaJavaQuery.class, "SQLQuery");
+
+	public static JavaFunction Start = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1,
+					LuaJavaQuery.class, "SQLQuery");
 			self.start();
 			return 0;
 		}
@@ -39,17 +36,16 @@ public class LuaSQLQuery {
 
 	/**
 	 * @author Jake
-	 * @function SetString
-	 * Sets the string at a specified index within the prepared statement
+	 * @function SetString Sets the string at a specified index within the
+	 *           prepared statement
 	 * @arguments [[Number]]:index, [[String]]:value
 	 * @return nil
 	 */
-	
-	public static JavaFunction SetString = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1, LuaJavaQuery.class, "SQLQuery");
+
+	public static JavaFunction SetString = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1,
+					LuaJavaQuery.class, "SQLQuery");
 			try {
 				self.statement.setString(l.checkInteger(2), l.checkString(3));
 			} catch (SQLException e) {
@@ -61,17 +57,16 @@ public class LuaSQLQuery {
 
 	/**
 	 * @author Jake
-	 * @function SetInt
-	 * Sets the number at a specified index within the prepared statement
+	 * @function SetInt Sets the number at a specified index within the prepared
+	 *           statement
 	 * @arguments [[Number]]:index, [[Number]]:value
 	 * @return nil
 	 */
-	
-	public static JavaFunction SetInt = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1, LuaJavaQuery.class, "SQLQuery");
+
+	public static JavaFunction SetInt = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaQuery self = (LuaJavaQuery) l.checkUserdata(1,
+					LuaJavaQuery.class, "SQLQuery");
 			try {
 				self.statement.setInt(l.checkInteger(2), l.checkInteger(3));
 			} catch (SQLException e) {
@@ -80,17 +75,16 @@ public class LuaSQLQuery {
 			return 0;
 		}
 	};
-	
-	public static void Init(LuaState l)
-	{		
+
+	public static void Init(LuaState l) {
 		l.newMetatable("SQLQuery");
 		{
 			l.pushValue(-1);
 			l.setField(-2, "__index");
-			
+
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			l.pushJavaFunction(Start);
 			l.setField(-2, "Start");
 			l.pushJavaFunction(SetString);

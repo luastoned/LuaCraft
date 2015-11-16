@@ -19,47 +19,47 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
-public class LuaBlock
-{
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+public class LuaBlock {
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
 			int id = Block.getIdFromBlock(self.block);
-			int meta = Block.getStateId(self.blockWorld.getBlockState(self.getPos()));
+			int meta = Block.getStateId(self.blockWorld.getBlockState(self
+					.getPos()));
 
-			l.pushString(String.format("%s [%d, %d, %d][%d %d]", self.block.getLocalizedName(), self.x, self.z, self.y, id, meta));
+			l.pushString(String.format("%s [%d, %d, %d][%d %d]",
+					self.block.getLocalizedName(), self.x, self.z, self.y, id,
+					meta));
 			return 1;
 		}
 	};
 
-	public static JavaFunction __eq = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			LuaJavaBlock other = (LuaJavaBlock) l.checkUserdata(2, LuaJavaBlock.class, "Block");
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
+			LuaJavaBlock other = (LuaJavaBlock) l.checkUserdata(2,
+					LuaJavaBlock.class, "Block");
 
-			l.pushBoolean(self.x == other.x && self.y == other.y && self.z == other.z && self.blockWorld == other.blockWorld);
+			l.pushBoolean(self.x == other.x && self.y == other.y
+					&& self.z == other.z && self.blockWorld == other.blockWorld);
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function GetPos
-	 * Return the position
+	 * @function GetPos Return the position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
 
-	public static JavaFunction GetPos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction GetPos = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
 			Vector pos = new Vector(self.x, self.z, self.y);
 			pos.push(l);
@@ -69,29 +69,25 @@ public class LuaBlock
 
 	/**
 	 * @author Gregor
-	 * @function SetPos
-	 * Set the position
+	 * @function SetPos Set the position
 	 * @arguments [[Vector]]:vec OR [ [[Number]]:x, [[Number]]:y, [[Number]]:z ]
 	 * @return nil
 	 */
 
-	public static JavaFunction SetPos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction SetPos = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
-			int x,y,z;
+			int x, y, z;
 
-			if (l.isUserdata(2, Vector.class))
-			{
-				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class, "Vector");
+			if (l.isUserdata(2, Vector.class)) {
+				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class,
+						"Vector");
 				x = (int) thisVec.x;
 				y = (int) thisVec.y;
 				z = (int) thisVec.z;
-			}
-			else
-			{
+			} else {
 				x = l.checkInteger(2, 0);
 				y = l.checkInteger(3, 0);
 				z = l.checkInteger(4, 0);
@@ -111,17 +107,15 @@ public class LuaBlock
 
 	/**
 	 * @author Gregor
-	 * @function GetID
-	 * Return the block id
+	 * @function GetID Return the block id
 	 * @arguments nil
 	 * @return [[Number]]:id
 	 */
 
-	public static JavaFunction GetID = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction GetID = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 			int id = Block.getIdFromBlock(self.block);
 			l.pushInteger(id);
 			return 1;
@@ -130,19 +124,17 @@ public class LuaBlock
 
 	/**
 	 * @author Gregor
-	 * @function SetID
-	 * Set the block id
+	 * @function SetID Set the block id
 	 * @arguments [[Number]]:id
 	 * @return nil
 	 */
 
-	public static JavaFunction SetID = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction SetID = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
-			int id = l.checkInteger(2, 0);	
+			int id = l.checkInteger(2, 0);
 			IBlockState meta = Block.getStateById(id);
 			self.blockWorld.setBlockState(self.getPos(), meta, 3);
 			return 0;
@@ -151,35 +143,32 @@ public class LuaBlock
 
 	/**
 	 * @author Gregor
-	 * @function GetMeta
-	 * Return the block meta value
+	 * @function GetMeta Return the block meta value
 	 * @arguments nil
 	 * @return [[Number]]:meta
 	 */
 
-	public static JavaFunction GetMeta = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushInteger(Block.getStateId(self.blockWorld.getBlockState(self.getPos())));
+	public static JavaFunction GetMeta = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
+			l.pushInteger(Block.getStateId(self.blockWorld.getBlockState(self
+					.getPos())));
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function SetMeta
-	 * Set the block meta value
+	 * @function SetMeta Set the block meta value
 	 * @arguments [[Number]]:meta
 	 * @return nil
 	 */
 
-	public static JavaFunction SetMeta = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction SetMeta = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
 			int metaID = l.checkInteger(2, 0);
 			IBlockState meta = Block.getStateById(metaID);
@@ -190,17 +179,15 @@ public class LuaBlock
 
 	/**
 	 * @author Gregor
-	 * @function GetClass
-	 * Return the classname
+	 * @function GetClass Return the classname
 	 * @arguments nil
 	 * @return [[String]]:class
 	 */
 
-	public static JavaFunction GetClass = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction GetClass = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 			l.pushString(self.block.getUnlocalizedName());
 			return 1;
 		}
@@ -208,17 +195,15 @@ public class LuaBlock
 
 	/**
 	 * @author Jake
-	 * @function GetName
-	 * Return the human readable name
+	 * @function GetName Return the human readable name
 	 * @arguments nil
 	 * @return [[String]]:name
 	 */
 
-	public static JavaFunction GetName = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction GetName = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 			l.pushString(self.block.getLocalizedName());
 			return 1;
 		}
@@ -226,37 +211,37 @@ public class LuaBlock
 
 	/**
 	 * @author Matt
-	 * @function GetBiome
-	 * Get the biome name the block rests in.
+	 * @function GetBiome Get the biome name the block rests in.
 	 * @arguments nil
 	 * @return [[String]]:biome
 	 */
 
-	public static JavaFunction GetBiome = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.blockWorld.getWorldChunkManager().getBiomeGenAt(null, self.x, self.z, 0, 0, false).toString());
+	public static JavaFunction GetBiome = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
+			l.pushString(self.blockWorld.getWorldChunkManager()
+					.getBiomeGenAt(null, self.x, self.z, 0, 0, false)
+					.toString());
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function Break
-	 * Break the block
+	 * @function Break Break the block
 	 * @arguments [[Number]]:chance
 	 * @return nil
 	 */
 
-	public static JavaFunction Break = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction Break = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 
-			self.block.dropBlockAsItemWithChance(self.blockWorld, self.getPos(), (IBlockState) self.getState(), (float) l.checkNumber(2,1), 0);
+			self.block.dropBlockAsItemWithChance(self.blockWorld,
+					self.getPos(), (IBlockState) self.getState(),
+					(float) l.checkNumber(2, 1), 0);
 			self.blockWorld.setBlockToAir(self.getPos());
 			return 0;
 		}
@@ -264,18 +249,17 @@ public class LuaBlock
 
 	/**
 	 * @author Jake
-	 * @function DropItem
-	 * Drop an item in place of the block
+	 * @function DropItem Drop an item in place of the block
 	 * @arguments [[ItemStack]]:item
 	 * @return nil
 	 */
 
-	public static JavaFunction DropItem = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack");
+	public static JavaFunction DropItem = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
+			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class,
+					"ItemStack");
 			self.block.spawnAsEntity(self.blockWorld, self.getPos(), item);
 			return 0;
 		}
@@ -283,17 +267,15 @@ public class LuaBlock
 
 	/**
 	 * @author Jake
-	 * @function GetContainer
-	 * Get's the container object for the block
+	 * @function GetContainer Get's the container object for the block
 	 * @arguments nil
 	 * @return [[Container]]:inv
 	 */
 
-	public static JavaFunction GetContainer = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction GetContainer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 			TileEntity tile = self.blockWorld.getTileEntity(self.getPos());
 			if (tile instanceof IInventory) {
 				l.pushUserdataWithMeta(tile, "Container");
@@ -305,23 +287,21 @@ public class LuaBlock
 
 	/**
 	 * @author Jake
-	 * @function GetSignText
-	 * Get's a table of each line on the sign
+	 * @function GetSignText Get's a table of each line on the sign
 	 * @arguments nil
 	 * @return [[Table]]:text
 	 */
 
-	public static JavaFunction GetSignText = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			TileEntitySign tile = (TileEntitySign) self.blockWorld.getTileEntity(self.getPos());
+	public static JavaFunction GetSignText = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
+			TileEntitySign tile = (TileEntitySign) self.blockWorld
+					.getTileEntity(self.getPos());
 
 			l.newTable();
 
-			for (int i = 0; i < tile.signText.length; i++)
-			{
+			for (int i = 0; i < tile.signText.length; i++) {
 				l.pushInteger(i + 1);
 				l.pushString(tile.signText[i].getUnformattedTextForChat());
 				l.setTable(-3);
@@ -330,18 +310,17 @@ public class LuaBlock
 		}
 	};
 
-	private static String getSignTextFromTable(LuaState l)
-	{
+	private static String getSignTextFromTable(LuaState l) {
 		StringBuilder line = new StringBuilder();
 
 		l.pushNil();
 
-		while(l.next(-2))
-		{
+		while (l.next(-2)) {
 			StringBuilder out = new StringBuilder();
 
 			if (l.type(-1) == LuaType.NUMBER) {
-				EnumChatFormatting format = EnumChatFormatting.values()[ l.toInteger(-1) ];
+				EnumChatFormatting format = EnumChatFormatting.values()[l
+						.toInteger(-1)];
 				out.append(format);
 			} else
 				out.append(l.toString(-1));
@@ -356,25 +335,23 @@ public class LuaBlock
 
 	/**
 	 * @author Jake
-	 * @function SetSignText
-	 * Get's a table of each line on the sign
+	 * @function SetSignText Get's a table of each line on the sign
 	 * @arguments [[Table]]:text
 	 * @return nil
 	 */
 
-	public static JavaFunction SetSignText = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
+	public static JavaFunction SetSignText = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1,
+					LuaJavaBlock.class, "Block");
 			l.checkType(2, LuaType.TABLE);
 
-			TileEntitySign tile = (TileEntitySign) self.blockWorld.getTileEntity(self.getPos());
+			TileEntitySign tile = (TileEntitySign) self.blockWorld
+					.getTileEntity(self.getPos());
 
 			l.pushNil();
 
-			while(l.next(2))
-			{
+			while (l.next(2)) {
 				StringBuilder out = new StringBuilder();
 
 				if (l.isTable(-1))
@@ -382,7 +359,8 @@ public class LuaBlock
 				else
 					out.append(l.toString(-1));
 
-				tile.signText[ l.toInteger(-2) ] = new ChatComponentText(out.toString());
+				tile.signText[l.toInteger(-2)] = new ChatComponentText(
+						out.toString());
 
 				l.pop(1); // Pop the value, keep the key
 			}
@@ -390,8 +368,7 @@ public class LuaBlock
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Block");
 		{
 			l.pushJavaFunction(__tostring);

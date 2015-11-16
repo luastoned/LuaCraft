@@ -27,48 +27,48 @@ import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 public class LuaLibUtil {
 
-	public static String base64encode(String str)
-	{
+	public static String base64encode(String str) {
 		return Base64.encode(str.getBytes());
 	}
 
-	public static byte[] base64decode(String str)
-	{
+	public static byte[] base64decode(String str) {
 		return Base64.decode(str);
 	}
-	
-	public static byte[] compress(String str) throws IOException
-	{
+
+	public static byte[] compress(String str) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		GZIPOutputStream gzip = new GZIPOutputStream(out);
 		gzip.write(str.getBytes());
 		gzip.close();
-		
+
 		byte[] ret = out.toByteArray();
 		out.close();
-		
+
 		return ret;
 	}
 
 	public static String decompress(byte[] bytes) throws IOException {
-		GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(bytes));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(gzip, "UTF-8"));
-		
+		GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(
+				bytes));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(gzip,
+				"UTF-8"));
+
 		StringBuilder out = new StringBuilder();
 		String line;
-		
+
 		while ((line = reader.readLine()) != null)
 			out.append(line);
-		
+
 		gzip.close();
 		reader.close();
-		
+
 		return out.toString();
 	}
 
-	public static void pushTrace(LuaState l, World world, Vector start, Vector endpos, boolean hitWater)
-	{
-		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(), endpos.toVec3(), hitWater);
+	public static void pushTrace(LuaState l, World world, Vector start,
+			Vector endpos, boolean hitWater) {
+		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(),
+				endpos.toVec3(), hitWater);
 
 		l.newTable();
 
@@ -94,7 +94,8 @@ public class LuaLibUtil {
 				LuaUserdataManager.PushUserdata(l, trace.entityHit);
 				l.setField(-2, "HitEntity");
 			} else {
-				LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
+				LuaJavaBlock thisBlock = new LuaJavaBlock(world,
+						trace.getBlockPos());
 				LuaUserdataManager.PushUserdata(l, thisBlock);
 				l.setField(-2, "HitBlock");
 
@@ -107,16 +108,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function CRC32
-	 * Get a CRC32-bit number of a string
+	 * @function CRC32 Get a CRC32-bit number of a string
 	 * @arguments nil
 	 * @return [[Number]]:crc32
 	 */
 
-	public static JavaFunction CRC32 = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction CRC32 = new JavaFunction() {
+		public int invoke(LuaState l) {
 			CRC32 crc = new CRC32();
 			crc.update(l.checkByteArray(1));
 			l.pushNumber(crc.getValue());
@@ -127,18 +125,15 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Encrypt
-	 * Encrypt a string using the specified algorithm
-	 * Defaults to MD5
+	 * @function Encrypt Encrypt a string using the specified algorithm Defaults
+	 *           to MD5
 	 * @arguments [[String]]:input, [ [[String]]:algorithm ]
 	 * @return [[String]]:encrypted
 	 */
 
-	public static JavaFunction Encrypt = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			String mode = l.checkString(2,"MD5");
+	public static JavaFunction Encrypt = new JavaFunction() {
+		public int invoke(LuaState l) {
+			String mode = l.checkString(2, "MD5");
 			MessageDigest ecrypt;
 			try {
 				ecrypt = MessageDigest.getInstance(mode);
@@ -154,16 +149,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Base64Encode
-	 * Encode a string to Base64
+	 * @function Base64Encode Encode a string to Base64
 	 * @arguments nil
 	 * @return [[String]]:data
 	 */
 
-	public static JavaFunction Base64Encode = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Base64Encode = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushString(base64encode(l.checkString(1)));
 			return 1;
 		}
@@ -172,16 +164,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Base64Decode
-	 * Decode Base64 encoded data back to a string
+	 * @function Base64Decode Decode Base64 encoded data back to a string
 	 * @arguments nil
 	 * @return [[String]]:string
 	 */
 
-	public static JavaFunction Base64Decode = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Base64Decode = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushByteArray(base64decode(l.checkString(1)));
 			return 1;
 		}
@@ -190,16 +179,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Compress
-	 * Compress a string using GZIP
+	 * @function Compress Compress a string using GZIP
 	 * @arguments nil
 	 * @return [[String]]:data
 	 */
 
-	public static JavaFunction Compress = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Compress = new JavaFunction() {
+		public int invoke(LuaState l) {
 			try {
 				l.pushByteArray(compress(l.checkString(1)));
 			} catch (IOException e) {
@@ -212,16 +198,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Decompress
-	 * Decompress a string using GZIP
+	 * @function Decompress Decompress a string using GZIP
 	 * @arguments nil
 	 * @return [[String]]:string
 	 */
 
-	public static JavaFunction Decompress = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Decompress = new JavaFunction() {
+		public int invoke(LuaState l) {
 			try {
 				l.pushString(decompress(l.checkByteArray(1)));
 			} catch (IOException e) {
@@ -234,16 +217,13 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function GetOS
-	 * Get the name of the OS
+	 * @function GetOS Get the name of the OS
 	 * @arguments nil
 	 * @return [[String]]:os
 	 */
 
-	public static JavaFunction GetOS = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetOS = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushString(System.getProperty("os.name"));
 			return 1;
 		}
@@ -252,23 +232,19 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function GetArchitecture
-	 * Get the architecture of the computer
+	 * @function GetArchitecture Get the architecture of the computer
 	 * @arguments nil
 	 * @return [[String]]:arch
 	 */
 
-	public static JavaFunction GetArchitecture = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetArchitecture = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushString(System.getProperty("os.arch"));
 			return 1;
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		l.newTable();
 		{
 			l.pushJavaFunction(CRC32);

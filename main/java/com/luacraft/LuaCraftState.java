@@ -21,122 +21,102 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
 
-public class LuaCraftState extends LuaState
-{
+public class LuaCraftState extends LuaState {
 	private boolean scriptEnforcer = false;
 	private Side sideOverride = null;
 
-	public void setSideOverride(Side side)
-	{
+	public void setSideOverride(Side side) {
 		sideOverride = side;
 	}
-	
-	public Side getSideOverride()
-	{
+
+	public Side getSideOverride() {
 		return sideOverride;
 	}
 
-	public Side getSide()
-	{
+	public Side getSide() {
 		if (sideOverride != null)
 			return sideOverride;
 
 		return getActualSide();
 	}
 
-	public Side getActualSide()
-	{
+	public Side getActualSide() {
 		return FMLCommonHandler.instance().getEffectiveSide();
 	}
 
-	public FMLClientHandler getForgeClient()
-	{
+	public FMLClientHandler getForgeClient() {
 		return FMLClientHandler.instance();
 	}
 
-	public FMLServerHandler getForgeServer()
-	{
+	public FMLServerHandler getForgeServer() {
 		return FMLServerHandler.instance();
 	}
 
-	public Minecraft getMinecraft()
-	{
+	public Minecraft getMinecraft() {
 		return getForgeClient().getClient();
 	}
 
-	public MinecraftServer getMinecraftServer()
-	{
+	public MinecraftServer getMinecraftServer() {
 		if (getSide().isClient())
 			return getForgeClient().getServer();
 		else
 			return getForgeServer().getServer();
 	}
 
-	public void getLoadedAddons()
-	{
+	public void getLoadedAddons() {
 		// TODO: Addon list
 	}
 
-	public void print(String str)
-	{
+	public void print(String str) {
 		LuaCraft.getLogger().info(str);
 	}
 
-	public void error(String str)
-	{
+	public void error(String str) {
 		LuaCraft.getLogger().error(str);
 	}
 
-	public void info(String str)
-	{
+	public void info(String str) {
 		LuaCraft.getLogger().info(str);
 	}
 
-	public void warning(String str)
-	{
+	public void warning(String str) {
 		LuaCraft.getLogger().warn(str);
 	}
 
-	public String traceback(String message)
-	{		
+	public String traceback(String message) {
 		getGlobal("debug");
 		getField(-1, "traceback");
 		remove(-2);
 
 		pushString(message);
 		pushInteger(1);
-		call(2,1);
+		call(2, 1);
 
 		String trace = toString(1);
 		pop(1);
 		return trace;
 	}
 
-	public void handleException(Exception e)
-	{
+	public void handleException(Exception e) {
 		String error = e.getMessage();
 		error(traceback(error));
 		e.printStackTrace();
 	}
 
-	public void pushHookCall()
-	{
+	public void pushHookCall() {
 		getGlobal("hook");
 		getField(-1, "Call");
 		remove(-2);
 	}
 
-	public void pushIncomingNet()
-	{
+	public void pushIncomingNet() {
 		getGlobal("net");
 		getField(-1, "Incoming");
 		remove(-2);
 	}
 
-	public void pushFace(EnumFacing face)
-	{
-		switch (face)
-		{
+	public void pushFace(EnumFacing face) {
+		switch (face) {
 		case DOWN:
 			new Vector(0, 0, -1).push(this);
 			break;
@@ -161,35 +141,32 @@ public class LuaCraftState extends LuaState
 		}
 	}
 
-	public void autorun(String side)
-	{
-		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/"+side);
-		
-		for (File file: files)
+	public void autorun(String side) {
+		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side);
+
+		for (File file : files)
 			includeFile(file);
 	}
 
-	public void includeDirectory(String base)
-	{
-		ArrayList<File> files = FileMount.GetFilesIn("lua/"+base);
+	public void includeDirectory(String base) {
+		ArrayList<File> files = FileMount.GetFilesIn("lua/" + base);
 
-		for (File file: files)
+		for (File file : files)
 			includeFiles(file);
 	}
 
-	public void includeFiles(File base)
-	{
-		for (File file : base.listFiles())
-		{
+	public void includeFiles(File base) {
+		for (File file : base.listFiles()) {
 			if (!file.getName().endsWith(".lua"))
 				continue;
-	
+
 			InputStream in = null;
 			try {
 				in = new FileInputStream(file);
 				includeFileStream(in, file.getName());
 			} catch (FileNotFoundException e) {
-				throw new LuaRuntimeException("Cannot open " + file + ": No such file or directory");
+				throw new LuaRuntimeException("Cannot open " + file
+						+ ": No such file or directory");
 			} catch (Exception e) {
 				handleException(e);
 			} finally {
@@ -202,14 +179,14 @@ public class LuaCraftState extends LuaState
 		}
 	}
 
-	public void includePackedFile(String file)
-	{
+	public void includePackedFile(String file) {
 		InputStream in = null;
 		try {
 			in = LuaCraft.getPackedFileInputStream(file);
 			includeFileStream(in, file);
 		} catch (FileNotFoundException e) {
-			throw new LuaRuntimeException("Cannot open " + file + ": No such file or directory");
+			throw new LuaRuntimeException("Cannot open " + file
+					+ ": No such file or directory");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -220,25 +197,25 @@ public class LuaCraftState extends LuaState
 			}
 		}
 	}
-	
-	public void includeFile(File file)
-	{
+
+	public void includeFile(File file) {
 		if (!file.getName().endsWith(".lua"))
 			return;
-		
+
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
 			includeFileStream(in, file.getName());
 		} catch (FileNotFoundException e) {
-			throw new LuaRuntimeException("Cannot open " + file.getName() + ": No such file or directory");
+			throw new LuaRuntimeException("Cannot open " + file.getName()
+					+ ": No such file or directory");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void includeFileStream(InputStream in, String file) throws IOException
-	{
+	public void includeFileStream(InputStream in, String file)
+			throws IOException {
 		print("Loading: " + file);
 		load(in, file);
 		call(0, 0);

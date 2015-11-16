@@ -6,21 +6,17 @@ import org.lwjgl.input.Mouse;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaLibInput
-{
+public class LuaLibInput {
 	/**
 	 * @author Jake
 	 * @library input
-	 * @function IsKeyDown
-	 * Returns if the specified key is being pressed
+	 * @function IsKeyDown Returns if the specified key is being pressed
 	 * @arguments nil
 	 * @return [[Boolean]]:isdown
 	 */
 
-	public static JavaFunction IsKeyDown = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsKeyDown = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(Keyboard.isKeyDown(l.checkInteger(1)));
 			return 1;
 		}
@@ -29,23 +25,20 @@ public class LuaLibInput
 	/**
 	 * @author Gregor
 	 * @library input
-	 * @function IsMouseDown
-	 * Returns if the specified mouse button is being pressed
+	 * @function IsMouseDown Returns if the specified mouse button is being
+	 *           pressed
 	 * @arguments nil
 	 * @return [[Boolean]]:isdown
 	 */
 
-	public static JavaFunction IsMouseDown = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsMouseDown = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.pushBoolean(Mouse.isButtonDown(l.checkInteger(1)));
 			return 1;
 		}
 	};
 
-	public static void Init(final LuaState l)
-	{
+	public static void Init(final LuaState l) {
 		l.newTable();
 		{
 			l.pushJavaFunction(IsKeyDown);

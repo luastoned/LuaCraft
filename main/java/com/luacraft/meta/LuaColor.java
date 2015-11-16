@@ -6,23 +6,18 @@ import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaColor
-{
-	
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+public class LuaColor {
+
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
 			l.pushString(self.toString());
 			return 1;
 		}
 	};
-	
-	public static JavaFunction __index = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction __index = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
 			String key = l.checkString(2);
 
@@ -34,8 +29,7 @@ public class LuaColor
 				l.pushNumber(self.b);
 			else if (key.equals("a"))
 				l.pushNumber(self.a);
-			else
-			{
+			else {
 				l.newMetatable("Color");
 				l.pushString(key);
 				l.rawGet(-2);
@@ -45,10 +39,8 @@ public class LuaColor
 		}
 	};
 
-	public static JavaFunction __newindex = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __newindex = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
 			String key = l.checkString(2);
 			int val = l.toInteger(3);
@@ -65,11 +57,9 @@ public class LuaColor
 			return 0;
 		}
 	};
-	
-	public static JavaFunction __eq = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
 			Color other = (Color) l.checkUserdata(2, Color.class, "Color");
 			l.pushBoolean(self.equals(other));
@@ -77,10 +67,8 @@ public class LuaColor
 		}
 	};
 
-	public static JavaFunction __add = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __add = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
 			Color other = (Color) l.checkUserdata(2, Color.class, "Color");
 			self.add(other).push(l);
@@ -88,10 +76,8 @@ public class LuaColor
 		}
 	};
 
-	public static JavaFunction __sub = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __sub = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Vector.class, "Color");
 			Color other = (Color) l.checkUserdata(2, Vector.class, "Color");
 			self.sub(other).push(l);
@@ -99,18 +85,14 @@ public class LuaColor
 		}
 	};
 
-	public static JavaFunction __mul = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __mul = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
-			if (l.isUserdata(2, Vector.class))
-			{
+			if (l.isUserdata(2, Vector.class)) {
 				Color other = (Color) l.checkUserdata(2, Color.class, "Color");
 				self.mul(other).push(l);
 				return 1;
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				self.mul(other).push(l);
 				return 1;
@@ -119,18 +101,14 @@ public class LuaColor
 		}
 	};
 
-	public static JavaFunction __div = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __div = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Color self = (Color) l.checkUserdata(1, Color.class, "Color");
-			if (l.isUserdata(2, Color.class))
-			{
+			if (l.isUserdata(2, Color.class)) {
 				Color other = (Color) l.checkUserdata(2, Color.class, "Color");
 				self.div(other).push(l);
 				return 1;
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				self.div(other).push(l);
 				return 1;
@@ -138,17 +116,16 @@ public class LuaColor
 			return 0;
 		}
 	};
-	
-	public static void Init(final LuaCraftState l)
-	{		
+
+	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Color");
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
-			
+
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
 

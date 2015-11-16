@@ -8,13 +8,11 @@ import com.naef.jnlua.LuaUserdata;
 
 import net.minecraftforge.fml.relauncher.Side;
 
-public class LuaJavaThread extends Thread implements LuaUserdata
-{
+public class LuaJavaThread extends Thread implements LuaUserdata {
 	private LuaCraftState l = null;
 	private File file = null;
 
-	public LuaJavaThread(LuaCraftState state, String f)
-	{
+	public LuaJavaThread(LuaCraftState state, String f) {
 		l = new LuaCraftState();
 		file = new File(f);
 
@@ -22,14 +20,12 @@ public class LuaJavaThread extends Thread implements LuaUserdata
 			LuaCraft.clientLibs.Initialize(l);
 		else
 			LuaCraft.serverLibs.Initialize(l);
-		
+
 		l.setSideOverride(state.getSide());
 	}
 
-	public void run()
-	{
-		if (l.isOpen())
-		{
+	public void run() {
+		if (l.isOpen()) {
 			try {
 				l.includeFile(file);
 			} catch (Exception e) {

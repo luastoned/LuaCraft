@@ -15,39 +15,34 @@ import com.luacraft.meta.client.LuaFont;
 import com.luacraft.meta.client.LuaModelResource;
 import com.luacraft.meta.client.LuaVector;
 
-public class LuaClient extends LuaShared
-{
+public class LuaClient extends LuaShared {
 	private static LuaEventManagerClient luaEvent = null;
 
-	public void Initialize(final LuaCraftState l)
-	{
+	public void Initialize(final LuaCraftState l) {
 		luaEvent = new LuaEventManagerClient(l);
 		super.Initialize(l);
-		
+
 		LoadLibraries(l);
 
 		MinecraftForge.EVENT_BUS.register(luaEvent);
 		FMLCommonHandler.instance().bus().register(luaEvent);
 	}
-	
-	public void Autorun(final LuaCraftState l)
-	{
+
+	public void Autorun(final LuaCraftState l) {
 		super.Autorun(l);
 		l.autorun("client"); // Load all files within autorun/client
 	}
 
-	public void Shutdown()
-	{
+	public void Shutdown() {
 		MinecraftForge.EVENT_BUS.unregister(luaEvent);
 		FMLCommonHandler.instance().bus().unregister(luaEvent);
 		luaEvent = null;
 		super.Shutdown();
 	}
 
-	private static void LoadLibraries(final LuaCraftState l)
-	{
+	private static void LoadLibraries(final LuaCraftState l) {
 		l.print("Loading Client LuaState...");
-		
+
 		// Libs
 		LuaGlobals.Init(l);
 		LuaLibGame.Init(l);

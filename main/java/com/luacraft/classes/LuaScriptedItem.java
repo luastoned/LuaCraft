@@ -25,69 +25,60 @@ import com.naef.jnlua.LuaUserdata;
 
 public class LuaScriptedItem extends Item implements LuaUserdata {
 	public LuaState l;
-	
-	public LuaScriptedItem(LuaState l){
+
+	public LuaScriptedItem(LuaState l) {
 		this.l = l;
 	}
-	
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			LuaScriptedItem self = (LuaScriptedItem) l.checkUserdata(1, LuaScriptedItem.class, "ScriptedItem");
+
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaScriptedItem self = (LuaScriptedItem) l.checkUserdata(1,
+					LuaScriptedItem.class, "ScriptedItem");
 			l.pushString(String.format("ScriptedItem: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
 	};
-	
-	public static JavaFunction Register = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction Register = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.checkType(1, LuaType.TABLE);
 			String classname = l.checkString(2);
-			
+
 			LuaScriptedItem item = new LuaScriptedItem(l);
 			item.setUnlocalizedName(classname);
-			
+
 			l.newMetatable("ScriptedItemsRegistry");
 			l.pushString(item.getUnlocalizedName());
 			l.pushValue(1);
 			l.setTable(-3);
-			
+
 			GameRegistry.registerItem(item, classname);
 			return 0;
 		}
 	};
-	
-	public static JavaFunction GetTable = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction GetTable = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.newMetatable("ScriptedItemsRegistry");
 			return 1;
 		}
 	};
-	
-	public static JavaFunction Get = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction Get = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.newMetatable("ScriptedItemsRegistry");
 			l.getField(-1, l.checkString(1));
 			return 1;
 		}
 	};
-	
-	public static JavaFunction dummyFunc = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction dummyFunc = new JavaFunction() {
+		public int invoke(LuaState l) {
 			return 0;
 		}
 	};
-	
-	public static void Init(LuaState l ) {
+
+	public static void Init(LuaState l) {
 
 		l.pushInteger(EnumAction.NONE.ordinal());
 		l.setGlobal("ITEM_ACTION_NONE");
@@ -101,14 +92,14 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 		l.setGlobal("ITEM_ACTION_BOW");
 
 		l.pushInteger(EnumRarity.COMMON.ordinal());
-		l.setGlobal("ITEM_RARITY_DRINK");
+		l.setGlobal("ITEM_RARITY_COMMON");
 		l.pushInteger(EnumRarity.UNCOMMON.ordinal());
-		l.setGlobal("ITEM_RARITY_BLOCK");
+		l.setGlobal("ITEM_RARITY_UNCOMMON");
 		l.pushInteger(EnumRarity.RARE.ordinal());
-		l.setGlobal("ITEM_RARITY_BOW");
+		l.setGlobal("ITEM_RARITY_RARE");
 		l.pushInteger(EnumRarity.EPIC.ordinal());
-		l.setGlobal("ITEM_RARITY_BOW");
-		
+		l.setGlobal("ITEM_RARITY_EPIC");
+
 		l.newMetatable("ScriptedItem");
 		{
 			l.pushJavaFunction(__tostring);
@@ -124,6 +115,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setField(-2, "UseAction");
 			l.pushInteger(0);
 			l.setField(-2, "UseDuration");
+			l.pushInteger(EnumRarity.COMMON.ordinal());
+			l.setField(-2, "Rarity");
 			l.pushInteger(6000);
 			l.setField(-2, "Lifespan");
 
@@ -151,7 +144,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setField(-2, "OnDroppedByPlayer");
 		}
 		l.pop(1);
-		
+
 		l.newTable();
 		{
 			l.pushJavaFunction(Register);
@@ -162,28 +155,27 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setField(-2, "Get");
 		}
 		l.setGlobal("item");
-		
+
 		l.newMetatable("ScriptedItemsRegistry");
 		l.pop(1);
 	}
-	
+
 	@Override
 	public String getTypeName() {
 		return "ScriptedItem";
 	}
-	
-	private void pushSelf()
-	{
+
+	private void pushSelf() {
 		l.newMetatable("ScriptedItemsRegistry");
 		l.getField(-1, getUnlocalizedName());
 		l.remove(-2);
 	}
-	
+
 	private void pushValue(String name) {
 		pushSelf();
 		l.getField(-1, name);
 		l.remove(-2);
-		
+
 		if (l.isNil(-1)) // Fallback to metatable defaults
 		{
 			l.pop(1);
@@ -194,34 +186,45 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public int getMaxDamage(ItemStack stack)
-    {
-		pushValue("GetMaxDamage");
-		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
+	public int getMaxDamage(ItemStack stack) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getMaxDamage();
+
+			pushValue("GetMaxDamage");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+			}
+			l.call(2, 1);
+			int ret = l.toInteger(1);
+			l.setTop(0);
+			return ret;
 		}
-		l.call(2, 1);
-		int ret  = l.toInteger(1);
-		l.setTop(0);
-		return ret;
-    }
-	
+	}
+
 	@Override
 	public int getItemStackLimit(ItemStack stack) {
-		pushValue("MaxStackSize");
-		int ret = l.toInteger(-1);
-		l.pop(1);
-		return ret;
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getItemStackLimit(stack);
+
+			pushValue("MaxStackSize");
+			int ret = l.toInteger(-1);
+			l.pop(1);
+			return ret;
+		}
 	}
-	
+
 	@Override
-    @SideOnly(Side.CLIENT)
-    public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining)
-    {
-    	synchronized (l)
-		{
-	    	pushValue("GetModel");
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player,
+			int useRemaining) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getModel(stack, player, useRemaining);
+
+			pushValue("GetModel");
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
@@ -229,29 +232,34 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				l.pushInteger(useRemaining);
 			}
 			l.call(4, 1);
-			
+
 			ModelResourceLocation ret = null;
-			
+
 			if (l.isUserdata(1, ModelResourceLocation.class))
 				ret = (ModelResourceLocation) l.toUserdata(1);
-			
+
 			l.setTop(0);
 			return ret;
 		}
-    }
-	
+	}
+
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-    	synchronized (l)
-		{
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn,
+			World worldIn, BlockPos pos, EnumFacing side, float hitX,
+			float hitY, float hitZ) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onItemUse(stack, playerIn, worldIn, pos, side,
+						hitX, hitY, hitZ);
+
 			pushValue("OnItemUse");
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
 				LuaUserdataManager.PushUserdata(l, playerIn);
 				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
+				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn,
+						pos));
 				l.pushInteger(side.ordinal());
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
@@ -261,12 +269,14 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			return ret;
 		}
 	}
-	
+
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn)
-	{
-    	synchronized (l)
-		{
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn,
+			EntityPlayer playerIn) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onItemUseFinish(stack, worldIn, playerIn);
+
 			pushValue("OnItemUseFinish");
 			{
 				pushSelf();
@@ -275,22 +285,24 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				LuaUserdataManager.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
-			
+
 			ItemStack ret = stack;
-			
+
 			if (l.isUserdata(1, ItemStack.class))
 				ret = (ItemStack) l.toUserdata(1);
-			
+
 			l.setTop(0);
 			return ret;
 		}
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn)
-    {
-    	synchronized (l)
-		{
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn,
+			EntityPlayer playerIn) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onItemRightClick(itemStackIn, worldIn, playerIn);
+
 			pushValue("OnItemRightClick");
 			{
 				pushSelf();
@@ -299,22 +311,24 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				LuaUserdataManager.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
-			
+
 			ItemStack ret = itemStackIn;
-			
+
 			if (l.isUserdata(1, ItemStack.class))
 				ret = (ItemStack) l.toUserdata(1);
-			
+
 			l.setTop(0);
 			return ret;
 		}
-    }
+	}
 
 	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
-    {
-    	synchronized (l)
-		{
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player,
+			Entity entity) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onLeftClickEntity(stack, player, entity);
+
 			pushValue("OnLeftClickEntity");
 			{
 				pushSelf();
@@ -327,13 +341,15 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setTop(0);
 			return ret;
 		}
-    }
+	}
 
 	@Override
-	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
-    {
-    	synchronized (l)
-		{
+	public boolean hitEntity(ItemStack stack, EntityLivingBase target,
+			EntityLivingBase attacker) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.hitEntity(stack, target, attacker);
+
 			pushValue("OnHitEntity");
 			{
 				pushSelf();
@@ -346,13 +362,16 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setTop(0);
 			return ret;
 		}
-    }
-	
+	}
+
 	@Override
-    public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos, EntityLivingBase playerIn)
-    {
-		synchronized (l)
-		{
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn,
+			Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onBlockDestroyed(stack, worldIn, blockIn, pos,
+						playerIn);
+
 			pushValue("OnBlockDestroyed");
 			{
 				pushSelf();
@@ -366,13 +385,15 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setTop(0);
 			return ret;
 		}
-    }
+	}
 
 	@Override
-    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target)
-    {
-		synchronized (l)
-		{
+	public boolean itemInteractionForEntity(ItemStack stack,
+			EntityPlayer playerIn, EntityLivingBase target) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.itemInteractionForEntity(stack, playerIn, target);
+
 			pushValue("CanInteractWithEntity");
 			{
 				pushSelf();
@@ -385,120 +406,154 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.setTop(0);
 			return ret;
 		}
-    }
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public boolean isFull3D()
-    {
-		pushValue("Full3D");
-		boolean ret = l.toBoolean(-1);
-		l.pop(1);
-        return ret;
-    }
-	
-	@Override
-    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
-	{
-		pushValue("OnUpdate");
-		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, worldIn);
-			LuaUserdataManager.PushUserdata(l, entityIn);
-			l.pushInteger(itemSlot);
-			l.pushBoolean(isSelected);
-		}
-		l.call(6, 0);
 	}
 
 	@Override
-    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
-	{
-		pushValue("OnCreated");
-		{
-			pushSelf();
-			l.pushUserdataWithMeta(stack, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, worldIn);
-			LuaUserdataManager.PushUserdata(l, playerIn);
+	@SideOnly(Side.CLIENT)
+	public boolean isFull3D() {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.isFull3D();
+
+			pushValue("Full3D");
+			boolean ret = l.toBoolean(-1);
+			l.pop(1);
+			return ret;
 		}
-		l.call(4, 0);
 	}
 
 	@Override
-	public EnumAction getItemUseAction(ItemStack stack)
-    {
-		pushValue("UseAction");
-		int ret = l.toInteger(-1);
-		l.pop(1);
-		
-		switch(ret) {
-        case 0:
-            return EnumAction.NONE;
-        case 1:
-            return EnumAction.EAT;
-        case 2:
-            return EnumAction.DRINK;
-        case 3:
-            return EnumAction.BLOCK;
-        case 4:
-            return EnumAction.BOW;
-        }
-		
-		return EnumAction.values()[ret];
-    }
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn,
+			int itemSlot, boolean isSelect
+			l.pushInteger(EnumRarity.COMMON.ordinal());
+			l.setField(-2, "Rarity");ed) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
 
-	@Override
-    public int getMaxItemUseDuration(ItemStack stack)
-    {
-		pushValue("UseDuration");
-		int ret = l.toInteger(-1);
-		l.pop(1);
-        return ret;
-    }
-	
-
-    public EnumRarity getRarity(ItemStack stack)
-    {
-    	pushValue("Rarity");
-		int ret = l.toInteger(-1);
-		l.pop(1);
-		
-		switch(ret) {
-	    case 0:
-	        return EnumRarity.COMMON;
-	    case 1:
-	        return EnumRarity.UNCOMMON;
-	    case 2:
-	        return EnumRarity.RARE;
-	    case 3:
-	        return EnumRarity.EPIC;
-	    }
-		
-		return EnumRarity.values()[ret];
-    }
-    
-	@Override
-	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
-	{
-		pushValue("OnDroppedByPlayer");
-		{
-			pushSelf();
-			l.pushUserdataWithMeta(item, "ItemStack");
-			LuaUserdataManager.PushUserdata(l, player);
+			pushValue("OnUpdate");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, entityIn);
+				l.pushInteger(itemSlot);
+				l.pushBoolean(isSelected);
+			}
+			l.call(6, 0);
 		}
-		l.call(3, 1);
-		boolean ret = l.toBoolean(1);
-		l.pop(1);
-		return ret;
 	}
 
 	@Override
-    public int getEntityLifespan(ItemStack itemStack, World world)
-    {
-		pushValue("Lifespan");
-		int ret = l.toInteger(-1);
-		l.pop(1);
-        return ret;
-    }
+	public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			pushValue("OnCreated");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(stack, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, worldIn);
+				LuaUserdataManager.PushUserdata(l, playerIn);
+			}
+			l.call(4, 0);
+		}
+	}
+
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getItemUseAction(stack);
+
+			pushValue("UseAction");
+			int ret = l.toInteger(-1);
+			l.pop(1);
+
+			switch (ret) {
+			case 0:
+				return EnumAction.NONE;
+			case 1:
+				return EnumAction.EAT;
+			case 2:
+				return EnumAction.DRINK;
+			case 3:
+				return EnumAction.BLOCK;
+			case 4:
+				return EnumAction.BOW;
+			}
+
+			return EnumAction.values()[ret];
+		}
+	}
+
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getMaxItemUseDuration(stack);
+
+			pushValue("UseDuration");
+			int ret = l.toInteger(-1);
+			l.pop(1);
+			return ret;
+		}
+	}
+
+	public EnumRarity getRarity(ItemStack stack) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getRarity(stack);
+
+			pushValue("Rarity");
+			int ret = l.toInteger(-1);
+			l.pop(1);
+
+			switch (ret) {
+			case 0:
+				return EnumRarity.COMMON;
+			case 1:
+				return EnumRarity.UNCOMMON;
+			case 2:
+				return EnumRarity.RARE;
+			case 3:
+				return EnumRarity.EPIC;
+			}
+
+			return EnumRarity.values()[ret];
+		}
+	}
+
+	@Override
+	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.onDroppedByPlayer(item, player);
+
+			pushValue("OnDroppedByPlayer");
+			{
+				pushSelf();
+				l.pushUserdataWithMeta(item, "ItemStack");
+				LuaUserdataManager.PushUserdata(l, player);
+			}
+			l.call(3, 1);
+			boolean ret = l.toBoolean(1);
+			l.pop(1);
+			return ret;
+		}
+	}
+
+	@Override
+	public int getEntityLifespan(ItemStack itemStack, World world) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return super.getEntityLifespan(itemStack, world);
+
+			pushValue("Lifespan");
+			int ret = l.toInteger(-1);
+			l.pop(1);
+			return ret;
+		}
+	}
 }

@@ -7,12 +7,12 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 /**
  * @author dmillerw
  */
-@IFMLLoadingPlugin.SortingIndex(1001) // get after deobfuscation
-public class LuaCraftLoader implements IFMLLoadingPlugin
-{
+@IFMLLoadingPlugin.SortingIndex(1001)
+// get after deobfuscation
+public class LuaCraftLoader implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] {LuaCraftAccessTransformer.class.getName()};
+		return new String[] { LuaCraftAccessTransformer.class.getName() };
 	}
 
 	@Override

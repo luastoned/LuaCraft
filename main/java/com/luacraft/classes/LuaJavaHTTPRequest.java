@@ -14,8 +14,7 @@ public class LuaJavaHTTPRequest extends Thread {
 	private int callbackRef;
 	public HttpURLConnection connection;
 
-	private int newCallbackRef(int index)
-	{
+	private int newCallbackRef(int index) {
 		int ref;
 		l.newMetatable("PendingHTTPRequests");
 		{
@@ -26,28 +25,27 @@ public class LuaJavaHTTPRequest extends Thread {
 		return ref;
 	}
 
-	public LuaJavaHTTPRequest(LuaState luaState, URL requestURL, int index) throws IOException
-	{
+	public LuaJavaHTTPRequest(LuaState luaState, URL requestURL, int index)
+			throws IOException {
 		l = luaState;
 		callbackRef = newCallbackRef(index);
 
 		connection = (HttpURLConnection) requestURL.openConnection();
 	}
 
-	public void pushCallbackFunc()
-	{
+	public void pushCallbackFunc() {
 		l.newMetatable("PendingHTTPRequests");
 		l.rawGet(-1, callbackRef);
 		l.remove(-2);
 	}
 
-	public void run()
-	{
+	public void run() {
 		synchronized (l) {
 			StringBuilder contents = new StringBuilder();
 
 			try {
-				InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+				InputStreamReader reader = new InputStreamReader(
+						connection.getInputStream());
 				BufferedReader in = new BufferedReader(reader);
 
 				String line;

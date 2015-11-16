@@ -14,8 +14,7 @@ public class LuaPacketManager {
 
 	private LuaCraftState l;
 
-	public LuaPacketManager(LuaCraftState state)
-	{
+	public LuaPacketManager(LuaCraftState state) {
 		l = state;
 	}
 
@@ -35,7 +34,7 @@ public class LuaPacketManager {
 	public void onServerPacket(ServerCustomPacketEvent event) {
 		try {
 			PacketBuffer buffer = new PacketBuffer(event.packet.payload());
-			EntityPlayerMP player = ((NetHandlerPlayServer)event.handler).playerEntity;
+			EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
 			l.pushIncomingNet();
 			l.pushUserdataWithMeta(buffer, "ByteBuf");
 			l.pushUserdataWithMeta(player, "Player");

@@ -4,13 +4,10 @@ import com.luacraft.classes.Angle;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-public class LuaAngle
-{
+public class LuaAngle {
 
-	public static JavaFunction __index = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __index = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			String key = l.checkString(2);
 
@@ -20,8 +17,7 @@ public class LuaAngle
 				l.pushNumber(self.y);
 			else if (key.equals("r"))
 				l.pushNumber(self.r);
-			else
-			{
+			else {
 				l.newMetatable("Angle");
 				l.pushString(key);
 				l.rawGet(-2);
@@ -31,10 +27,8 @@ public class LuaAngle
 		}
 	};
 
-	public static JavaFunction __newindex = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __newindex = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			String key = l.checkString(2);
 			double val = l.toNumber(3);
@@ -50,20 +44,16 @@ public class LuaAngle
 		}
 	};
 
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			l.pushString(self.toString());
 			return 1;
 		}
 	};
 
-	public static JavaFunction __eq = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			Angle other = (Angle) l.checkUserdata(2, Angle.class, "Angle");
 			l.pushBoolean(self.equals(other));
@@ -71,10 +61,8 @@ public class LuaAngle
 		}
 	};
 
-	public static JavaFunction __add = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __add = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			Angle other = (Angle) l.checkUserdata(2, Angle.class, "Angle");
 			self.copy().add(other).push(l);
@@ -82,10 +70,8 @@ public class LuaAngle
 		}
 	};
 
-	public static JavaFunction __sub = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __sub = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			Angle other = (Angle) l.checkUserdata(2, Angle.class, "Angle");
 			self.copy().sub(other).push(l);
@@ -93,18 +79,14 @@ public class LuaAngle
 		}
 	};
 
-	public static JavaFunction __mul = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __mul = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			Angle ret = self.copy();
-			if (l.isUserdata(2, Angle.class))
-			{
+			if (l.isUserdata(2, Angle.class)) {
 				Angle other = (Angle) l.checkUserdata(2, Angle.class, "Angle");
 				ret.mul(other);
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				ret.mul(other);
 			}
@@ -112,19 +94,15 @@ public class LuaAngle
 			return 1;
 		}
 	};
-	
-	public static JavaFunction __div = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+
+	public static JavaFunction __div = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			Angle ret = self.copy();
-			if (l.isUserdata(2, Angle.class))
-			{
+			if (l.isUserdata(2, Angle.class)) {
 				Angle other = (Angle) l.checkUserdata(2, Angle.class, "Angle");
 				ret.div(other).push(l);
-			} else if (l.isNumber(2))
-			{
+			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
 				ret.div(other).push(l);
 			}
@@ -135,16 +113,13 @@ public class LuaAngle
 
 	/**
 	 * @author Jake
-	 * @function Forward
-	 * Get the forward vector of an angle
+	 * @function Forward Get the forward vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:forward
 	 */
 
-	public static JavaFunction Forward = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Forward = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			self.forward().push(l);
 			return 1;
@@ -153,16 +128,13 @@ public class LuaAngle
 
 	/**
 	 * @author Jake
-	 * @function Right
-	 * Get the right vector of an angle
+	 * @function Right Get the right vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:right
 	 */
 
-	public static JavaFunction Right = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Right = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			self.right().push(l);
 			return 1;
@@ -171,29 +143,25 @@ public class LuaAngle
 
 	/**
 	 * @author Jake
-	 * @function Up
-	 * Get the upward vector of an angle
+	 * @function Up Get the upward vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:up
 	 */
 
-	public static JavaFunction Up = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Up = new JavaFunction() {
+		public int invoke(LuaState l) {
 			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
 			self.up().push(l);
 			return 1;
 		}
 	};
 
-	public static void Init(final LuaState l)
-	{		
+	public static void Init(final LuaState l) {
 		l.newMetatable("Angle");
 		{
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
-			
+
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
 

@@ -14,9 +14,8 @@ public class LuaJavaQuery extends Thread implements LuaUserdata {
 
 	private LuaState l;
 	private int callbackRef;
-	
-	private int newCallbackRef(int index)
-	{
+
+	private int newCallbackRef(int index) {
 		int ref;
 		l.newMetatable("PendingQueries");
 		{
@@ -27,40 +26,34 @@ public class LuaJavaQuery extends Thread implements LuaUserdata {
 		return ref;
 	}
 
-	public LuaJavaQuery(LuaState luaState, PreparedStatement query, int index)
-	{
+	public LuaJavaQuery(LuaState luaState, PreparedStatement query, int index) {
 		l = luaState;
 		statement = query;
 		callbackRef = newCallbackRef(index);
 	}
 
-	public void pushCallbackFunc()
-	{
+	public void pushCallbackFunc() {
 		l.newMetatable("PendingQueries");
 		l.rawGet(-1, callbackRef);
 		l.remove(-2);
 	}
 
 	public void run() {
-		synchronized (l)
-		{
+		synchronized (l) {
 			ResultSet result = null;
-			try {				
-				if (statement.execute())
-				{
+			try {
+				if (statement.execute()) {
 					l.newTable();
 
 					int row = 1;
 					result = statement.getResultSet();
-					while (result.next())
-					{
+					while (result.next()) {
 						ResultSetMetaData data = result.getMetaData();
 
 						l.pushInteger(row++);
 						l.newTable();
 
-						for (int i=0; i < data.getColumnCount(); i++)
-						{
+						for (int i = 0; i < data.getColumnCount(); i++) {
 							int column = i + 1;
 							l.pushString(result.getString(column));
 							l.setField(-2, data.getColumnName(column));
@@ -72,27 +65,24 @@ public class LuaJavaQuery extends Thread implements LuaUserdata {
 					l.pushNil();
 
 				pushCallbackFunc();
-				if (l.isFunction(-1))
-				{
+				if (l.isFunction(-1)) {
 					l.pushValue(-2); // Push the data value
 					l.remove(-3); // Since we pushed a copy, remove the original
 					l.call(1, 0);
 				}
-			} catch (SQLException e)
-			{
+			} catch (SQLException e) {
 				pushCallbackFunc();
-				if (l.isFunction(-1))
-				{
+				if (l.isFunction(-1)) {
 					l.pushNil();
 					l.pushString(e.getMessage());
 					l.call(2, 0);
 				}
 			} finally {
-				try
-				{
+				try {
 					if (result != null)
 						result.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 				l.newMetatable("PendingQueries");
 				l.unref(-1, callbackRef);
 				l.setTop(0); // Clears the stack

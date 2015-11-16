@@ -9,26 +9,23 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
-public class LuaLibCommand
-{
+public class LuaLibCommand {
 	private static CommandHandler commandHandler = null;
-	
+
 	/**
 	 * @author Jake
 	 * @library command
-	 * @function Add
-	 * Adds a chat command
-	 * @arguments [[String]]:command, [[Function]]:callback, [ [[String]]:usage ]
+	 * @function Add Adds a chat command
+	 * @arguments [[String]]:command, [[Function]]:callback, [ [[String]]:usage
+	 *            ]
 	 * @return nil
 	 */
 
-	public static JavaFunction Add = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction Add = new JavaFunction() {
+		public int invoke(LuaState l) {
 			String commandStr = l.checkString(1);
 			l.checkType(2, LuaType.FUNCTION);
-			String usageStr = l.checkString(3,"");
+			String usageStr = l.checkString(3, "");
 
 			l.newMetatable("CommandCallbacks");
 			l.pushString(commandStr);
@@ -40,27 +37,23 @@ public class LuaLibCommand
 			return 0;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @library command
-	 * @function GetAll
-	 * Gets a table of all registered commmands
+	 * @function GetAll Gets a table of all registered commmands
 	 * @arguments nil
 	 * @return [[Table]]:commands
 	 */
 
-	public static JavaFunction GetAll = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetAll = new JavaFunction() {
+		public int invoke(LuaState l) {
 			l.newMetatable("CommandCallbacks");
 			return 1;
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		MinecraftServer server = l.getMinecraftServer();
 		commandHandler = (CommandHandler) server.getCommandManager();
 

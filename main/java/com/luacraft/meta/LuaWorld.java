@@ -22,22 +22,18 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
-public class LuaWorld
-{
-	public static JavaFunction __tostring = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+public class LuaWorld {
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushString(String.format("World [%d][%s]", self.provider.getDimensionId(), self.getWorldInfo().getWorldName()));
+			l.pushString(String.format("World [%d][%s]", self.provider
+					.getDimensionId(), self.getWorldInfo().getWorldName()));
 			return 1;
 		}
 	};
 
-	public static JavaFunction __eq = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			World other = (World) l.checkUserdata(2, World.class, "World");
 			l.pushBoolean(self == other);
@@ -47,29 +43,25 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetBlock
-	 * Get a block at position within the world
-	 * @arguments [[Vector]]:position OR [ [[Number]]:x, [[Number]]:y, [[Number]]:z ]
+	 * @function GetBlock Get a block at position within the world
+	 * @arguments [[Vector]]:position OR [ [[Number]]:x, [[Number]]:y,
+	 *            [[Number]]:z ]
 	 * @return [[Block]]:block
 	 */
 
-	public static JavaFunction GetBlock = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetBlock = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 
-			int x,y,z;
+			int x, y, z;
 
-			if (l.isUserdata(2, Vector.class))
-			{
-				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class, "Vector");
+			if (l.isUserdata(2, Vector.class)) {
+				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class,
+						"Vector");
 				x = (int) thisVec.x;
 				y = (int) thisVec.y;
 				z = (int) thisVec.z;
-			}
-			else
-			{
+			} else {
 				x = l.checkInteger(2, 0);
 				y = l.checkInteger(3, 0);
 				z = l.checkInteger(4, 0);
@@ -83,38 +75,34 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetTopBlock
-	 * Gets the topmost block within the given X,Y coordinate
+	 * @function GetTopBlock Gets the topmost block within the given X,Y
+	 *           coordinate
 	 * @arguments [[Vector]]:position OR [ [[Number]]:x, [[Number]]:y ]
 	 * @return [[Block]]:block
 	 */
 
-	public static JavaFunction GetTopBlock = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetTopBlock = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 
 			int x, y;
 
-			if (l.isUserdata(2, Vector.class))
-			{
-				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class, "Vector");
+			if (l.isUserdata(2, Vector.class)) {
+				Vector thisVec = (Vector) l.checkUserdata(2, Vector.class,
+						"Vector");
 				x = (int) thisVec.x;
 				y = (int) thisVec.y;
-			}
-			else
-			{
+			} else {
 				x = l.checkInteger(2, 0);
 				y = l.checkInteger(3, 0);
 			}
 
 			int k = 63;
 
-			while(!self.isAirBlock(new BlockPos(x, k+1, y)))
+			while (!self.isAirBlock(new BlockPos(x, k + 1, y)))
 				k++;
 
-			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, k, y);			
+			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, k, y);
 			LuaUserdataManager.PushUserdata(l, thisBlock);
 			return 1;
 		}
@@ -122,23 +110,19 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetPlayers
-	 * Get all players within the world
+	 * @function GetPlayers Get all players within the world
 	 * @arguments nil
 	 * @return [[Table]]:players
 	 */
 
-	public static JavaFunction GetPlayers = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetPlayers = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			List<EntityPlayer> playerList = self.playerEntities;
 
 			l.newTable();
 			int i = 1;
-			for (EntityPlayer player: playerList)
-			{
+			for (EntityPlayer player : playerList) {
 				l.pushInteger(i++);
 				LuaUserdataManager.PushUserdata(l, player);
 				l.setTable(-3);
@@ -149,25 +133,22 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetPlayerByName
-	 * Attempts to find a player using the provided string
+	 * @function GetPlayerByName Attempts to find a player using the provided
+	 *           string
 	 * @arguments [[String]]:search
 	 * @return [[Player]]:player
 	 */
 
-	public static JavaFunction GetPlayerByName = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetPlayerByName = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			String search = l.checkString(2).toLowerCase();
 			List<EntityPlayer> playerList = self.playerEntities;
 
-			for (EntityPlayer player: playerList)
-			{
-				String playerName = player.getGameProfile().getName().toLowerCase();
-				if (playerName.contains(search))
-				{
+			for (EntityPlayer player : playerList) {
+				String playerName = player.getGameProfile().getName()
+						.toLowerCase();
+				if (playerName.contains(search)) {
 					LuaUserdataManager.PushUserdata(l, player);
 					return 1;
 				}
@@ -178,24 +159,20 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetEntity
-	 * Gets an entity by its index
+	 * @function GetEntity Gets an entity by its index
 	 * @arguments [[Number]]:entindex
 	 * @return [[Entity]]:entity
 	 */
 
-	public static JavaFunction GetEntity = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetEntity = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			int searchId = l.checkInteger(2);
 
 			List<Entity> entityList = self.loadedEntityList;
 
-			for (Entity ent: entityList)
-				if (ent.getEntityId() == searchId)
-				{
+			for (Entity ent : entityList)
+				if (ent.getEntityId() == searchId) {
 					LuaUserdataManager.PushUserdata(l, ent);
 					return 1;
 				}
@@ -205,23 +182,19 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetEntities
-	 * Get all entities within the world
+	 * @function GetEntities Get all entities within the world
 	 * @arguments nil
 	 * @return [[Table]]:players
 	 */
 
-	public static JavaFunction GetEntities = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetEntities = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			List<Entity> entityList = self.loadedEntityList;
 
 			l.newTable();
 			int i = 1;
-			for (Entity ent: entityList)
-			{
+			for (Entity ent : entityList) {
 				l.pushInteger(i++);
 				LuaUserdataManager.PushUserdata(l, ent);
 				l.setTable(-3);
@@ -232,28 +205,25 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function GetEntitiesByClass
-	 * Get all entities that match the provided class
+	 * @function GetEntitiesByClass Get all entities that match the provided
+	 *           class
 	 * @arguments [[String]]:classname
 	 * @return [[Table]]:entities
 	 */
 
-	public static JavaFunction GetEntitiesByClass = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetEntitiesByClass = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			String search = l.checkString(2);
 			List<Entity> entityList = self.loadedEntityList;
 
 			l.newTable();
 			int i = 1;
-			for (Entity ent: entityList)
-			{
-				String className = EntityList.getEntityString(ent).toLowerCase();
+			for (Entity ent : entityList) {
+				String className = EntityList.getEntityString(ent)
+						.toLowerCase();
 
-				if (className.contains(search))
-				{
+				if (className.contains(search)) {
 					l.pushInteger(i++);
 					LuaUserdataManager.PushUserdata(l, ent);
 					l.setTable(-3);
@@ -265,16 +235,13 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function CreateEntity
-	 * Creates a new entity
+	 * @function CreateEntity Creates a new entity
 	 * @arguments [[String]]:classname
 	 * @return [[Entity]]:entity
 	 */
 
-	public static JavaFunction CreateEntity = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction CreateEntity = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Entity ent = EntityList.createEntityByName(l.checkString(2), self);
 			LuaUserdataManager.PushUserdata(l, ent);
@@ -284,16 +251,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function IsDayTime
-	 * Checks if the sun is up
+	 * @function IsDayTime Checks if the sun is up
 	 * @arguments nil
 	 * @return [[Boolean]]:day
 	 */
 
-	public static JavaFunction IsDayTime = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsDayTime = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushBoolean(self.isDaytime());
 			return 1;
@@ -302,16 +266,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function IsNightTime
-	 * Checks if the moon is up
+	 * @function IsNightTime Checks if the moon is up
 	 * @arguments nil
 	 * @return [[Boolean]]:night
 	 */
 
-	public static JavaFunction IsNightTime = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsNightTime = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushBoolean(!self.isDaytime());
 			return 1;
@@ -320,16 +281,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function GetTime
-	 * Returns the worlds time
+	 * @function GetTime Returns the worlds time
 	 * @arguments nil
 	 * @return [[Number]]:time
 	 */
 
-	public static JavaFunction GetTime = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetTime = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushNumber(self.getWorldTime());
 			return 1;
@@ -338,16 +296,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetTime
-	 * Sets the worlds time
+	 * @function SetTime Sets the worlds time
 	 * @arguments [[Number]]:time
 	 * @return nil
 	 */
 
-	public static JavaFunction SetTime = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetTime = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			self.setWorldTime((long) l.checkNumber(2));
 			return 0;
@@ -356,16 +311,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function IsRaining
-	 * Check if the rain is falling
+	 * @function IsRaining Check if the rain is falling
 	 * @arguments nil
 	 * @return [[Boolean]]:rain
 	 */
 
-	public static JavaFunction IsRaining = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsRaining = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushBoolean(self.getWorldInfo().isRaining());
 			return 1;
@@ -374,16 +326,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetRaining
-	 * Set the weather to rainfall
+	 * @function SetRaining Set the weather to rainfall
 	 * @arguments [[Boolean]]:rain
 	 * @return nil
 	 */
 
-	public static JavaFunction SetRaining = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetRaining = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			self.getWorldInfo().setRaining(l.checkBoolean(2));
 			return 0;
@@ -392,16 +341,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function IsStorming
-	 * Check if it is storming
+	 * @function IsStorming Check if it is storming
 	 * @arguments nil
 	 * @return [[Boolean]]:storm
 	 */
 
-	public static JavaFunction IsStorming = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction IsStorming = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushBoolean(self.getWorldInfo().isThundering());
 			return 1;
@@ -410,16 +356,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetStorming
-	 * Set the weather to storm
+	 * @function SetStorming Set the weather to storm
 	 * @arguments [[Boolean]]:storm
 	 * @return nil
 	 */
 
-	public static JavaFunction SetStorming = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetStorming = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			self.getWorldInfo().setThundering(l.checkBoolean(2));
 			return 0;
@@ -428,16 +371,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function GetDifficulty
-	 * Returns the worlds difficulty
+	 * @function GetDifficulty Returns the worlds difficulty
 	 * @arguments nil
 	 * @return [[Number]]:diff
 	 */
 
-	public static JavaFunction GetDifficulty = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetDifficulty = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushNumber(self.getDifficulty().ordinal());
 			return 1;
@@ -446,38 +386,34 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetDifficulty
-	 * Sets the worlds difficulty
+	 * @function SetDifficulty Sets the worlds difficulty
 	 * @arguments [[Number]]:diff
 	 * @return nil
 	 */
 
-	public static JavaFunction SetDifficulty = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetDifficulty = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			//self.difficultySetting = EnumDifficulty.getDifficultyEnum(l.checkInteger(2));
-			//TODO: Fix World:SetDifficulty()
+			// self.difficultySetting =
+			// EnumDifficulty.getDifficultyEnum(l.checkInteger(2));
+			// TODO: Fix World:SetDifficulty()
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function GetSpawnPos
-	 * Returns the worlds spawnposition
+	 * @function GetSpawnPos Returns the worlds spawnposition
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
 
-	public static JavaFunction GetSpawnPos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetSpawnPos = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			WorldInfo info = self.getWorldInfo();
-			Vector pos = new Vector(info.getSpawnX(), info.getSpawnZ(), info.getSpawnY());
+			Vector pos = new Vector(info.getSpawnX(), info.getSpawnZ(),
+					info.getSpawnY());
 			pos.push(l);
 			return 1;
 		}
@@ -485,16 +421,13 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetSpawnPos
-	 * Sets the worlds spawnposition
+	 * @function SetSpawnPos Sets the worlds spawnposition
 	 * @arguments [[Vector]]:pos
 	 * @return nil
 	 */
 
-	public static JavaFunction SetSpawnPos = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetSpawnPos = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			WorldInfo info = self.getWorldInfo();
@@ -505,88 +438,77 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function GetAnimalSpawning
-	 * Check if animals are spawning
+	 * @function GetAnimalSpawning Check if animals are spawning
 	 * @arguments nil
 	 * @return [[Boolean]]:animals
 	 */
 
-	public static JavaFunction GetAnimalSpawning = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetAnimalSpawning = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(World.class, self, "spawnPeacefulMobs"));
+			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(
+					World.class, self, "spawnPeacefulMobs"));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function SetAnimalSpawning
-	 * Set animals spawning
+	 * @function SetAnimalSpawning Set animals spawning
 	 * @arguments [[Boolean]]:animals
 	 * @return nil
 	 */
 
-	public static JavaFunction SetAnimalSpawning = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetAnimalSpawning = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			ReflectionHelper.setPrivateValue(World.class, self, l.checkBoolean(2), "spawnPeacefulMobs");
+			ReflectionHelper.setPrivateValue(World.class, self,
+					l.checkBoolean(2), "spawnPeacefulMobs");
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function GetMobSpawning
-	 * Check if mobs are spawning
+	 * @function GetMobSpawning Check if mobs are spawning
 	 * @arguments nil
 	 * @return [[Boolean]]:mobs
 	 */
 
-	public static JavaFunction GetMobSpawning = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetMobSpawning = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(World.class, self, "spawnHostileMobs"));
+			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(
+					World.class, self, "spawnHostileMobs"));
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function SetMobSpawning
-	 * Set mobs spawning
+	 * @function SetMobSpawning Set mobs spawning
 	 * @arguments [[Boolean]]:mobs
 	 * @return nil
 	 */
 
-	public static JavaFunction SetMobSpawning = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetMobSpawning = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			ReflectionHelper.setPrivateValue(World.class, self, l.checkBoolean(2), "spawnHostileMobs");
+			ReflectionHelper.setPrivateValue(World.class, self,
+					l.checkBoolean(2), "spawnHostileMobs");
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function GetGamemode
-	 * Returns the worlds gamemode
+	 * @function GetGamemode Returns the worlds gamemode
 	 * @arguments nil
 	 * @return [[Number]]:gamemode
 	 */
 
-	public static JavaFunction GetGamemode = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetGamemode = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushInteger(self.getWorldInfo().getGameType().ordinal());
 			return 1;
@@ -595,34 +517,29 @@ public class LuaWorld
 
 	/**
 	 * @author Gregor
-	 * @function SetGamemode
-	 * Set the worlds gamemode
+	 * @function SetGamemode Set the worlds gamemode
 	 * @arguments [[Number]]:gamemode
 	 * @return nil
 	 */
 
-	public static JavaFunction SetGamemode = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction SetGamemode = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			self.getWorldInfo().setGameType(WorldSettings.GameType.getByID(l.checkInteger(2)));
+			self.getWorldInfo().setGameType(
+					WorldSettings.GameType.getByID(l.checkInteger(2)));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetSeed
-	 * Returns the worlds seed
+	 * @function GetSeed Returns the worlds seed
 	 * @arguments nil
 	 * @return [[Number]]:seed
 	 */
 
-	public static JavaFunction GetSeed = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetSeed = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushNumber(self.getWorldInfo().getSeed());
 			return 1;
@@ -631,54 +548,49 @@ public class LuaWorld
 
 	/**
 	 * @author Jake
-	 * @function AddLightning
-	 * Adds an lightning bolt to the world
+	 * @function AddLightning Adds an lightning bolt to the world
 	 * @arguments nil
 	 * @return nil
 	 */
 
-	public static JavaFunction AddLightning = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction AddLightning = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.addWeatherEffect(new EntityLightningBolt(self,pos.x,pos.z,pos.y));
+			self.addWeatherEffect(new EntityLightningBolt(self, pos.x, pos.z,
+					pos.y));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function AddExplosion
-	 * Adds an explosion to the world
-	 * @arguments [[Vector]]:pos, [ [[Number]]:size, [[Boolean]]:flaming, [[Boolean]]:smoking ]
+	 * @function AddExplosion Adds an explosion to the world
+	 * @arguments [[Vector]]:pos, [ [[Number]]:size, [[Boolean]]:flaming,
+	 *            [[Boolean]]:smoking ]
 	 * @return nil
 	 */
 
-	public static JavaFunction AddExplosion = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction AddExplosion = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.newExplosion(null, pos.x,pos.z,pos.y, (float) l.checkNumber(3,5), l.checkBoolean(4,false), l.checkBoolean(5,false));
+			self.newExplosion(null, pos.x, pos.z, pos.y,
+					(float) l.checkNumber(3, 5), l.checkBoolean(4, false),
+					l.checkBoolean(5, false));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetDimension
-	 * Returns the worlds dimension number
+	 * @function GetDimension Returns the worlds dimension number
 	 * @arguments nil
 	 * @return [[Number]]:dimension
 	 */
 
-	public static JavaFunction GetDimension = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetDimension = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushNumber(self.provider.getDimensionId());
 			return 1;
@@ -687,46 +599,42 @@ public class LuaWorld
 
 	/**
 	 * @author Matt
-	 * @function GetBiome
-	 * Returns the current biome of a position.
+	 * @function GetBiome Returns the current biome of a position.
 	 * @arguments [[Vector]]:pos
 	 * @return [[String]]:biome
 	 */
 
-	public static JavaFunction GetBiome = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction GetBiome = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			l.pushString(self.getWorldChunkManager().getBiomeGenAt(null, (int) pos.x, (int) pos.y, 0, 0, false).toString());
+			l.pushString(self.getWorldChunkManager()
+					.getBiomeGenAt(null, (int) pos.x, (int) pos.y, 0, 0, false)
+					.toString());
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function EmitSound
-	 * Play a sound emitting from the position given
-	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [ [[Number]]:Pitch, [[Number]]:Volume ]
+	 * @function EmitSound Play a sound emitting from the position given
+	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [
+	 *            [[Number]]:Pitch, [[Number]]:Volume ]
 	 * @return nil
 	 */
 
-	public static JavaFunction EmitSound = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction EmitSound = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.playSoundEffect(pos.x, pos.z, pos.y, l.checkString(3), (float) l.checkNumber(4,1), (float) l.checkNumber(5,1));
+			self.playSoundEffect(pos.x, pos.z, pos.y, l.checkString(3),
+					(float) l.checkNumber(4, 1), (float) l.checkNumber(5, 1));
 			return 0;
 		}
 	};
 
-	public static JavaFunction TraceLine = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
+	public static JavaFunction TraceLine = new JavaFunction() {
+		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.checkType(2, LuaType.TABLE);
 
@@ -747,8 +655,7 @@ public class LuaWorld
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		l.newMetatable("World");
 		{
 			l.pushValue(-1);

@@ -15,34 +15,30 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function Send
-	 * Sends the buffer to a player or a table of palyers
+	 * @function Send Sends the buffer to a player or a table of palyers
 	 * @arguments [[Player]]:player or [[Table]]:players, ...
 	 * @return nil
 	 */
 
-	public static JavaFunction Send = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			S3FPacketCustomPayload packet = new S3FPacketCustomPayload("LuaCraft", self);
+	public static JavaFunction Send = new JavaFunction() {
+		public int invoke(LuaState l) {
+			PacketBuffer self = (PacketBuffer) l.checkUserdata(1,
+					PacketBuffer.class, "ByteBuf");
+			S3FPacketCustomPayload packet = new S3FPacketCustomPayload(
+					"LuaCraft", self);
 
-			for (int i = 2; i <= l.getTop(); i++)
-			{
-				if (l.isUserdata(i, EntityPlayerMP.class))
-				{
-					EntityPlayerMP player = (EntityPlayerMP) l.checkUserdata(i, EntityPlayerMP.class, "Player");
+			for (int i = 2; i <= l.getTop(); i++) {
+				if (l.isUserdata(i, EntityPlayerMP.class)) {
+					EntityPlayerMP player = (EntityPlayerMP) l.checkUserdata(i,
+							EntityPlayerMP.class, "Player");
 					player.playerNetServerHandler.sendPacket(packet);
-				}
-				else if(l.isTable(i))
-				{
+				} else if (l.isTable(i)) {
 					l.pushNil();
-					while(l.next(i))
-					{
-						if (l.isUserdata(-1, EntityPlayerMP.class))
-						{
-							EntityPlayerMP player = (EntityPlayerMP) l.checkUserdata(-1, EntityPlayerMP.class, "Player");
+					while (l.next(i)) {
+						if (l.isUserdata(-1, EntityPlayerMP.class)) {
+							EntityPlayerMP player = (EntityPlayerMP) l
+									.checkUserdata(-1, EntityPlayerMP.class,
+											"Player");
 							player.playerNetServerHandler.sendPacket(packet);
 						}
 						l.pop(1);
@@ -55,21 +51,23 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function Broadcast
-	 * Sends the buffer to all players or all players within a specific dimension
+	 * @function Broadcast Sends the buffer to all players or all players within
+	 *           a specific dimension
 	 * @arguments [ [[Number]]:Dimension ]
 	 * @return nil
 	 */
 
-	public static JavaFunction Broadcast = new JavaFunction()
-	{
-		public int invoke(LuaState l)
-		{
-			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			S3FPacketCustomPayload packet = new S3FPacketCustomPayload("LuaCraft", self);
+	public static JavaFunction Broadcast = new JavaFunction() {
+		public int invoke(LuaState l) {
+			PacketBuffer self = (PacketBuffer) l.checkUserdata(1,
+					PacketBuffer.class, "ByteBuf");
+			S3FPacketCustomPayload packet = new S3FPacketCustomPayload(
+					"LuaCraft", self);
 
 			if (l.isNumber(2))
-				server.getConfigurationManager().sendPacketToAllPlayersInDimension(packet, l.toInteger(2));
+				server.getConfigurationManager()
+						.sendPacketToAllPlayersInDimension(packet,
+								l.toInteger(2));
 			else
 				server.getConfigurationManager().sendPacketToAllPlayers(packet);
 
@@ -77,8 +75,7 @@ public class LuaByteBuf {
 		}
 	};
 
-	public static void Init(final LuaCraftState l)
-	{
+	public static void Init(final LuaCraftState l) {
 		server = l.getMinecraftServer();
 
 		l.newMetatable("ByteBuf");
