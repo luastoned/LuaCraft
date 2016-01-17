@@ -34,14 +34,12 @@ import com.naef.jnlua.LuaState;
  * Lua script engine implementation conforming to JSR 223: Scripting for the
  * Java Platform.
  */
-class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
-		Invocable {
+class LuaScriptEngine extends AbstractScriptEngine implements Compilable, Invocable {
 	// -- Static
 	private static final String READER = "reader";
 	private static final String WRITER = "writer";
 	private static final String ERROR_WRITER = "errorWriter";
-	private static final Pattern LUA_ERROR_MESSAGE = Pattern
-			.compile("^(.+):(\\d+):");
+	private static final Pattern LUA_ERROR_MESSAGE = Pattern.compile("^(.+):(\\d+):");
 
 	// -- State
 	private LuaScriptEngineFactory factory;
@@ -72,8 +70,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	}
 
 	@Override
-	public Object eval(String script, ScriptContext context)
-			throws ScriptException {
+	public Object eval(String script, ScriptContext context) throws ScriptException {
 		synchronized (luaState) {
 			loadChunk(script, context);
 			return callChunk(context);
@@ -81,8 +78,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	}
 
 	@Override
-	public Object eval(Reader reader, ScriptContext context)
-			throws ScriptException {
+	public Object eval(Reader reader, ScriptContext context) throws ScriptException {
 		synchronized (luaState) {
 			loadChunk(reader, context);
 			return callChunk(context);
@@ -152,14 +148,12 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	}
 
 	@Override
-	public Object invokeFunction(String name, Object... args)
-			throws ScriptException, NoSuchMethodException {
+	public Object invokeFunction(String name, Object... args) throws ScriptException, NoSuchMethodException {
 		synchronized (luaState) {
 			luaState.getGlobal(name);
 			if (!luaState.isFunction(-1)) {
 				luaState.pop(1);
-				throw new NoSuchMethodException(String.format(
-						"function '%s' is undefined", name));
+				throw new NoSuchMethodException(String.format("function '%s' is undefined", name));
 			}
 			for (int i = 0; i < args.length; i++) {
 				luaState.pushJavaObject(args[i]);
@@ -174,8 +168,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	}
 
 	@Override
-	public Object invokeMethod(Object thiz, String name, Object... args)
-			throws ScriptException, NoSuchMethodException {
+	public Object invokeMethod(Object thiz, String name, Object... args) throws ScriptException, NoSuchMethodException {
 		synchronized (luaState) {
 			luaState.pushJavaObject(thiz);
 			try {
@@ -185,8 +178,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 				luaState.getField(-1, name);
 				if (!luaState.isFunction(-1)) {
 					luaState.pop(1);
-					throw new NoSuchMethodException(String.format(
-							"method '%s' is undefined", name));
+					throw new NoSuchMethodException(String.format("method '%s' is undefined", name));
 				}
 				luaState.pushValue(-2);
 				for (int i = 0; i < args.length; i++) {
@@ -215,8 +207,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	/**
 	 * Loads a chunk from a string.
 	 */
-	void loadChunk(String string, ScriptContext scriptContext)
-			throws ScriptException {
+	void loadChunk(String string, ScriptContext scriptContext) throws ScriptException {
 		try {
 			luaState.load(string, getChunkName(scriptContext));
 		} catch (LuaException e) {
@@ -227,16 +218,14 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 	/**
 	 * Loads a chunk from a reader.
 	 */
-	void loadChunk(Reader reader, ScriptContext scriptContext)
-			throws ScriptException {
+	void loadChunk(Reader reader, ScriptContext scriptContext) throws ScriptException {
 		loadChunk(new ReaderInputStream(reader), scriptContext);
 	}
 
 	/**
 	 * Loads a chunk from an input stream.
 	 */
-	void loadChunk(InputStream inputStream, ScriptContext scriptContext)
-			throws ScriptException {
+	void loadChunk(InputStream inputStream, ScriptContext scriptContext) throws ScriptException {
 		try {
 			luaState.load(inputStream, getChunkName(scriptContext));
 		} catch (LuaException e) {
@@ -264,8 +253,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 				// Engine bindings
 				bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
 				if (bindings != null) {
-					if (bindings instanceof LuaBindings
-							&& ((LuaBindings) bindings).getScriptEngine() == this) {
+					if (bindings instanceof LuaBindings && ((LuaBindings) bindings).getScriptEngine() == this) {
 						// No need to apply our own live bindings
 					} else {
 						applyBindings(bindings);
@@ -401,8 +389,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable,
 					}
 				} else {
 					if (!flushed) {
-						if (encoder.encode(charBuffer, byteBuffer, true)
-								.isError()) {
+						if (encoder.encode(charBuffer, byteBuffer, true).isError()) {
 							throw new IOException("Encoding error");
 						}
 						if (encoder.flush(byteBuffer).isError()) {

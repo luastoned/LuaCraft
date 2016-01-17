@@ -94,11 +94,9 @@ public class Angle implements LuaUserdata {
 		float roll = (float) Math.toRadians(r);
 
 		double x = (MathHelper.sin(roll) * MathHelper.sin(pitch))
-				+ (MathHelper.cos(roll) * MathHelper.sin(yaw) * MathHelper
-						.cos(pitch));
+				+ (MathHelper.cos(roll) * MathHelper.sin(yaw) * MathHelper.cos(pitch));
 		double y = (-MathHelper.cos(roll) * MathHelper.sin(pitch))
-				+ (MathHelper.sin(roll) * MathHelper.sin(yaw) * MathHelper
-						.cos(pitch));
+				+ (MathHelper.sin(roll) * MathHelper.sin(yaw) * MathHelper.cos(pitch));
 		double z = MathHelper.cos(yaw) * MathHelper.cos(pitch);
 
 		return new Vector(x, y, z);
@@ -121,11 +119,9 @@ public class Angle implements LuaUserdata {
 		float roll = (float) Math.toRadians(r);
 
 		double x = (-MathHelper.sin(roll) * MathHelper.cos(pitch))
-				+ (MathHelper.cos(roll) * MathHelper.sin(yaw) * MathHelper
-						.sin(pitch));
+				+ (MathHelper.cos(roll) * MathHelper.sin(yaw) * MathHelper.sin(pitch));
 		double y = (MathHelper.cos(roll) * MathHelper.cos(pitch))
-				+ (MathHelper.sin(roll) * MathHelper.sin(yaw) * MathHelper
-						.sin(pitch));
+				+ (MathHelper.sin(roll) * MathHelper.sin(yaw) * MathHelper.sin(pitch));
 		double z = MathHelper.cos(yaw) * MathHelper.sin(pitch);
 
 		return new Vector(x, y, z);

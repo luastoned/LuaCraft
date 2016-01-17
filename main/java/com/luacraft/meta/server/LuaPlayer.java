@@ -19,15 +19,15 @@ public class LuaPlayer {
 
 	/**
 	 * @author Jake
-	 * @function GetPing Return the players ping
+	 * @function GetPing
+	 * @info Return the players ping
 	 * @arguments nil
 	 * @return [[Number]]:ping
 	 */
 
 	public static JavaFunction GetPing = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			l.pushInteger(self.ping);
 			return 1;
 		}
@@ -35,18 +35,17 @@ public class LuaPlayer {
 
 	/**
 	 * @author Jake
-	 * @function GetIP Return the players ping
+	 * @function GetIP
+	 * @info Return the players ping
 	 * @arguments nil
 	 * @return [[Number]]:ping
 	 */
 
 	public static JavaFunction GetIP = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 
-			String ip = self.playerNetServerHandler.netManager
-					.getRemoteAddress().toString();
+			String ip = self.playerNetServerHandler.netManager.getRemoteAddress().toString();
 			ip = ip.substring(ip.indexOf("/") + 1);
 			ip = ip.substring(0, ip.indexOf(":"));
 			l.pushString(ip);
@@ -56,25 +55,25 @@ public class LuaPlayer {
 
 	/**
 	 * @author Gregor
-	 * @function SetPos Sets the players position
+	 * @function SetPos
+	 * @info Sets the players position
 	 * @arguments [[Vector]]:pos
 	 * @return nil
 	 */
 
 	public static JavaFunction SetPos = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.playerNetServerHandler.setPlayerLocation(pos.x, pos.z, pos.y,
-					self.rotationYaw, self.rotationPitch);
+			self.playerNetServerHandler.setPlayerLocation(pos.x, pos.z, pos.y, self.rotationYaw, self.rotationPitch);
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function Msg Print something to a players chat
+	 * @function Msg
+	 * @info Print something to a players chat
 	 * @arguments [[String]]:msg / [[Number]]:color See [[color]] for further
 	 *            information
 	 * @return nil
@@ -82,8 +81,7 @@ public class LuaPlayer {
 
 	public static JavaFunction Msg = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 
 			StringBuilder message = new StringBuilder();
 
@@ -92,8 +90,7 @@ public class LuaPlayer {
 					continue;
 
 				if (l.type(i) == LuaType.NUMBER) {
-					EnumChatFormatting format = EnumChatFormatting.values()[l
-							.toInteger(i)];
+					EnumChatFormatting format = EnumChatFormatting.values()[l.toInteger(i)];
 					message.append(format);
 				} else {
 					l.getGlobal("tostring");
@@ -111,55 +108,51 @@ public class LuaPlayer {
 
 	/**
 	 * @author Jake
-	 * @function Remove Remove the entity
+	 * @function Remove
+	 * @info Remove the entity
 	 * @arguments nil
 	 * @return nil
 	 */
 
 	public static JavaFunction Remove = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
-			self.playerNetServerHandler
-					.kickPlayerFromServer("You were removed");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			self.playerNetServerHandler.kickPlayerFromServer("You were removed");
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function IsOP Check if a player is op
+	 * @function IsOP
+	 * @info Check if a player is op
 	 * @arguments nil
 	 * @return [[Boolean]]:op
 	 */
 
 	public static JavaFunction IsOP = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
-			ServerConfigurationManager config = server
-					.getConfigurationManager();
-			l.pushBoolean(config.getOppedPlayers().getEntry(
-					self.getGameProfile()) != null);
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			ServerConfigurationManager config = server.getConfigurationManager();
+			l.pushBoolean(config.getOppedPlayers().getEntry(self.getGameProfile()) != null);
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function SetOP Give op to a player
+	 * @function SetOP
+	 * @info Give op to a player
 	 * @arguments [[Boolean]]:op
 	 * @return nil
 	 */
 
 	public static JavaFunction SetOP = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			boolean state = l.checkBoolean(2);
 
-			ServerConfigurationManager config = server
-					.getConfigurationManager();
+			ServerConfigurationManager config = server.getConfigurationManager();
 			GameProfile user = self.getGameProfile();
 
 			if (state)
@@ -173,40 +166,37 @@ public class LuaPlayer {
 
 	/**
 	 * @author Gregor
-	 * @function Kick Kick a player from the server
+	 * @function Kick
+	 * @info Kick a player from the server
 	 * @arguments [ [[String]]:reason ]
 	 * @return nil
 	 */
 
 	public static JavaFunction Kick = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
-			self.playerNetServerHandler.kickPlayerFromServer(l.checkString(2,
-					"You have been kicked."));
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			self.playerNetServerHandler.kickPlayerFromServer(l.checkString(2, "You have been kicked."));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function Ban Ban a player from the server
+	 * @function Ban
+	 * @info Ban a player from the server
 	 * @arguments [ [[String]]:reason ]
 	 * @return nil
 	 */
 
 	public static JavaFunction Ban = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1,
-					EntityPlayerMP.class, "Player");
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			String reason = l.checkString(2, "You have been banned.");
 
-			ServerConfigurationManager config = server
-					.getConfigurationManager();
+			ServerConfigurationManager config = server.getConfigurationManager();
 
 			// TODO: Add date to Player:Ban()
-			UserListBansEntry banEntry = new UserListBansEntry(
-					self.getGameProfile(), null, null, null, reason);
+			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), null, null, null, reason);
 
 			self.playerNetServerHandler.kickPlayerFromServer(reason);
 			config.getBannedPlayers().addEntry(banEntry);

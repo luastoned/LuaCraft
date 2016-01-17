@@ -15,8 +15,7 @@ public class LuaLibLanguage {
 			for (int i = 2; i <= top; i++)
 				strings[i - 1] = l.checkString(i);
 
-			String translated = StatCollector.translateToLocalFormatted(
-					l.checkString(1), strings);
+			String translated = StatCollector.translateToLocalFormatted(l.checkString(1), strings);
 
 			l.pushString(translated);
 			return 1;

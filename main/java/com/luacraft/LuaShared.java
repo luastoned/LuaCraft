@@ -61,9 +61,10 @@ public class LuaShared {
 
 	public void Autorun(final LuaCraftState l) {
 		l.print("Loading autorun");
-		l.autorun("shared"); // Load all files within autorun
+		l.autorun(); // Load all files within autorun
+		l.autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
 	}
-	
+
 	private static void LoadExtensions(final LuaCraftState l) {
 		// Load all packed modules from our Jar
 		l.includePackedFile("/lua/modules/hook.lua");
@@ -107,15 +108,13 @@ public class LuaShared {
 
 		// Set the package path to the correct location
 		l.getGlobal("package");
-		l.pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua
-				+ "modules/?/init.lua");
+		l.pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua + "modules/?/init.lua");
 		l.setField(-2, "path");
 		l.pop(1);
 
 		// Set the package path to the correct location
 		l.getGlobal("package");
-		l.pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua
-				+ "modules/bin/loadall.dll");
+		l.pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua + "modules/bin/loadall.dll");
 		l.setField(-2, "cpath");
 		l.pop(1);
 

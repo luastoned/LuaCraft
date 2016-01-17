@@ -24,12 +24,9 @@ public class LuaVector {
 	public static Vector3f Vec3Transform(Vector3f vec, Matrix4f matrix) {
 		Vector3f vOutput = new Vector3f(0, 0, 0);
 
-		vOutput.x = (vec.x * matrix.m00) + (vec.y * matrix.m10)
-				+ (vec.z * matrix.m20) + matrix.m30;
-		vOutput.y = (vec.x * matrix.m01) + (vec.y * matrix.m11)
-				+ (vec.z * matrix.m21) + matrix.m31;
-		vOutput.z = (vec.x * matrix.m02) + (vec.y * matrix.m12)
-				+ (vec.z * matrix.m22) + matrix.m32;
+		vOutput.x = (vec.x * matrix.m00) + (vec.y * matrix.m10) + (vec.z * matrix.m20) + matrix.m30;
+		vOutput.y = (vec.x * matrix.m01) + (vec.y * matrix.m11) + (vec.z * matrix.m21) + matrix.m31;
+		vOutput.z = (vec.x * matrix.m02) + (vec.y * matrix.m12) + (vec.z * matrix.m22) + matrix.m32;
 
 		return vOutput;
 	}
@@ -37,14 +34,10 @@ public class LuaVector {
 	public static Vector3f Vec3TransformCoordinate(Vector3f vec, Matrix4f matrix) {
 		Vector3f vOutput = new Vector3f(0, 0, 0);
 
-		vOutput.x = (vec.x * matrix.m00) + (vec.y * matrix.m10)
-				+ (vec.z * matrix.m20) + matrix.m30;
-		vOutput.y = (vec.x * matrix.m01) + (vec.y * matrix.m11)
-				+ (vec.z * matrix.m21) + matrix.m31;
-		vOutput.z = (vec.x * matrix.m02) + (vec.y * matrix.m12)
-				+ (vec.z * matrix.m22) + matrix.m32;
-		float w = 1 / ((vec.x * matrix.m03) + (vec.y * matrix.m13)
-				+ (vec.z * matrix.m23) + matrix.m33);
+		vOutput.x = (vec.x * matrix.m00) + (vec.y * matrix.m10) + (vec.z * matrix.m20) + matrix.m30;
+		vOutput.y = (vec.x * matrix.m01) + (vec.y * matrix.m11) + (vec.z * matrix.m21) + matrix.m31;
+		vOutput.z = (vec.x * matrix.m02) + (vec.y * matrix.m12) + (vec.z * matrix.m22) + matrix.m32;
+		float w = 1 / ((vec.x * matrix.m03) + (vec.y * matrix.m13) + (vec.z * matrix.m23) + matrix.m33);
 
 		vOutput.x *= w;
 		vOutput.y *= w;
@@ -55,7 +48,8 @@ public class LuaVector {
 
 	/**
 	 * @author Gregor
-	 * @function ToScreen Get x, y for a 3D Vector
+	 * @function ToScreen
+	 * @info Get x, y for a 3D Vector
 	 * @arguments [[Vector]]:vec
 	 * @return [[Number]]:x, [[Number]]:y, [[Boolean]]:visible
 	 */
@@ -64,12 +58,10 @@ public class LuaVector {
 		public int invoke(LuaState l) {
 			Entity renderView = client.getRenderViewEntity();
 			if (renderView != null) {
-				Vector self = (Vector) l.checkUserdata(1, Vector.class,
-						"Vector");
+				Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 
 				Vec3 viewNormal = renderView.getLook(1F).normalize();
-				Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(
-						renderView, client.timer.renderPartialTicks);
+				Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(renderView, client.timer.renderPartialTicks);
 
 				float vecX = (float) (eyePos.xCoord - self.x);
 				float vecY = (float) (eyePos.zCoord - self.y);
@@ -77,16 +69,13 @@ public class LuaVector {
 
 				Vector3f viewVec = new Vector3f(vecX, vecZ, vecY);
 
-				Matrix4f viewMatrix = new Matrix4f(
-						clippingHelper.modelviewMatrix);
-				Matrix4f projectionMatrix = new Matrix4f(
-						clippingHelper.projectionMatrix);
+				Matrix4f viewMatrix = new Matrix4f(clippingHelper.modelviewMatrix);
+				Matrix4f projectionMatrix = new Matrix4f(clippingHelper.projectionMatrix);
 
 				viewVec = Vec3TransformCoordinate(viewVec, viewMatrix);
 				viewVec = Vec3TransformCoordinate(viewVec, projectionMatrix);
 
-				ScaledResolution scaledRes = new ScaledResolution(client,
-						client.displayWidth, client.displayHeight);
+				ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
 				viewVec.x = (float) ((scaledRes.getScaledWidth() * (viewVec.x + 1.0)) / 2.0);
 				viewVec.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((viewVec.y + 1.0) / 2.0)));
 

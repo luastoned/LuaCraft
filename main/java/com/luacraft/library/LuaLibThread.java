@@ -13,11 +13,12 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 public class LuaLibThread {
-	
+
 	/**
 	 * @author Jake
 	 * @library thread
-	 * @function NewThread Create a new thread
+	 * @function NewThread
+	 * @info Create a new thread
 	 * @arguments [[String]]:filename
 	 * @return [[Thread]]:thread
 	 */
@@ -35,7 +36,8 @@ public class LuaLibThread {
 	/**
 	 * @author Jake
 	 * @library thread
-	 * @function GetChannel Create a new channel
+	 * @function GetChannel
+	 * @info Create a new channel
 	 * @arguments nil
 	 * @return [[Channel]]:channel
 	 */
@@ -45,12 +47,12 @@ public class LuaLibThread {
 			synchronized (LuaCraft.threadChannels) {
 				String name = l.checkString(1);
 				LuaJavaChannel channel = LuaCraft.threadChannels.get(name);
-				
+
 				if (channel == null) {
 					channel = new LuaJavaChannel();
 					LuaCraft.threadChannels.put(name, channel);
 				}
-	
+
 				l.pushUserdataWithMeta(channel, "Channel");
 				return 1;
 			}

@@ -107,20 +107,17 @@ public class LuaConsole {
 	 */
 	public void run() {
 		// Banner
-		System.out.println(String.format("JNLua %s Console using Lua %s.",
-				LuaState.VERSION, LuaState.LUA_VERSION));
+		System.out.println(String.format("JNLua %s Console using Lua %s.", LuaState.VERSION, LuaState.LUA_VERSION));
 		System.out.print("Type 'go' on an empty line to evaluate a chunk. ");
 		System.out.println("Type =<expression> to print an expression.");
 
 		// Prepare reader
-		BufferedReader bufferedReader = new BufferedReader(
-				new InputStreamReader(System.in));
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			// Process chunks
 			chunk: while (true) {
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
-				OutputStreamWriter outWriter = new OutputStreamWriter(out,
-						"UTF-8");
+				OutputStreamWriter outWriter = new OutputStreamWriter(out, "UTF-8");
 				boolean firstLine = true;
 
 				// Process lines
@@ -131,16 +128,14 @@ public class LuaConsole {
 					}
 					if (line.equals("go")) {
 						outWriter.flush();
-						InputStream in = new ByteArrayInputStream(
-								out.toByteArray());
+						InputStream in = new ByteArrayInputStream(out.toByteArray());
 						runChunk(in);
 						continue chunk;
 					}
 					if (firstLine && line.startsWith("=")) {
 						outWriter.write("return " + line.substring(1));
 						outWriter.flush();
-						InputStream in = new ByteArrayInputStream(
-								out.toByteArray());
+						InputStream in = new ByteArrayInputStream(out.toByteArray());
 						runChunk(in);
 						continue chunk;
 					}

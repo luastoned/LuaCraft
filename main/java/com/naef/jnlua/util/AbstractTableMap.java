@@ -18,8 +18,7 @@ import com.naef.jnlua.LuaValueProxy;
 /**
  * Abstract map implementation backed by a Lua table.
  */
-public abstract class AbstractTableMap<K> extends AbstractMap<K, Object>
-		implements LuaValueProxy {
+public abstract class AbstractTableMap<K> extends AbstractMap<K, Object> implements LuaValueProxy {
 	// -- State
 	private Set<Map.Entry<K, Object>> entrySet;
 
@@ -365,8 +364,7 @@ public abstract class AbstractTableMap<K> extends AbstractMap<K, Object>
 			}
 			@SuppressWarnings("unchecked")
 			Entry other = (Entry) obj;
-			return getLuaState() == other.getLuaState()
-					&& key.equals(other.key);
+			return getLuaState() == other.getLuaState() && key.equals(other.key);
 		}
 
 		@Override

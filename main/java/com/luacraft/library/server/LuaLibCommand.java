@@ -15,7 +15,8 @@ public class LuaLibCommand {
 	/**
 	 * @author Jake
 	 * @library command
-	 * @function Add Adds a chat command
+	 * @function Add
+	 * @info Adds a chat command
 	 * @arguments [[String]]:command, [[Function]]:callback, [ [[String]]:usage
 	 *            ]
 	 * @return nil
@@ -41,7 +42,8 @@ public class LuaLibCommand {
 	/**
 	 * @author Jake
 	 * @library command
-	 * @function GetAll Gets a table of all registered commmands
+	 * @function GetAll
+	 * @info Gets a table of all registered commmands
 	 * @arguments nil
 	 * @return [[Table]]:commands
 	 */

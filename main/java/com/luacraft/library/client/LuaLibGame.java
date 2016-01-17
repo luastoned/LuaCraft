@@ -17,7 +17,8 @@ public class LuaLibGame {
 	/**
 	 * @author Matt
 	 * @library game
-	 * @function MaxPlayers Get the number of available player slots
+	 * @function MaxPlayers
+	 * @info Get the number of available player slots
 	 * @arguments nil
 	 * @return [[Number]]:slots
 	 */
@@ -35,7 +36,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function HostAddress Get the ip:port of the current connected server
+	 * @function HostAddress
+	 * @info Get the ip:port of the current connected server
 	 * @arguments nil
 	 * @return [[String]]:IP
 	 */
@@ -50,8 +52,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function PlayerInfo Return a table of information for every player on
-	 *           the server
+	 * @function PlayerInfo
+	 * @info Return a table of information for every player on the server
 	 * @arguments nil
 	 * @return [[Table]]:info
 	 */
@@ -77,7 +79,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function HasFocus Returns if the game is in focus
+	 * @function HasFocus
+	 * @info Returns if the game is in focus
 	 * @arguments nil
 	 * @return [[Boolean]]:focus
 	 */
@@ -91,7 +94,8 @@ public class LuaLibGame {
 
 	/**
 	 * @author Jake
-	 * @function Say Force yourself to say something
+	 * @function Say
+	 * @info Force yourself to say something
 	 * @arguments [[String]]:message
 	 * @return nil
 	 */

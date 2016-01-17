@@ -10,7 +10,8 @@ public class LuaLibInput {
 	/**
 	 * @author Jake
 	 * @library input
-	 * @function IsKeyDown Returns if the specified key is being pressed
+	 * @function IsKeyDown
+	 * @info Returns if the specified key is being pressed
 	 * @arguments nil
 	 * @return [[Boolean]]:isdown
 	 */
@@ -25,8 +26,8 @@ public class LuaLibInput {
 	/**
 	 * @author Gregor
 	 * @library input
-	 * @function IsMouseDown Returns if the specified mouse button is being
-	 *           pressed
+	 * @function IsMouseDown
+	 * @info Returns if the specified mouse button is being pressed
 	 * @arguments nil
 	 * @return [[Boolean]]:isdown
 	 */

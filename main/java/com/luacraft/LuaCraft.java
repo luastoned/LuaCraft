@@ -39,19 +39,18 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = LuaCraft.MODID, version = LuaCraft.VERSION)
 public class LuaCraft {
 	public static final String MODID = "luacraft";
-	public static final String VERSION = "1.1";
+	public static final String VERSION = "1.2";
 
 	@SidedProxy(clientSide = "com.luacraft.LuaClient", serverSide = "com.luacraft.LuaServer")
 	public static LuaShared luaProxy;
-	
+
 	public static HashMap<String, LuaJavaChannel> threadChannels = new HashMap<String, LuaJavaChannel>();
 
 	public static LuaServer serverLibs = new LuaServer();
 	public static LuaClient clientLibs = new LuaClient();
 
 	public static String luaDir = "lua" + File.separator;
-	public static String rootDir = System.getProperty("user.dir")
-			+ File.separator;
+	public static String rootDir = System.getProperty("user.dir") + File.separator;
 
 	private static Logger luaLogger;
 	private static LuaLoader luaLoader = new LuaLoader(rootDir);
@@ -61,8 +60,7 @@ public class LuaCraft {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ModContainer modContainer = FMLCommonHandler.instance()
-				.findContainerFor(this);
+		ModContainer modContainer = FMLCommonHandler.instance().findContainerFor(this);
 		luaLogger = LogManager.getLogger(modContainer.getName());
 	}
 
@@ -131,12 +129,10 @@ public class LuaCraft {
 	}
 
 	@SuppressWarnings("resource")
-	public static InputStream getPackedFileInputStream(String file)
-			throws FileNotFoundException {
+	public static InputStream getPackedFileInputStream(String file) throws FileNotFoundException {
 		InputStream in = null;
 		if (luaLoader.isEclipse)
-			in = new FileInputStream(new File(rootDir, "../src/main/resources/"
-					+ file));
+			in = new FileInputStream(new File(rootDir, "../src/main/resources/" + file));
 		else
 			in = LuaCraft.class.getResourceAsStream(file);
 
@@ -213,8 +209,7 @@ public class LuaCraft {
 	public static void checkVersion() {
 		try {
 			URL requestURL = new URL("http://luacraft.com/update/" + VERSION);
-			HttpURLConnection httpCon = (HttpURLConnection) requestURL
-					.openConnection();
+			HttpURLConnection httpCon = (HttpURLConnection) requestURL.openConnection();
 
 			httpCon.setRequestMethod("GET");
 			httpCon.setRequestProperty("User-Agent", "Minecraft, LuaCraft");
@@ -222,8 +217,7 @@ public class LuaCraft {
 			String inputLine;
 			StringBuffer resBuffer = new StringBuffer();
 			int responseCode = httpCon.getResponseCode();
-			BufferedReader in = new BufferedReader(new InputStreamReader(
-					httpCon.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
 
 			while ((inputLine = in.readLine()) != null)
 				resBuffer.append(inputLine);
@@ -231,9 +225,7 @@ public class LuaCraft {
 			in.close();
 			String webVersion = resBuffer.toString();
 			if (!webVersion.equals(VERSION))
-				LuaCraft.getLogger().info(
-						"A newer version of LuaCraft (" + webVersion
-								+ ") is available!");
+				LuaCraft.getLogger().info("A newer version of LuaCraft (" + webVersion + ") is available!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

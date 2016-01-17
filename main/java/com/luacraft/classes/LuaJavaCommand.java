@@ -40,8 +40,7 @@ public class LuaJavaCommand extends CommandBase {
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args)
-			throws CommandException {
+	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		synchronized (l) {
 			String rawString = "";
 

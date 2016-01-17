@@ -83,8 +83,7 @@ public class LuaVector {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector ret = self.copy();
 			if (l.isUserdata(2, Vector.class)) {
-				Vector other = (Vector) l.checkUserdata(2, Vector.class,
-						"Vector");
+				Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 				ret.mul(other);
 			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
@@ -100,8 +99,7 @@ public class LuaVector {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 			Vector ret = self.copy();
 			if (l.isUserdata(2, Vector.class)) {
-				Vector other = (Vector) l.checkUserdata(2, Vector.class,
-						"Vector");
+				Vector other = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 				ret.div(other);
 			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
@@ -114,7 +112,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function Length Get the length of a vector
+	 * @function Length
+	 * @info Get the length of a vector
 	 * @arguments nil
 	 * @return [[Number]]:len
 	 */
@@ -129,7 +128,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function Distance Get the distance between two vectors
+	 * @function Distance
+	 * @info Get the distance between two vectors
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:distance
 	 */
@@ -145,7 +145,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function DistanceSqr Get the distance between two vectors, squared
+	 * @function DistanceSqr
+	 * @info Get the distance between two vectors, squared
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:distance
 	 */
@@ -161,7 +162,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function GetNormal Get the normalized vector
+	 * @function GetNormal
+	 * @info Get the normalized vector
 	 * @arguments nil
 	 * @return [[Vector]]:norm
 	 */
@@ -176,8 +178,9 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function Normalize Normalize the vector. Doesn't return anything, but it
-	 *           directly modifies the vector.
+	 * @function Normalize
+	 * @info Normalize the vector. Doesn't return anything, but it directly
+	 *       modifies the vector.
 	 * @arguments nil
 	 * @return nil
 	 */
@@ -192,7 +195,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function Dot Get the dot product of a vector
+	 * @function Dot
+	 * @info Get the dot product of a vector
 	 * @arguments [[Vector]]:vector
 	 * @return [[Number]]:dot
 	 */
@@ -208,7 +212,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function Cross Get the dot product of a vector
+	 * @function Cross
+	 * @info Get the dot product of a vector
 	 * @arguments [[Vector]]:vector
 	 * @return [[Vector]]:cross
 	 */
@@ -224,7 +229,8 @@ public class LuaVector {
 
 	/**
 	 * @author Jake
-	 * @function RayQuadIntersect Return a UV point on a plane
+	 * @function RayQuadIntersect
+	 * @info Return a UV point on a plane
 	 * @arguments [[Vector]]:direction, [[Vector]]:plane, [[Vector]]:xcoord,
 	 *            [[Vector]]:ycoord
 	 * @return [[Number]]:u, [[Number]]:v

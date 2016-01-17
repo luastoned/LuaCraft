@@ -8,11 +8,10 @@
 	*/
 ]]
 
-local fileDir = "D:/Developer/Java/LuaCraft-Forge/"
+local fileDir = "/run/media/jake/storage/Documents/Developer/Java/LuaCraft-Forge/"
 local javaDir = "src/main/java/com/luacraft/"
  
 local pattern           = "/%*%*([%w%s%p]-)%*/"
-local pattern_info		= "%*%s([^@].-)\n"
 
 local fmt_header        = "==== %s(%s) ===="
 local fmt_alias         = "* '''Alias''' to this function: '''%s'''"
@@ -47,6 +46,7 @@ function grabdoc(fileName)
 	for doc in str:gmatch(pattern) do
 		local author	= doc:match("@author%s(.-)\r\n")
 		local func		= doc:match("@function%s(.-)\r\n")
+		local info		= doc:match("@info%s(.-)\r\n")
 		local alias		= doc:match("@alias%s(.-)\r\n")
 		local arg		= doc:match("@arguments%s(.-)\r\n")
 		local ret		= doc:match("@return%s(.-)\r\n")
@@ -54,18 +54,12 @@ function grabdoc(fileName)
 		arg = (arg == "nil") and "" or arg -- (" " .. arg .. " ")
 		arg = arg:gsub(":", " ")
 		ret = ret:gsub(":", " ")
-
-		local info = {}
-		for add in doc:gmatch(pattern_info) do
-			table.insert(info, add)
-		end    
-		local add_info = table.concat(info, "\n")
 		
 		local fmt = {}
 		table.insert(fmt, string.format(fmt_header, func, arg))
 		if (alias) then table.insert(fmt, string.format(fmt_alias, alias)) end
 		table.insert(fmt, string.format(fmt_return, ret))
-		if (#info > 0) then table.insert(fmt, string.format(fmt_info, add_info)) end
+		if (info) then table.insert(fmt, string.format(fmt_info, info)) end
 		--if (... == true) then table.insert(fmt, string.format(fmt_derive, name)) end
 		table.insert(tbl, {alias = alias, func = func, fmt = table.concat(fmt, "\n")})
 	end
@@ -97,32 +91,36 @@ end
 
 -- Library
 
-java2wiki("Input", "Client", "library/client/LuaLibInput")
-java2wiki("Profiler", "Client", "library/client/LuaLibProfiler")
-java2wiki("Render", "Client", "library/client/LuaLibRender")
-java2wiki("Surface", "Client", "library/client/LuaLibSurface")
-
-java2wiki("Globals", "Client", "library/client/LuaGlobals")
-java2wiki("Globals", "Shared", "library/LuaGlobals", true)
+java2wiki("Globals", "Shared", "library/LuaGlobals")
+java2wiki("Globals", "Client", "library/client/LuaGlobals", true)
 java2wiki("Globals", "Server", "library/server/LuaGlobals", true)
 
 java2wiki("Game", "Client", "library/client/LuaLibGame")
 java2wiki("Game", "Server", "library/server/LuaLibGame", true)
 
+java2wiki("HTTP", "Shared", "library/LuaLibHTTP")
+java2wiki("Language", "Shared", "library/LuaLibLanguage")
 java2wiki("SQL", "Shared", "library/LuaLibSQL")
+java2wiki("Thread", "Shared", "library/LuaLibThread")
 java2wiki("Util", "Shared", "library/LuaLibUtil")
+
+java2wiki("Input", "Client", "library/client/LuaLibInput")
+java2wiki("Profiler", "Client", "library/client/LuaLibProfiler")
+java2wiki("Render", "Client", "library/client/LuaLibRender")
+java2wiki("Surface", "Client", "library/client/LuaLibSurface")
 
 java2wiki("Command", "Server", "library/server/LuaLibCommand")
 
 -- Meta
 
-java2wiki("Font", "Client", "meta/client/LuaFont")
-
 java2wiki("Angle", "Shared", "meta/LuaAngle")
 java2wiki("Block", "Shared", "meta/LuaBlock")
+java2wiki("Channel", "Shared", "meta/LuaChannel")
 java2wiki("Color", "Shared", "meta/LuaColor")
 java2wiki("Container", "Shared", "meta/LuaContainer")
+java2wiki("DamageSource", "Shared", "meta/LuaDamageSource")
 java2wiki("DataWatcher", "Shared", "meta/LuaDataWatcher")
+java2wiki("EntityDamageSource", "Shared", "meta/LuaEntityDamageSource")
 java2wiki("ItemStack", "Shared", "meta/LuaItemStack")
 java2wiki("Living", "Shared", "meta/LuaLiving")
 java2wiki("LivingBase", "Shared", "meta/LuaLivingBase")
@@ -132,6 +130,7 @@ java2wiki("SQLDatabase", "Shared", "meta/LuaSQLDatabase")
 java2wiki("SQLQuery", "Shared", "meta/LuaSQLQuery")
 java2wiki("Thread", "Shared", "meta/LuaThread")
 java2wiki("World", "Shared", "meta/LuaWorld")
+java2wiki("EntityItem", "Shared", "meta/LuaEntityItem")
 
 java2wiki("ByteBuf", "Client", "meta/client/LuaByteBuf")
 java2wiki("ByteBuf", "Shared", "meta/LuaByteBuf", true)
@@ -140,7 +139,8 @@ java2wiki("ByteBuf", "Server", "meta/server/LuaByteBuf", true)
 java2wiki("Entity", "Client", "meta/client/LuaEntity")
 java2wiki("Entity", "Shared", "meta/LuaEntity", true)
 
-java2wiki("EntityItem", "Shared", "meta/LuaEntityItem")
+java2wiki("Font", "Client", "meta/client/LuaFont")
+java2wiki("ModelResource", "Client", "meta/client/LuaModelResource")
 
 java2wiki("Player", "Shared", "meta/LuaPlayer")
 java2wiki("Player", "Server", "meta/server/LuaPlayer", true)
@@ -149,8 +149,6 @@ java2wiki("Vector", "Client", "meta/client/LuaVector")
 java2wiki("Vector", "Shared", "meta/LuaVector", true)
 
 java2wiki("PropertyManager", "Server", "meta/server/LuaPropertyManager")
-
-java2wiki("Resource", "Shared", "meta/LuaResource")
 
 
 

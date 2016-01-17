@@ -13,7 +13,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetPos Returns the entity position
+	 * @function GetPos
+	 * @info Returns the entity position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
@@ -33,7 +34,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetEyePos Returns the entitys eye position
+	 * @function GetEyePos
+	 * @info Returns the entitys eye position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */

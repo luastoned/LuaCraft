@@ -209,18 +209,15 @@ public class LuaState {
 
 		// Add metamethods
 		for (int i = 0; i < JavaReflector.Metamethod.values().length; i++) {
-			final JavaReflector.Metamethod metamethod = JavaReflector.Metamethod
-					.values()[i];
+			final JavaReflector.Metamethod metamethod = JavaReflector.Metamethod.values()[i];
 			lua_pushjavafunction(new JavaFunction() {
 				@Override
 				public int invoke(LuaState luaState) {
-					JavaFunction javaFunction = getMetamethod(
-							luaState.toJavaObjectRaw(1), metamethod);
+					JavaFunction javaFunction = getMetamethod(luaState.toJavaObjectRaw(1), metamethod);
 					if (javaFunction != null) {
 						return javaFunction.invoke(LuaState.this);
 					} else {
-						throw new UnsupportedOperationException(
-								metamethod.getMetamethodName());
+						throw new UnsupportedOperationException(metamethod.getMetamethodName());
 					}
 				}
 			});
@@ -313,11 +310,9 @@ public class LuaState {
 	 *            the object, or <code>null</code>
 	 * @return the Java reflector
 	 */
-	public synchronized JavaFunction getMetamethod(Object obj,
-			Metamethod metamethod) {
+	public synchronized JavaFunction getMetamethod(Object obj, Metamethod metamethod) {
 		if (obj != null && obj instanceof JavaReflector) {
-			JavaFunction javaFunction = ((JavaReflector) obj)
-					.getMetamethod(metamethod);
+			JavaFunction javaFunction = ((JavaReflector) obj).getMetamethod(metamethod);
 			if (javaFunction != null) {
 				return javaFunction;
 			}
@@ -450,8 +445,7 @@ public class LuaState {
 	 * @param namedJavaFunctions
 	 *            the Java functions of the module
 	 */
-	public synchronized void register(String moduleName,
-			NamedJavaFunction[] namedJavaFunctions) {
+	public synchronized void register(String moduleName, NamedJavaFunction[] namedJavaFunctions) {
 		check();
 		/*
 		 * The following code corresponds to luaL_openlib() and must be kept in
@@ -462,12 +456,10 @@ public class LuaState {
 		getField(-1, moduleName);
 		if (!isTable(-1)) {
 			pop(1);
-			String conflict = lua_findtable(GLOBALSINDEX, moduleName,
-					namedJavaFunctions.length);
+			String conflict = lua_findtable(GLOBALSINDEX, moduleName, namedJavaFunctions.length);
 			if (conflict != null) {
-				throw new IllegalArgumentException(String.format(
-						"naming conflict for module name '%s' at '%s'",
-						moduleName, conflict));
+				throw new IllegalArgumentException(
+						String.format("naming conflict for module name '%s' at '%s'", moduleName, conflict));
 			}
 			pushValue(-1);
 			setField(-3, moduleName);
@@ -476,8 +468,7 @@ public class LuaState {
 		for (int i = 0; i < namedJavaFunctions.length; i++) {
 			String name = namedJavaFunctions[i].getName();
 			if (name == null) {
-				throw new IllegalArgumentException(String.format(
-						"anonymous function at index %d", i));
+				throw new IllegalArgumentException(String.format("anonymous function at index %d", i));
 			}
 			pushJavaFunction(namedJavaFunctions[i]);
 			setField(-2, name);
@@ -497,8 +488,7 @@ public class LuaState {
 	 * @throws IOException
 	 *             if an IO error occurs
 	 */
-	public synchronized void load(InputStream inputStream, String chunkName)
-			throws IOException {
+	public synchronized void load(InputStream inputStream, String chunkName) throws IOException {
 		if (chunkName == null) {
 			throw new NullPointerException();
 		}
@@ -583,8 +573,7 @@ public class LuaState {
 	 * @param name
 	 *            the global variable name
 	 */
-	public synchronized void setGlobal(String name)
-			throws LuaMemoryAllocationException, LuaRuntimeException {
+	public synchronized void setGlobal(String name) throws LuaMemoryAllocationException, LuaRuntimeException {
 		check();
 		lua_setglobal(name);
 	}
@@ -677,8 +666,7 @@ public class LuaState {
 		lua_pushuserdata(object);
 	}
 
-	public synchronized void pushUserdataWithMeta(Object object,
-			String metaTable) {
+	public synchronized void pushUserdataWithMeta(Object object, String metaTable) {
 		pushUserdata(object);
 		newMetatable(metaTable);
 		setMetatable(-2);
@@ -1904,10 +1892,8 @@ public class LuaState {
 	public synchronized <T> T checkJavaObject(int index, Class<T> clazz) {
 		check();
 		if (!isJavaObject(index, clazz)) {
-			throw getArgException(
-					index,
-					String.format("exptected %s, got %s",
-							clazz.getCanonicalName(), typeName(index)));
+			throw getArgException(index,
+					String.format("exptected %s, got %s", clazz.getCanonicalName(), typeName(index)));
 		}
 		return toJavaObject(index, clazz);
 	}
@@ -1956,10 +1942,7 @@ public class LuaState {
 				return s;
 			}
 		}
-		throw getArgException(
-				index,
-				String.format("expected one of %s, got %s",
-						Arrays.asList(options), s));
+		throw getArgException(index, String.format("expected one of %s, got %s", Arrays.asList(options), s));
 	}
 
 	/**
@@ -2032,14 +2015,11 @@ public class LuaState {
 		return toUserdata(index);
 	}
 
-	public synchronized <T> Object checkUserdata(int index,
-			Class<T> formalType, String expected) {
+	public synchronized <T> Object checkUserdata(int index, Class<T> formalType, String expected) {
 		check();
 		Object userdata = toUserdata(index);
-		if (!isUserdata(index)
-				|| !formalType.isAssignableFrom(userdata.getClass())) {
-			throw getArgException(index, String.format("exptected %s, got %s",
-					expected, typeName(index)));
+		if (!isUserdata(index) || !formalType.isAssignableFrom(userdata.getClass())) {
+			throw getArgException(index, String.format("exptected %s, got %s", expected, typeName(index)));
 		}
 		return userdata;
 	}
@@ -2108,16 +2088,14 @@ public class LuaState {
 	public synchronized LuaValueProxy getProxy(int index, Class<?>[] interfaces) {
 		pushValue(index);
 		if (!isTable(index)) {
-			throw new IllegalArgumentException(String.format(
-					"index %d is not a table", index));
+			throw new IllegalArgumentException(String.format("index %d is not a table", index));
 		}
 		Class<?>[] allInterfaces = new Class<?>[interfaces.length + 1];
 		System.arraycopy(interfaces, 0, allInterfaces, 0, interfaces.length);
 		allInterfaces[allInterfaces.length - 1] = LuaValueProxy.class;
 		int reference = ref(REGISTRYINDEX);
 		try {
-			Object proxy = Proxy.newProxyInstance(classLoader, allInterfaces,
-					new LuaInvocationHandler(reference));
+			Object proxy = Proxy.newProxyInstance(classLoader, allInterfaces, new LuaInvocationHandler(reference));
 			reference = -1;
 			return (LuaValueProxy) proxy;
 		} finally {
@@ -2168,9 +2146,8 @@ public class LuaState {
 	 * Creates a Lua runtime exception to indicate an argument type error.
 	 */
 	private LuaRuntimeException getArgTypeException(int index, LuaType type) {
-		return getArgException(index,
-				String.format("expected %s, got %s", type.toString()
-						.toLowerCase(), type(index).toString().toLowerCase()));
+		return getArgException(index, String.format("expected %s, got %s", type.toString().toLowerCase(),
+				type(index).toString().toLowerCase()));
 	}
 
 	/**
@@ -2184,11 +2161,9 @@ public class LuaState {
 		String funcName = lua_funcname();
 		index = lua_narg(index);
 		String msg;
-		String argument = index > 0 ? String.format("argument #%d", index)
-				: "self argument";
+		String argument = index > 0 ? String.format("argument #%d", index) : "self argument";
 		if (funcName != null) {
-			msg = String.format("bad %s to '%s' (%s)", argument, funcName,
-					extraMsg);
+			msg = String.format("bad %s to '%s' (%s)", argument, funcName, extraMsg);
 		} else {
 			msg = String.format("bad %s (%s)", argument, extraMsg);
 		}
@@ -2206,8 +2181,7 @@ public class LuaState {
 
 	private native void lua_openlib(int lib);
 
-	private native void lua_load(InputStream inputStream, String chunkname)
-			throws IOException;
+	private native void lua_load(InputStream inputStream, String chunkname) throws IOException;
 
 	private native void lua_dump(OutputStream outputStream) throws IOException;
 
@@ -2488,8 +2462,7 @@ public class LuaState {
 	/**
 	 * Phantom reference to a Lua value proxy for pre-mortem cleanup.
 	 */
-	private static class LuaValueProxyRef extends
-			PhantomReference<LuaValueProxyImpl> {
+	private static class LuaValueProxyRef extends PhantomReference<LuaValueProxyImpl> {
 		// -- State
 		private int reference;
 
@@ -2544,8 +2517,7 @@ public class LuaState {
 	/**
 	 * Invocation handler for implementing Java interfaces in Lua.
 	 */
-	private class LuaInvocationHandler extends LuaValueProxyImpl implements
-			InvocationHandler {
+	private class LuaInvocationHandler extends LuaValueProxyImpl implements InvocationHandler {
 		// -- Construction
 		/**
 		 * Creates a new instance.
@@ -2556,8 +2528,7 @@ public class LuaState {
 
 		// -- InvocationHandler methods
 		@Override
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 			// Handle LuaProxy methods
 			if (method.getDeclaringClass() == LuaValueProxy.class) {
 				return method.invoke(this, args);
@@ -2579,8 +2550,7 @@ public class LuaState {
 				int retCount = method.getReturnType() != Void.TYPE ? 1 : 0;
 				call(argCount + 1, retCount);
 				try {
-					return retCount == 1 ? LuaState.this.toJavaObject(-1,
-							method.getReturnType()) : null;
+					return retCount == 1 ? LuaState.this.toJavaObject(-1, method.getReturnType()) : null;
 				} finally {
 					if (retCount == 1) {
 						pop(1);

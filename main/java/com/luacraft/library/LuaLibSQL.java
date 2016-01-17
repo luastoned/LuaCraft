@@ -13,7 +13,8 @@ public class LuaLibSQL {
 	/**
 	 * @author Jake
 	 * @library sql
-	 * @function Connect Connect to a database via JDBC
+	 * @function Connect
+	 * @info Connect to a database via JDBC
 	 * @arguments [[String]]:JDBC URL, [ [[String]]:username,
 	 *            [[String]]:password ]
 	 * @return [[SQLDatabase]]:database, [ [[String]]:error ]
@@ -25,8 +26,7 @@ public class LuaLibSQL {
 			Connection dataBase;
 			try {
 				if (l.isString(2) && l.isString(3))
-					dataBase = DriverManager.getConnection(url, l.toString(2),
-							l.toString(3));
+					dataBase = DriverManager.getConnection(url, l.toString(2), l.toString(3));
 				else
 					dataBase = DriverManager.getConnection(url);
 
@@ -43,7 +43,8 @@ public class LuaLibSQL {
 	/**
 	 * @author Jake
 	 * @library sql
-	 * @function GetQueries Get a table of all pending queries
+	 * @function GetQueries
+	 * @info Get a table of all pending queries
 	 * @arguments nil
 	 * @return [[Table]]:queries
 	 */

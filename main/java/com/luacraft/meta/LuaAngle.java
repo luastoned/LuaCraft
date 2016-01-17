@@ -113,7 +113,8 @@ public class LuaAngle {
 
 	/**
 	 * @author Jake
-	 * @function Forward Get the forward vector of an angle
+	 * @function Forward
+	 * @info Get the forward vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:forward
 	 */
@@ -128,7 +129,8 @@ public class LuaAngle {
 
 	/**
 	 * @author Jake
-	 * @function Right Get the right vector of an angle
+	 * @function Right
+	 * @info Get the right vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:right
 	 */
@@ -143,7 +145,8 @@ public class LuaAngle {
 
 	/**
 	 * @author Jake
-	 * @function Up Get the upward vector of an angle
+	 * @function Up
+	 * @info Get the upward vector of an angle
 	 * @arguments nil
 	 * @return [[Vector]]:up
 	 */

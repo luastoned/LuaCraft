@@ -12,20 +12,16 @@ import com.naef.jnlua.LuaState;
 public class LuaItemStack {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
-			l.pushString(String.format("ItemStack [%s][%d]",
-					self.getDisplayName(), self.stackSize));
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
+			l.pushString(String.format("ItemStack [%s][%d]", self.getDisplayName(), self.stackSize));
 			return 1;
 		}
 	};
 
 	public static JavaFunction __eq = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
-			ItemStack other = (ItemStack) l.checkUserdata(2, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
+			ItemStack other = (ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack");
 			l.pushBoolean(self.isItemEqual(other));
 			return 1;
 		}
@@ -33,15 +29,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function Copy Gets a copy of the [[ItemStack]]
+	 * @function Copy
+	 * @info Gets a copy of the [[ItemStack]]
 	 * @arguments nil
 	 * @return [[ItemStack]]:stack
 	 */
 
 	public static JavaFunction Copy = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushUserdataWithMeta(self.copy(), "ItemStack");
 			return 1;
 		}
@@ -49,15 +45,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function GetID Gets the [[ItemStack]]s id
+	 * @function GetID
+	 * @info Gets the [[ItemStack]]s id
 	 * @arguments nil
 	 * @return [[Number]]:id
 	 */
 
 	public static JavaFunction GetID = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushInteger(Item.getIdFromItem(self.getItem()));
 			return 1;
 		}
@@ -65,15 +61,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetID Sets the [[ItemStack]]s id
+	 * @function SetID
+	 * @info Sets the [[ItemStack]]s id
 	 * @arguments [[Number]]:id
 	 * @return nil
 	 */
 
 	public static JavaFunction SetID = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.setItem(Item.getItemById(l.checkInteger(2, 1)));
 			return 0;
 		}
@@ -81,15 +77,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Jake
-	 * @function GetName Gets the [[ItemStack]]s human readable name
+	 * @function GetName
+	 * @info Gets the [[ItemStack]]s human readable name
 	 * @arguments nil
 	 * @return [[String]]:name
 	 */
 
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushString(self.getDisplayName());
 			return 1;
 		}
@@ -97,15 +93,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetName Sets the [[ItemStack]]s human readable name
+	 * @function SetName
+	 * @info Sets the [[ItemStack]]s human readable name
 	 * @arguments [[String]]:name
 	 * @return nil
 	 */
 
 	public static JavaFunction SetName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.setStackDisplayName(l.checkString(2, "error"));
 			return 0;
 		}
@@ -113,15 +109,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Matt
-	 * @function GetNBT Gets the [[ItemStack]]s [[NBTTag]]
+	 * @function GetNBT
+	 * @info Gets the [[ItemStack]]s [[NBTTag]]
 	 * @arguments nil
 	 * @return [[NBTTag]]:tag
 	 */
 
 	public static JavaFunction GetNBT = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			if (!self.hasTagCompound())
 				self.setTagCompound(new NBTTagCompound());
 
@@ -132,17 +128,16 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetNBT Sets the [[ItemStack]]s [[NBTTag]]
+	 * @function SetNBT
+	 * @info Sets the [[ItemStack]]s [[NBTTag]]
 	 * @arguments [[NBTTag]]:tag
 	 * @return nil
 	 */
 
 	public static JavaFunction SetNBT = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
-			NBTTagCompound nbtTag = (NBTTagCompound) l.checkUserdata(2,
-					NBTTagCompound.class, "NBTTag");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
+			NBTTagCompound nbtTag = (NBTTagCompound) l.checkUserdata(2, NBTTagCompound.class, "NBTTag");
 			self.setTagCompound(nbtTag);
 			return 0;
 		}
@@ -150,15 +145,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function GetSize Gets the [[ItemStack]]s size
+	 * @function GetSize
+	 * @info Gets the [[ItemStack]]s size
 	 * @arguments nil
 	 * @return [[Number]]:size
 	 */
 
 	public static JavaFunction GetSize = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushInteger(self.stackSize);
 			return 1;
 		}
@@ -166,15 +161,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetSize Sets the [[ItemStack]]s size
+	 * @function SetSize
+	 * @info Sets the [[ItemStack]]s size
 	 * @arguments [[Number]]:size
 	 * @return nil
 	 */
 
 	public static JavaFunction SetSize = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.stackSize = l.checkInteger(2, 1);
 			return 0;
 		}
@@ -182,15 +177,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function GetMaxSize Gets the [[ItemStack]]s maximal size
+	 * @function GetMaxSize
+	 * @info Gets the [[ItemStack]]s maximal size
 	 * @arguments nil
 	 * @return [[Number]]:size
 	 */
 
 	public static JavaFunction GetMaxSize = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushInteger(self.getMaxStackSize());
 			return 1;
 		}
@@ -198,15 +193,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetMaxSize Sets the [[ItemStack]]s maximal size
+	 * @function SetMaxSize
+	 * @info Sets the [[ItemStack]]s maximal size
 	 * @arguments [[Number]]:size
 	 * @return nil
 	 */
 
 	public static JavaFunction SetMaxSize = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.getItem().setMaxStackSize(l.checkInteger(2, 1));
 			return 0;
 		}
@@ -214,15 +209,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function GetDamage Gets the [[ItemStack]]s damage value
+	 * @function GetDamage
+	 * @info Gets the [[ItemStack]]s damage value
 	 * @arguments nil
 	 * @return [[Number]]:damage
 	 */
 
 	public static JavaFunction GetDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushInteger(self.getItemDamage());
 			return 1;
 		}
@@ -230,15 +225,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function SetDamage Sets the [[ItemStack]]s damage value
+	 * @function SetDamage
+	 * @info Sets the [[ItemStack]]s damage value
 	 * @arguments [[Number]]:damage
 	 * @return nil
 	 */
 
 	public static JavaFunction SetDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.setItemDamage(l.checkInteger(2, 0));
 			return 0;
 		}
@@ -246,15 +241,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function GetMaxDamage Gets the [[ItemStack]]s maximal damage
+	 * @function GetMaxDamage
+	 * @info Gets the [[ItemStack]]s maximal damage
 	 * @arguments nil
 	 * @return [[Number]]:damage
 	 */
 
 	public static JavaFunction GetMaxDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushInteger(self.getMaxDamage());
 			return 1;
 		}
@@ -262,15 +257,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Matt
-	 * @function SetMaxDamage Sets the [[ItemStack]]s maximal damage
+	 * @function SetMaxDamage
+	 * @info Sets the [[ItemStack]]s maximal damage
 	 * @arguments [[Number]]:damage
 	 * @return nil
 	 */
 
 	public static JavaFunction SetMaxDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			self.getItem().setMaxDamage(l.checkInteger(2, 0));
 			return 0;
 		}
@@ -278,15 +273,15 @@ public class LuaItemStack {
 
 	/**
 	 * @author Matt
-	 * @function IsEnchanted Gets the [[ItemStack]]s enchantment status
+	 * @function IsEnchanted
+	 * @info Gets the [[ItemStack]]s enchantment status
 	 * @arguments nil
 	 * @return [[Boolean]]:status
 	 */
 
 	public static JavaFunction IsEnchanted = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
 			l.pushBoolean(self.isItemEnchanted());
 			return 1;
 		}
@@ -294,18 +289,16 @@ public class LuaItemStack {
 
 	/**
 	 * @author Gregor
-	 * @function AddEnchantment Adds a specific entchantment
+	 * @function AddEnchantment
+	 * @info Adds a specific entchantment
 	 * @arguments [[Number]]:id, [[Number]]:level
 	 * @return nil
 	 */
 
 	public static JavaFunction AddEnchantment = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class,
-					"ItemStack");
-			self.addEnchantment(
-					Enchantment.getEnchantmentById(l.checkInteger(2, 0)),
-					l.checkInteger(3, 1));
+			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
+			self.addEnchantment(Enchantment.getEnchantmentById(l.checkInteger(2, 0)), l.checkInteger(3, 1));
 			return 0;
 		}
 	};

@@ -9,9 +9,8 @@ import com.naef.jnlua.LuaState;
 public class LuaModelResource {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ModelResourceLocation self = (ModelResourceLocation) l
-					.checkUserdata(1, ModelResourceLocation.class,
-							"ModelResource");
+			ModelResourceLocation self = (ModelResourceLocation) l.checkUserdata(1, ModelResourceLocation.class,
+					"ModelResource");
 			l.pushString(String.format("ModelResource: 0x%08x", l.toPointer(1)));
 			return 1;
 		}

@@ -7,8 +7,7 @@ import com.naef.jnlua.LuaState;
 public class LuaThread {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushString(String.format("Thread: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -16,15 +15,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function SetPriority Sets the [[Thread]]s priority
+	 * @function SetPriority
+	 * @info Sets the [[Thread]]s priority
 	 * @arguments [[ENUM:THREAD_PRIORITY_*]]:priority
 	 * @return nil
 	 */
 
 	public static JavaFunction SetPriority = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			self.setPriority(l.checkInteger(2));
 			return 0;
 		}
@@ -32,15 +31,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function GetPriority Gets the [[Thread]]s priority
+	 * @function GetPriority
+	 * @info Gets the [[Thread]]s priority
 	 * @arguments nil
 	 * @return [[ENUM:THREAD_PRIORITY_*]]:priority
 	 */
 
 	public static JavaFunction GetPriority = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushNumber(self.getPriority());
 			return 1;
 		}
@@ -48,16 +47,16 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function IsAlive Tests if this [[Thread]] is alive. A [[Thread]] is
-	 *           alive if it has been started and has not yet died.
+	 * @function IsAlive
+	 * @info Tests if this [[Thread]] is alive. A [[Thread]] is alive if it has
+	 *       been started and has not yet died.
 	 * @arguments nil
 	 * @return [[Boolean]]:alive
 	 */
 
 	public static JavaFunction IsAlive = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushBoolean(self.isAlive());
 			return 1;
 		}
@@ -65,15 +64,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function Interrupt Interrupts this [[Thread]].
+	 * @function Interrupt
+	 * @info Interrupts this [[Thread]].
 	 * @arguments nil
 	 * @return nil
 	 */
 
 	public static JavaFunction Interrupt = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			self.interrupt();
 			return 0;
 		}
@@ -81,16 +80,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function IsInterrupted Tests whether this [[Thread]] has been
-	 *           interrupted.
+	 * @function IsInterrupted
+	 * @info Tests whether this [[Thread]] has been interrupted.
 	 * @arguments nil
 	 * @return [[Boolean]]:interrupted
 	 */
 
 	public static JavaFunction IsInterrupted = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushBoolean(self.isInterrupted());
 			return 1;
 		}
@@ -98,15 +96,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function SetName Sets the name of this [[Thread]].
+	 * @function SetName
+	 * @info Sets the name of this [[Thread]].
 	 * @arguments [[String]]:name
 	 * @return nil
 	 */
 
 	public static JavaFunction SetName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			self.setName(l.checkString(2));
 			return 0;
 		}
@@ -114,15 +112,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function GetName Gets the name of this [[Thread]].
+	 * @function GetName
+	 * @info Gets the name of this [[Thread]].
 	 * @arguments nil
 	 * @return [[String]]:name
 	 */
 
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushString(self.getName());
 			return 1;
 		}
@@ -130,15 +128,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function GetID Changes the ID of this [[Thread]].
+	 * @function GetID
+	 * @info Changes the ID of this [[Thread]].
 	 * @arguments nil
 	 * @return [[Number]]:id
 	 */
 
 	public static JavaFunction GetID = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushNumber(self.getId());
 			return 1;
 		}
@@ -146,15 +144,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function Sleep Pauses the thread for the given amount of time
+	 * @function Sleep
+	 * @info Pauses the thread for the given amount of time
 	 * @arguments [[Number]]:milliseconds, [ [[Number]]:nanoseconds ]
 	 * @return nil
 	 */
 
 	public static JavaFunction Sleep = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			try {
 				Thread.sleep((long) l.checkNumber(2), l.checkInteger(3, 0));
 			} catch (InterruptedException e) {
@@ -166,15 +164,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function Start Starts the thread
+	 * @function Start
+	 * @info Starts the thread
 	 * @arguments nil
 	 * @return nil
 	 */
 
 	public static JavaFunction Start = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			self.start();
 			return 0;
 		}
@@ -182,15 +180,15 @@ public class LuaThread {
 
 	/**
 	 * @author Jake
-	 * @function GetState Returns the state of the [[Thread]]
+	 * @function GetState
+	 * @info Returns the state of the [[Thread]]
 	 * @arguments nil
 	 * @return [[ENUM:THREAD_STATE_*]]:priority
 	 */
 
 	public static JavaFunction GetState = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1,
-					LuaJavaThread.class, "Thread");
+			LuaJavaThread self = (LuaJavaThread) l.checkUserdata(1, LuaJavaThread.class, "Thread");
 			l.pushNumber(self.getState().ordinal());
 			return 1;
 		}

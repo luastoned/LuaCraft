@@ -34,7 +34,8 @@ public class LuaLibRender {
 	/**
 	 * @author Jake
 	 * @library render
-	 * @function IgnoreZ Set ignoreZ to true or false
+	 * @function IgnoreZ
+	 * @info Set ignoreZ to true or false
 	 * @arguments [[Boolean]]:ignore
 	 * @return nil
 	 */
@@ -49,7 +50,8 @@ public class LuaLibRender {
 	/**
 	 * @author Jake
 	 * @library render
-	 * @function GetDrawColor Gets the current drawing color
+	 * @function GetDrawColor
+	 * @info Gets the current drawing color
 	 * @arguments nil
 	 * @return [[Color]]:color
 	 */
@@ -64,7 +66,8 @@ public class LuaLibRender {
 	/**
 	 * @author Jake
 	 * @library render
-	 * @function SetDrawColor Sets the current drawing color
+	 * @function SetDrawColor
+	 * @info Sets the current drawing color
 	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR
 	 *            [[Color]]:color
 	 * @return nil
@@ -81,8 +84,7 @@ public class LuaLibRender {
 				int a = l.checkInteger(4, 255);
 				drawColor = new Color(r, g, b, a);
 			} else
-				throw new LuaRuntimeException(
-						"surface.SetDrawColor: No valid color passed");
+				throw new LuaRuntimeException("surface.SetDrawColor: No valid color passed");
 			return 0;
 		}
 	};
@@ -90,7 +92,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawText Draws text to the current screen
+	 * @function DrawText
+	 * @info Draws text to the current screen
 	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang,
 	 *            [[Number]]:scale, [[Boolean]]:shadow
 	 * @return nil
@@ -104,17 +107,13 @@ public class LuaLibRender {
 			float flScale = (float) l.checkNumber(4, 1);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y
-					- posZ;
+			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -140,8 +139,7 @@ public class LuaLibRender {
 
 			GL11.glScalef(0.125F * flScale, 0.125F * flScale, 0.125F * flScale);
 			if (l.checkBoolean(5, false))
-				currentFont
-						.drawStringWithShadow(text, 0, 0, drawColor.getRGB());
+				currentFont.drawStringWithShadow(text, 0, 0, drawColor.getRGB());
 			else
 				currentFont.drawString(text, 0, 0, drawColor.getRGB());
 
@@ -163,7 +161,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawLine Draws a line in 3D space
+	 * @function DrawLine
+	 * @info Draws a line in 3D space
 	 * @arguments [[Vector]]:pos1, [[Vector]]:pos2, [ [[Number]]:width ]
 	 * @return nil
 	 */
@@ -175,25 +174,18 @@ public class LuaLibRender {
 			float lineWidth = (float) l.checkNumber(3, 2);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y
-					- posZ;
-			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y
-					- posZ;
+			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y - posZ;
+			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA,
-					GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
-					drawColor.b / 255.f, drawColor.a / 255.f);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glLineWidth(lineWidth);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDepthMask(false);
@@ -226,8 +218,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawBoundingBox Draws a bounding box in 3D space with the given
-	 *           a mins and a maxs
+	 * @function DrawBoundingBox
+	 * @info Draws a bounding box in 3D space with the given a mins and a maxs
 	 * @arguments [[Vector]]:min, [[Vector]]:max, [ [[Number]]:width ]
 	 * @return nil
 	 */
@@ -239,24 +231,18 @@ public class LuaLibRender {
 			float lineWidth = (float) l.checkNumber(3, 2);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y
-					- posZ;
-			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y
-					- posZ;
+			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y - posZ;
+			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
-					drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glLineWidth(lineWidth);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDepthMask(false);
@@ -309,7 +295,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawCircle Draws a circle in 3D space
+	 * @function DrawCircle
+	 * @info Draws a circle in 3D space
 	 * @arguments [[Vector]]:pos, [[Number]]:radius1, [ [[Number]]:radius2,
 	 *            [[Angle]]:ang ]
 	 * @return nil
@@ -324,22 +311,17 @@ public class LuaLibRender {
 			int iSlices = l.checkInteger(5, 24);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y
-					- posZ;
+			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
-					drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDepthMask(false);
 
@@ -378,7 +360,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawCylinder Draws a cylinder in 3D space
+	 * @function DrawCylinder
+	 * @info Draws a cylinder in 3D space
 	 * @arguments [[Vector]]:pos, [[Number]]:length, [[Number]]:radius1, [
 	 *            [[Number]]:radius2, [[Angle]]:ang, [[Number]]:numSlices ]
 	 * @return nil
@@ -394,22 +377,17 @@ public class LuaLibRender {
 			int iSlices = l.checkInteger(6, 24);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y
-					- posZ;
+			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
-					drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDepthMask(false);
 
@@ -428,8 +406,7 @@ public class LuaLibRender {
 			GL11.glRotatef((float) ang1.y, 0.F, 1.F, 0.F);
 			GL11.glRotatef((float) ang1.r, 1.F, 0.F, 0.F);
 
-			renderCylinder.draw(flRadius1, flRadius2, flLength, iSlices,
-					iSlices);
+			renderCylinder.draw(flRadius1, flRadius2, flLength, iSlices, iSlices);
 
 			GL11.glPopMatrix();
 
@@ -449,7 +426,8 @@ public class LuaLibRender {
 	/**
 	 * @author Gregor
 	 * @library render
-	 * @function DrawSphere Draws a sphere in 3D space
+	 * @function DrawSphere
+	 * @info Draws a sphere in 3D space
 	 * @arguments [[Vector]]:pos, [[Number]]:radius, [ [[Number]]:numSlices ]
 	 * @return nil
 	 */
@@ -461,22 +439,17 @@ public class LuaLibRender {
 			int iSlices = l.checkInteger(3, 24);
 
 			double posX = client.thePlayer.lastTickPosX
-					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
 			double posY = client.thePlayer.lastTickPosY
-					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posY - client.thePlayer.lastTickPosY) * client.timer.renderPartialTicks;
 			double posZ = client.thePlayer.lastTickPosZ
-					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ)
-					* client.timer.renderPartialTicks;
+					+ (client.thePlayer.posZ - client.thePlayer.lastTickPosZ) * client.timer.renderPartialTicks;
 
-			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y
-					- posZ;
+			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f,
-					drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDepthMask(false);
 

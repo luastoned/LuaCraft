@@ -68,8 +68,7 @@ public class LuaEventManager {
 				l.pushString("command.run");
 
 				if (event.sender instanceof EntityPlayer)
-					LuaUserdataManager.PushUserdata(l,
-							(EntityPlayer) event.sender);
+					LuaUserdataManager.PushUserdata(l, (EntityPlayer) event.sender);
 				else
 					l.pushNil();
 
@@ -496,8 +495,7 @@ public class LuaEventManager {
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
-				event.setResult(Result.values()[l.checkInteger(-1,
-						Result.DEFAULT.ordinal())]);
+				event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
@@ -517,8 +515,7 @@ public class LuaEventManager {
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
-				event.setResult(Result.values()[l.checkInteger(-1,
-						Result.DEFAULT.ordinal())]);
+				event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
@@ -729,8 +726,7 @@ public class LuaEventManager {
 				l.pushString("player.mineblock");
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 
-				LuaJavaBlock thisBlock = new LuaJavaBlock(
-						event.entityPlayer.worldObj, event.pos);
+				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
 				LuaUserdataManager.PushUserdata(l, thisBlock);
 
 				l.pushNumber(event.action.ordinal());

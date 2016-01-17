@@ -14,8 +14,7 @@ import com.naef.jnlua.LuaValueProxy;
 /**
  * Abstract list implementation backed by a Lua table.
  */
-public abstract class AbstractTableList extends AbstractList<Object> implements
-		RandomAccess, LuaValueProxy {
+public abstract class AbstractTableList extends AbstractList<Object> implements RandomAccess, LuaValueProxy {
 	// -- Construction
 	/**
 	 * Creates a new instance.
@@ -30,8 +29,7 @@ public abstract class AbstractTableList extends AbstractList<Object> implements
 		synchronized (luaState) {
 			int size = size();
 			if (index < 0 || index > size) {
-				throw new IndexOutOfBoundsException("index: " + index
-						+ ", size: " + size);
+				throw new IndexOutOfBoundsException("index: " + index + ", size: " + size);
 			}
 			pushValue();
 			luaState.tableMove(-1, index + 1, index + 2, size - index);
@@ -47,8 +45,7 @@ public abstract class AbstractTableList extends AbstractList<Object> implements
 		synchronized (luaState) {
 			int size = size();
 			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException("index: " + index
-						+ ", size: " + size);
+				throw new IndexOutOfBoundsException("index: " + index + ", size: " + size);
 			}
 			pushValue();
 			luaState.rawGet(-1, index + 1);
@@ -66,8 +63,7 @@ public abstract class AbstractTableList extends AbstractList<Object> implements
 		synchronized (luaState) {
 			int size = size();
 			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException("index: " + index
-						+ ", size: " + size);
+				throw new IndexOutOfBoundsException("index: " + index + ", size: " + size);
 			}
 			Object oldValue = get(index);
 			pushValue();
@@ -85,8 +81,7 @@ public abstract class AbstractTableList extends AbstractList<Object> implements
 		synchronized (luaState) {
 			int size = size();
 			if (index < 0 || index >= size) {
-				throw new IndexOutOfBoundsException("index: " + index
-						+ ", size: " + size);
+				throw new IndexOutOfBoundsException("index: " + index + ", size: " + size);
 			}
 			Object oldValue = get(index);
 			pushValue();

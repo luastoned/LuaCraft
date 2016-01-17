@@ -14,7 +14,8 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function SendToServer Sends the buffer to to the server
+	 * @function SendToServer
+	 * @info Sends the buffer to to the server
 	 * @arguments nil
 	 * @return nil
 	 */
@@ -24,10 +25,8 @@ public class LuaByteBuf {
 			if (client.thePlayer == null)
 				return 0;
 
-			PacketBuffer self = (PacketBuffer) l.checkUserdata(1,
-					PacketBuffer.class, "ByteBuf");
-			C17PacketCustomPayload packet = new C17PacketCustomPayload(
-					"LuaCraft", self);
+			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
+			C17PacketCustomPayload packet = new C17PacketCustomPayload("LuaCraft", self);
 			client.thePlayer.sendQueue.addToSendQueue(packet);
 			return 0;
 		}

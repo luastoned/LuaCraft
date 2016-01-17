@@ -9,8 +9,7 @@ import com.naef.jnlua.LuaState;
 public class LuaResource {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ResourceLocation self = (ResourceLocation) l.checkUserdata(1,
-					ResourceLocation.class, "Resource");
+			ResourceLocation self = (ResourceLocation) l.checkUserdata(1, ResourceLocation.class, "Resource");
 			l.pushString(String.format("Resource: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -18,15 +17,15 @@ public class LuaResource {
 
 	/**
 	 * @author Jake
-	 * @function GetDomain Gets the domain of the resource
+	 * @function GetDomain
+	 * @info Gets the domain of the resource
 	 * @arguments nil
 	 * @return [[String]]:domain
 	 */
 
 	public static JavaFunction GetDomain = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ResourceLocation self = (ResourceLocation) l.checkUserdata(1,
-					ResourceLocation.class, "Resource");
+			ResourceLocation self = (ResourceLocation) l.checkUserdata(1, ResourceLocation.class, "Resource");
 			l.pushString(self.getResourceDomain());
 			return 1;
 		}
@@ -34,15 +33,15 @@ public class LuaResource {
 
 	/**
 	 * @author Jake
-	 * @function GetPath Gets the path of the resource
+	 * @function GetPath
+	 * @info Gets the path of the resource
 	 * @arguments nil
 	 * @return [[String]]:path
 	 */
 
 	public static JavaFunction GetPath = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ResourceLocation self = (ResourceLocation) l.checkUserdata(1,
-					ResourceLocation.class, "Resource");
+			ResourceLocation self = (ResourceLocation) l.checkUserdata(1, ResourceLocation.class, "Resource");
 			l.pushString(self.getResourcePath());
 			return 1;
 		}

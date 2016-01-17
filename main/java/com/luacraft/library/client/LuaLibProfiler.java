@@ -14,7 +14,8 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function Start Starts a profiler section
+	 * @function Start
+	 * @info Starts a profiler section
 	 * @arguments [[String]]:name
 	 * @return nil
 	 */
@@ -29,7 +30,8 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function End Ends a profiler section
+	 * @function End
+	 * @info Ends a profiler section
 	 * @arguments nil
 	 * @return nil
 	 */
@@ -44,7 +46,8 @@ public class LuaLibProfiler {
 	/**
 	 * @author Jake
 	 * @library profiler
-	 * @function Clear Clears all profilers
+	 * @function Clear
+	 * @info Clears all profilers
 	 * @arguments nil
 	 * @return nil
 	 */

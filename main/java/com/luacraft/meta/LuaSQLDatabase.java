@@ -12,8 +12,7 @@ import com.naef.jnlua.LuaState;
 public class LuaSQLDatabase {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Connection self = (Connection) l.checkUserdata(1, Connection.class,
-					"SQLDatabase");
+			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
 			l.pushString(String.format("SQLDatabase: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -21,8 +20,7 @@ public class LuaSQLDatabase {
 
 	public static JavaFunction __gc = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Connection self = (Connection) l.checkUserdata(1, Connection.class,
-					"SQLDatabase");
+			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
 			try {
 				self.close();
 			} catch (SQLException e) {
@@ -34,15 +32,15 @@ public class LuaSQLDatabase {
 
 	/**
 	 * @author Jake
-	 * @function Disconnect Closes the connection to the database
+	 * @function Disconnect
+	 * @info Closes the connection to the database
 	 * @arguments nil
 	 * @return [[Boolean]]:success, [ [[String]]:error ]
 	 */
 
 	public static JavaFunction Disconnect = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Connection self = (Connection) l.checkUserdata(1, Connection.class,
-					"SQLDatabase");
+			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
 			try {
 				self.close();
 				l.pushBoolean(true);
@@ -57,18 +55,17 @@ public class LuaSQLDatabase {
 
 	/**
 	 * @author Jake
-	 * @function Query Query the database
+	 * @function Query
+	 * @info Query the database
 	 * @arguments [[String]]:query, [ [[Function]]:callback ]
 	 * @return [[SQLQuery]]:query, [ [[String]]:error ]
 	 */
 
 	public static JavaFunction Query = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Connection self = (Connection) l.checkUserdata(1, Connection.class,
-					"SQLDatabase");
+			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
 			try {
-				PreparedStatement statement = self.prepareStatement(l
-						.checkString(2));
+				PreparedStatement statement = self.prepareStatement(l.checkString(2));
 				LuaJavaQuery query = new LuaJavaQuery(l, statement, 3);
 				l.pushUserdataWithMeta(query, "SQLQuery");
 				return 1;

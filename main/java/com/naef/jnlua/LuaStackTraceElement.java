@@ -25,8 +25,7 @@ public class LuaStackTraceElement {
 	 * @param lineNumber
 	 *            the line number, or a negative number if unavailable
 	 */
-	public LuaStackTraceElement(String functionName, String sourceName,
-			int lineNumber) {
+	public LuaStackTraceElement(String functionName, String sourceName, int lineNumber) {
 		this.functionName = functionName;
 		this.sourceName = sourceName;
 		this.lineNumber = lineNumber;
@@ -74,8 +73,7 @@ public class LuaStackTraceElement {
 	@Override
 	public int hashCode() {
 		int result = functionName != null ? functionName.hashCode() : 0;
-		result = result * 65599 + sourceName != null ? sourceName.hashCode()
-				: 0;
+		result = result * 65599 + sourceName != null ? sourceName.hashCode() : 0;
 		result = result * 65599 + lineNumber;
 		return result;
 	}
@@ -89,8 +87,7 @@ public class LuaStackTraceElement {
 			return false;
 		}
 		LuaStackTraceElement other = (LuaStackTraceElement) obj;
-		return safeEquals(functionName, other.functionName)
-				&& safeEquals(sourceName, other.sourceName)
+		return safeEquals(functionName, other.functionName) && safeEquals(sourceName, other.sourceName)
 				&& lineNumber == other.lineNumber;
 	}
 

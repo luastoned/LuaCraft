@@ -32,8 +32,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaScriptedItem self = (LuaScriptedItem) l.checkUserdata(1,
-					LuaScriptedItem.class, "ScriptedItem");
+			LuaScriptedItem self = (LuaScriptedItem) l.checkUserdata(1, LuaScriptedItem.class, "ScriptedItem");
 			l.pushString(String.format("ScriptedItem: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -107,8 +106,6 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 
 			l.pushInteger(64);
 			l.setField(-2, "MaxStackSize");
-			l.pushInteger(0);
-			l.setField(-2, "MaxDamage");
 			l.pushBoolean(false);
 			l.setField(-2, "Full3D");
 			l.pushInteger(EnumAction.NONE.ordinal());
@@ -120,6 +117,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			l.pushInteger(6000);
 			l.setField(-2, "Lifespan");
 
+			l.pushJavaFunction(dummyFunc);
+			l.setField(-2, "GetMaxDamage");
 			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "GetModel");
 			l.pushJavaFunction(dummyFunc);
@@ -218,8 +217,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player,
-			int useRemaining) {
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.getModel(stack, player, useRemaining);
@@ -244,13 +242,11 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn,
-			World worldIn, BlockPos pos, EnumFacing side, float hitX,
-			float hitY, float hitZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemUse(stack, playerIn, worldIn, pos, side,
-						hitX, hitY, hitZ);
+				return super.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
 
 			pushValue("OnItemUse");
 			{
@@ -258,8 +254,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 				l.pushUserdataWithMeta(stack, "ItemStack");
 				LuaUserdataManager.PushUserdata(l, playerIn);
 				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn,
-						pos));
+				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
 				l.pushInteger(side.ordinal());
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
@@ -271,8 +266,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn,
-			EntityPlayer playerIn) {
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.onItemUseFinish(stack, worldIn, playerIn);
@@ -297,8 +291,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn,
-			EntityPlayer playerIn) {
+	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.onItemRightClick(itemStackIn, worldIn, playerIn);
@@ -323,8 +316,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player,
-			Entity entity) {
+	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.onLeftClickEntity(stack, player, entity);
@@ -344,8 +336,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public boolean hitEntity(ItemStack stack, EntityLivingBase target,
-			EntityLivingBase attacker) {
+	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.hitEntity(stack, target, attacker);
@@ -365,12 +356,11 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn,
-			Block blockIn, BlockPos pos, EntityLivingBase playerIn) {
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos,
+			EntityLivingBase playerIn) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onBlockDestroyed(stack, worldIn, blockIn, pos,
-						playerIn);
+				return super.onBlockDestroyed(stack, worldIn, blockIn, pos, playerIn);
 
 			pushValue("OnBlockDestroyed");
 			{
@@ -388,8 +378,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack stack,
-			EntityPlayer playerIn, EntityLivingBase target) {
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return super.itemInteractionForEntity(stack, playerIn, target);
@@ -423,8 +412,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn,
-			int itemSlot, boolean isSelected) {
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;

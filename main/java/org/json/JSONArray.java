@@ -137,8 +137,8 @@ public class JSONArray {
 	 * 
 	 * @param source
 	 *            A string that begins with <code>[</code>&nbsp;<small>(left
-	 *            bracket)</small> and ends with <code>]</code>
-	 *            &nbsp;<small>(right bracket)</small>.
+	 *            bracket)</small> and ends with <code>]</code> &nbsp;
+	 *            <small>(right bracket)</small>.
 	 * @throws JSONException
 	 *             If there is a syntax error.
 	 */
@@ -176,8 +176,7 @@ public class JSONArray {
 				this.put(JSONObject.wrap(Array.get(array, i)));
 			}
 		} else {
-			throw new JSONException(
-					"JSONArray initial value should be a string or collection or array.");
+			throw new JSONException("JSONArray initial value should be a string or collection or array.");
 		}
 	}
 
@@ -211,13 +210,10 @@ public class JSONArray {
 	 */
 	public boolean getBoolean(int index) throws JSONException {
 		Object object = this.get(index);
-		if (object.equals(Boolean.FALSE)
-				|| (object instanceof String && ((String) object)
-						.equalsIgnoreCase("false"))) {
+		if (object.equals(Boolean.FALSE) || (object instanceof String && ((String) object).equalsIgnoreCase("false"))) {
 			return false;
 		} else if (object.equals(Boolean.TRUE)
-				|| (object instanceof String && ((String) object)
-						.equalsIgnoreCase("true"))) {
+				|| (object instanceof String && ((String) object).equalsIgnoreCase("true"))) {
 			return true;
 		}
 		throw new JSONException("JSONArray[" + index + "] is not a boolean.");
@@ -236,8 +232,7 @@ public class JSONArray {
 	public double getDouble(int index) throws JSONException {
 		Object object = this.get(index);
 		try {
-			return object instanceof Number ? ((Number) object).doubleValue()
-					: Double.parseDouble((String) object);
+			return object instanceof Number ? ((Number) object).doubleValue() : Double.parseDouble((String) object);
 		} catch (Exception e) {
 			throw new JSONException("JSONArray[" + index + "] is not a number.");
 		}
@@ -255,8 +250,7 @@ public class JSONArray {
 	public int getInt(int index) throws JSONException {
 		Object object = this.get(index);
 		try {
-			return object instanceof Number ? ((Number) object).intValue()
-					: Integer.parseInt((String) object);
+			return object instanceof Number ? ((Number) object).intValue() : Integer.parseInt((String) object);
 		} catch (Exception e) {
 			throw new JSONException("JSONArray[" + index + "] is not a number.");
 		}
@@ -311,8 +305,7 @@ public class JSONArray {
 	public long getLong(int index) throws JSONException {
 		Object object = this.get(index);
 		try {
-			return object instanceof Number ? ((Number) object).longValue()
-					: Long.parseLong((String) object);
+			return object instanceof Number ? ((Number) object).longValue() : Long.parseLong((String) object);
 		} catch (Exception e) {
 			throw new JSONException("JSONArray[" + index + "] is not a number.");
 		}
@@ -387,8 +380,7 @@ public class JSONArray {
 	 * @return An object value, or null if there is no object at that index.
 	 */
 	public Object opt(int index) {
-		return (index < 0 || index >= this.length()) ? null : this.myArrayList
-				.get(index);
+		return (index < 0 || index >= this.length()) ? null : this.myArrayList.get(index);
 	}
 
 	/**
@@ -571,8 +563,7 @@ public class JSONArray {
 	 */
 	public String optString(int index, String defaultValue) {
 		Object object = this.opt(index);
-		return JSONObject.NULL.equals(object) ? object.toString()
-				: defaultValue;
+		return JSONObject.NULL.equals(object) ? object.toString() : defaultValue;
 	}
 
 	/**
@@ -870,8 +861,8 @@ public class JSONArray {
 	 *            The number of spaces to add to each level of indentation.
 	 * @return a printable, displayable, transmittable representation of the
 	 *         object, beginning with <code>[</code>&nbsp;<small>(left
-	 *         bracket)</small> and ending with <code>]</code>
-	 *         &nbsp;<small>(right bracket)</small>.
+	 *         bracket)</small> and ending with <code>]</code> &nbsp;
+	 *         <small>(right bracket)</small>.
 	 * @throws JSONException
 	 */
 	public String toString(int indentFactor) throws JSONException {
@@ -898,8 +889,7 @@ public class JSONArray {
 		int i;
 		StringBuffer sb = new StringBuffer("[");
 		if (len == 1) {
-			sb.append(JSONObject.valueToString(this.myArrayList.get(0),
-					indentFactor, indent));
+			sb.append(JSONObject.valueToString(this.myArrayList.get(0), indentFactor, indent));
 		} else {
 			int newindent = indent + indentFactor;
 			sb.append('\n');
@@ -910,8 +900,7 @@ public class JSONArray {
 				for (int j = 0; j < newindent; j += 1) {
 					sb.append(' ');
 				}
-				sb.append(JSONObject.valueToString(this.myArrayList.get(i),
-						indentFactor, newindent));
+				sb.append(JSONObject.valueToString(this.myArrayList.get(i), indentFactor, newindent));
 			}
 			sb.append('\n');
 			for (i = 0; i < indent; i += 1) {

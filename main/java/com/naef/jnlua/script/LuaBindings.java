@@ -42,8 +42,7 @@ class LuaBindings extends AbstractTableMap<String> implements Bindings {
 
 	@Override
 	protected boolean acceptKey(int index) {
-		return getLuaState().isString(index)
-				&& getLuaState().toString(index).length() > 0;
+		return getLuaState().isString(index) && getLuaState().toString(index).length() > 0;
 	}
 
 	@Override

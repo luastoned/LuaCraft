@@ -23,7 +23,7 @@ public class LuaPacketManager {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
-			
+
 			try {
 				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
 				l.pushIncomingNet();
@@ -40,7 +40,7 @@ public class LuaPacketManager {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
-			
+
 			try {
 				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
 				EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;

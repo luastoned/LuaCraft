@@ -11,8 +11,7 @@ public class LuaContainer {
 
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			l.pushString(String.format("Container: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -20,16 +19,15 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function GetMaxSlots Gets the maximum number of slots the container can
-	 *           hold
+	 * @function GetMaxSlots
+	 * @info Gets the maximum number of slots the container can hold
 	 * @arguments nil
 	 * @return [[Number]]:slots
 	 */
 
 	public static JavaFunction GetMaxSlots = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			l.pushInteger(self.getSizeInventory());
 			return 1;
 		}
@@ -37,16 +35,15 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function GetStackLimit Gets the maximum stack size that the container
-	 *           slot can hold
+	 * @function GetStackLimit
+	 * @info Gets the maximum stack size that the container slot can hold
 	 * @arguments nil
 	 * @return [[Number]]:slots
 	 */
 
 	public static JavaFunction GetStackLimit = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			l.pushInteger(self.getInventoryStackLimit());
 			return 1;
 		}
@@ -54,15 +51,15 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function GetName Gets the customized name of the container
+	 * @function GetName
+	 * @info Gets the customized name of the container
 	 * @arguments nil
 	 * @return [[String]]:name
 	 */
 
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			l.pushString(self.getName());
 			return 1;
 		}
@@ -70,15 +67,15 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function GetSlot Gets the item stack within the slot
+	 * @function GetSlot
+	 * @info Gets the item stack within the slot
 	 * @arguments nil
 	 * @return [[ItemStack]]:item
 	 */
 
 	public static JavaFunction GetSlot = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			ItemStack item = self.getStackInSlot(l.checkInteger(2));
 			l.pushUserdataWithMeta(item, "ItemStack");
 			return 1;
@@ -87,17 +84,16 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function SetSlot Sets the item stack within the slot
+	 * @function SetSlot
+	 * @info Sets the item stack within the slot
 	 * @arguments [[Number]]:slot, [[ItemStack]]:item
 	 * @return nil
 	 */
 
 	public static JavaFunction SetSlot = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
-			ItemStack item = (ItemStack) l.checkUserdata(3, ItemStack.class,
-					"ItemStack");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
+			ItemStack item = (ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack");
 			self.setInventorySlotContents(l.checkInteger(2), item);
 			return 0;
 		}
@@ -105,16 +101,15 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function DecreaseSlot Decrease the stack size of the item within the
-	 *           slot
+	 * @function DecreaseSlot
+	 * @info Decrease the stack size of the item within the slot
 	 * @arguments [[Number]]:slot, [ [[Number]]:amount ]
 	 * @return nil
 	 */
 
 	public static JavaFunction DecreaseSlot = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 			self.decrStackSize(l.checkInteger(2), l.checkInteger(3, 1));
 			return 0;
 		}
@@ -122,18 +117,17 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function IsItemValidForSlot Returns whether or not this item is allowed
-	 *           to be placed in the slot
+	 * @function IsItemValidForSlot
+	 * @info Returns whether or not this item is allowed to be placed in the
+	 *       slot
 	 * @arguments [[Number]]:slot, [[ItemStack]]:item
 	 * @return [[Boolean]]:isvalid
 	 */
 
 	public static JavaFunction IsItemValidForSlot = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
-			ItemStack item = (ItemStack) l.checkUserdata(3, ItemStack.class,
-					"ItemStack");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
+			ItemStack item = (ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack");
 			l.pushBoolean(self.isItemValidForSlot(l.checkInteger(2), item));
 			return 1;
 		}
@@ -141,16 +135,16 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
-	 * @function GetAll Returns a table of all the items within the container
-	 *           Format: [ SlotNumber ] = ItemStack
+	 * @function GetAll
+	 * @info Returns a table of all the items within the container Format: [
+	 *       SlotNumber ] = ItemStack
 	 * @arguments nil
 	 * @return [[Table]]:items
 	 */
 
 	public static JavaFunction GetAll = new JavaFunction() {
 		public int invoke(LuaState l) {
-			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class,
-					"Container");
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
 
 			l.newTable();
 

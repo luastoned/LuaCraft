@@ -25,6 +25,7 @@ public class LuaScriptEngineFactory implements ScriptEngineFactory {
 	private static final List<String> EXTENSIONS;
 	private static final List<String> MIME_TYPES;
 	private static final List<String> NAMES;
+
 	static {
 		// Extensions
 		List<String> extensions = new ArrayList<String>();

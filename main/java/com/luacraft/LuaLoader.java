@@ -33,9 +33,8 @@ public class LuaLoader implements Loader {
 			liblua = "libluajit";
 			libjnlua = "libjnluajit";
 		} else {
-			LuaCraft.getLogger().error(
-					String.format("Your OS (%s) is currently unsupported",
-							System.getProperty("os.name")));
+			LuaCraft.getLogger()
+					.error(String.format("Your OS (%s) is currently unsupported", System.getProperty("os.name")));
 		}
 
 		if (SystemUtils.OS_ARCH.contains("64"))
@@ -48,8 +47,7 @@ public class LuaLoader implements Loader {
 		if (isEclipse) {
 			System.load(rootDir + libraryDir + archType + lib + fileExt);
 		} else {
-			LuaCraft.extractFile("/bin/" + archType + lib + fileExt, libraryDir
-					+ lib + fileExt);
+			LuaCraft.extractFile("/bin/" + archType + lib + fileExt, libraryDir + lib + fileExt);
 			System.load(rootDir + libraryDir + lib + fileExt);
 		}
 	}

@@ -16,10 +16,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaRunCommand extends CommandBase {
 	private boolean switchState = false;
-	private static ChatComponentTranslation clientName = new ChatComponentTranslation(
-			"luacraft.state.client");
-	private static ChatComponentTranslation serverName = new ChatComponentTranslation(
-			"luacraft.state.server");
+	private static ChatComponentTranslation clientName = new ChatComponentTranslation("luacraft.state.client");
+	private static ChatComponentTranslation serverName = new ChatComponentTranslation("luacraft.state.server");
 
 	@Override
 	public String getName() {
@@ -36,15 +34,13 @@ public class LuaJavaRunCommand extends CommandBase {
 	 * { return true; }
 	 */
 
-	public void execute(ICommandSender sender, String[] args)
-			throws CommandException {
+	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		String strLua = "";
 		for (int i = 0; i < args.length; i++)
 			strLua += args[i] + " ";
 
 		if (args.length <= 0) {
-			ChatComponentTranslation usage = new ChatComponentTranslation(
-					getCommandUsage(sender));
+			ChatComponentTranslation usage = new ChatComponentTranslation(getCommandUsage(sender));
 			usage.getChatStyle().setColor(EnumChatFormatting.RED);
 			sender.addChatMessage(usage);
 			return;
@@ -53,9 +49,8 @@ public class LuaJavaRunCommand extends CommandBase {
 		if (args[0].equals("switch")) {
 			switchState = !switchState;
 
-			ChatComponentTranslation chatCT = new ChatComponentTranslation(
-					"luacraft.state.changed", switchState ? clientName
-							: serverName);
+			ChatComponentTranslation chatCT = new ChatComponentTranslation("luacraft.state.changed",
+					switchState ? clientName : serverName);
 			chatCT.getChatStyle().setColor(EnumChatFormatting.GREEN);
 			sender.addChatMessage(chatCT);
 			return;
@@ -64,13 +59,11 @@ public class LuaJavaRunCommand extends CommandBase {
 			return;
 		}
 
-		LuaCraftState l = LuaCraft.getLuaState(switchState ? Side.CLIENT
-				: Side.SERVER);
+		LuaCraftState l = LuaCraft.getLuaState(switchState ? Side.CLIENT : Side.SERVER);
 
 		synchronized (l) {
 			if (l == null) {
-				ChatComponentTranslation noLua = new ChatComponentTranslation(
-						"luacraft.state.notinit");
+				ChatComponentTranslation noLua = new ChatComponentTranslation("luacraft.state.notinit");
 				noLua.getChatStyle().setColor(EnumChatFormatting.RED);
 				sender.addChatMessage(noLua);
 				return;
@@ -79,8 +72,7 @@ public class LuaJavaRunCommand extends CommandBase {
 			LuaCraft.getLogger().info(sender.getName() + " Lua > " + strLua);
 
 			try {
-				l.load(strLua,
-						StatCollector.translateToLocal("luacraft.console"));
+				l.load(strLua, StatCollector.translateToLocal("luacraft.console"));
 				l.call(0, 0);
 			} catch (LuaException e) {
 				ChatComponentText chatCT = new ChatComponentText(e.getMessage());

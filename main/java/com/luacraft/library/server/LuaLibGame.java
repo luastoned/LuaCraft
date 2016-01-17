@@ -12,7 +12,8 @@ public class LuaLibGame {
 	/**
 	 * @author Matt
 	 * @library game
-	 * @function MaxPlayers Get the number of available player slots
+	 * @function MaxPlayers
+	 * @info Get the number of available player slots
 	 * @arguments nil
 	 * @return [[Number]]:slots
 	 */
@@ -27,7 +28,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetMOTD Get the current MOTD of the server
+	 * @function GetMOTD
+	 * @info Get the current MOTD of the server
 	 * @arguments nil
 	 * @return [[String]]:motd
 	 */
@@ -42,7 +44,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetMOTD Set the current MOTD of the server
+	 * @function SetMOTD
+	 * @info Set the current MOTD of the server
 	 * @arguments [[String]]:motd
 	 * @return nil
 	 */
@@ -57,7 +60,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetPVP Get if PVP is enabled on the server
+	 * @function GetPVP
+	 * @info Get if PVP is enabled on the server
 	 * @arguments nil
 	 * @return [[Boolean]]:pvp
 	 */
@@ -72,7 +76,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetPVP Set if PVP is enabled on the server
+	 * @function SetPVP
+	 * @info Set if PVP is enabled on the server
 	 * @arguments [[Boolean]]:pvp
 	 * @return nil
 	 */
@@ -87,7 +92,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetOnlineMode Get if the server is in online mode
+	 * @function GetOnlineMode
+	 * @info Get if the server is in online mode
 	 * @arguments nil
 	 * @return [[Boolean]]:online
 	 */
@@ -102,7 +108,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetOnlineMode Set if the server is in online mode
+	 * @function SetOnlineMode
+	 * @info Set if the server is in online mode
 	 * @arguments [[Boolean]]:online
 	 * @return nil
 	 */
@@ -117,7 +124,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetCanSpawnAnimals Get if the server can spawn animals
+	 * @function GetCanSpawnAnimals
+	 * @info Get if the server can spawn animals
 	 * @arguments nil
 	 * @return [[Boolean]]:animals
 	 */
@@ -132,7 +140,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetCanSpawnAnimals Set if the server can spawn animals
+	 * @function SetCanSpawnAnimals
+	 * @info Set if the server can spawn animals
 	 * @arguments [[Boolean]]:animals
 	 * @return nil
 	 */
@@ -147,7 +156,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetCanSpawnNPCs Get if the server can spawn NPCs
+	 * @function GetCanSpawnNPCs
+	 * @info Get if the server can spawn NPCs
 	 * @arguments nil
 	 * @return [[Boolean]]:npcs
 	 */
@@ -162,7 +172,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetCanSpawnNPCs Set if the server can spawn npcs
+	 * @function SetCanSpawnNPCs
+	 * @info Set if the server can spawn npcs
 	 * @arguments [[Boolean]]:npcs
 	 * @return nil
 	 */
@@ -177,7 +188,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetFlightEnabled Get if the server allows players to fly
+	 * @function GetFlightEnabled
+	 * @info Get if the server allows players to fly
 	 * @arguments nil
 	 * @return [[Boolean]]:flight
 	 */
@@ -192,7 +204,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetFlightEnabled Set if the server allows players to fly
+	 * @function SetFlightEnabled
+	 * @info Set if the server allows players to fly
 	 * @arguments [[Boolean]]:flight
 	 * @return nil
 	 */
@@ -207,7 +220,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetBuildHeight Get the maximum height a player can build
+	 * @function GetBuildHeight
+	 * @info Get the maximum height a player can build
 	 * @arguments nil
 	 * @return [[Number]]:height
 	 */
@@ -222,7 +236,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetBuildHeight Set the maximum height a player can build
+	 * @function SetBuildHeight
+	 * @info Set the maximum height a player can build
 	 * @arguments [[Number]]:height
 	 * @return nil
 	 */
@@ -237,7 +252,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetHostName Get the hostname of the server
+	 * @function GetHostName
+	 * @info Get the hostname of the server
 	 * @arguments nil
 	 * @return [[String]]:hostname
 	 */
@@ -252,7 +268,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function SetHostName Set the hostname of the server
+	 * @function SetHostName
+	 * @info Set the hostname of the server
 	 * @arguments [[String]]:hostname
 	 * @return nil
 	 */
@@ -267,8 +284,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function ConCommand Run a command as if it were ran through the server
-	 *           console
+	 * @function ConCommand
+	 * @info Run a command as if it were ran through the server console
 	 * @arguments [[String]]:command
 	 * @return [[String]]:output
 	 */
@@ -283,7 +300,8 @@ public class LuaLibGame {
 	/**
 	 * @author Jake
 	 * @library game
-	 * @function GetViewDistance Get the viewdistance of the server
+	 * @function GetViewDistance
+	 * @info Get the viewdistance of the server
 	 * @arguments nil
 	 * @return [[Number]]:distance
 	 */

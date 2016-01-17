@@ -11,17 +11,16 @@ import com.naef.jnlua.LuaState;
 public class LuaEntityItem {
 	/**
 	 * @author Jake
-	 * @function SetItemStack Set what item this entity will represent
+	 * @function SetItemStack
+	 * @info Set what item this entity will represent
 	 * @arguments [[ItemStack]]:item
 	 * @return nil
 	 */
 
 	public static JavaFunction SetItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
-			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class,
-					"ItemStack");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
+			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack");
 			self.setEntityItemStack(item);
 			return 0;
 		}
@@ -29,15 +28,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function GetItemStack Get what item this entity is representing
+	 * @function GetItemStack
+	 * @info Get what item this entity is representing
 	 * @arguments nil
 	 * @return [[ItemStack]]:item
 	 */
 
 	public static JavaFunction GetItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			l.pushUserdataWithMeta(self.getEntityItem(), "ItemStack");
 			return 1;
 		}
@@ -45,15 +44,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function SetItemStack Set how old this item is
+	 * @function SetItemStack
+	 * @info Set how old this item is
 	 * @arguments [[Number]]:age
 	 * @return nil
 	 */
 
 	public static JavaFunction SetAge = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			self.age = l.checkInteger(2);
 			return 0;
 		}
@@ -61,15 +60,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function GetAge Get how old this item is
+	 * @function GetAge
+	 * @info Get how old this item is
 	 * @arguments nil
 	 * @return [[Number]]:age
 	 */
 
 	public static JavaFunction GetAge = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			l.pushInteger(self.getAge());
 			return 1;
 		}
@@ -77,15 +76,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function SetPickupDelay Set the delay before this item can be picked up
+	 * @function SetPickupDelay
+	 * @info Set the delay before this item can be picked up
 	 * @arguments [[Number]]:delay
 	 * @return nil
 	 */
 
 	public static JavaFunction SetPickupDelay = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			self.delayBeforeCanPickup = l.checkInteger(2);
 			return 0;
 		}
@@ -93,15 +92,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function GetPickupDelay Get the delay before this item can be picked up
+	 * @function GetPickupDelay
+	 * @info Get the delay before this item can be picked up
 	 * @arguments nil
 	 * @return [[Number]]:age
 	 */
 
 	public static JavaFunction GetPickupDelay = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			l.pushInteger(self.delayBeforeCanPickup);
 			return 1;
 		}
@@ -109,15 +108,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function SetLifespan Set the lifespan of this item
+	 * @function SetLifespan
+	 * @info Set the lifespan of this item
 	 * @arguments [[Number]]:lifespan
 	 * @return nil
 	 */
 
 	public static JavaFunction SetLifespan = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			self.lifespan = l.checkInteger(2);
 			return 0;
 		}
@@ -125,15 +124,15 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function GetLifespan Get the lifespan of this item
+	 * @function GetLifespan
+	 * @info Get the lifespan of this item
 	 * @arguments nil
 	 * @return [[Number]]:lifespan
 	 */
 
 	public static JavaFunction GetLifespan = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			l.pushInteger(self.lifespan);
 			return 1;
 		}

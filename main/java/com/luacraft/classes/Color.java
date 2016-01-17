@@ -93,8 +93,7 @@ public class Color implements LuaUserdata {
 	}
 
 	public String toString() {
-		return String.format("Color [%d, %d, %d %d][#%08X]", r, g, b, a,
-				getRGB());
+		return String.format("Color [%d, %d, %d %d][#%08X]", r, g, b, a, getRGB());
 	}
 
 	public String getTypeName() {

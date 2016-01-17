@@ -11,18 +11,17 @@ public class LuaEntityDamageSource {
 
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1,
-					EntityDamageSource.class, "EntityDamageSource");
-			l.pushString(String.format("EntityDamageSource: 0x%08x",
-					l.toPointer(1)));
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
+			l.pushString(String.format("EntityDamageSource: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
 	};
 
 	public static JavaFunction GetEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1,
-					EntityDamageSource.class, "EntityDamageSource");
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
 			LuaUserdataManager.PushUserdata(l, self.getEntity());
 			return 1;
 		}
@@ -30,8 +29,8 @@ public class LuaEntityDamageSource {
 
 	public static JavaFunction IsDifficultyScaled = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1,
-					EntityDamageSource.class, "EntityDamageSource");
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
 			LuaUserdataManager.PushUserdata(l, self.isDifficultyScaled());
 			return 1;
 		}

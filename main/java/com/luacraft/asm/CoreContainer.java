@@ -14,8 +14,7 @@ public class CoreContainer extends DummyModContainer {
 		super(new ModMetadata());
 
 		ModMetadata metaData = super.getMetadata();
-		metaData.authorList = Arrays.asList("LuaStoned", "BlackAwps",
-				"iRzilla", "Skooch");
+		metaData.authorList = Arrays.asList("LuaStoned", "BlackAwps", "iRzilla", "Skooch");
 		metaData.description = "CoreMod for LuaCraft.";
 		metaData.modId = "luacraftcore";
 		metaData.version = LuaCraft.VERSION;

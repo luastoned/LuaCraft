@@ -15,7 +15,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Gregor
-	 * @function Block Get the Block at specified coordinates
+	 * @function Block
+	 * @info Get the Block at specified coordinates
 	 * @arguments nil
 	 * @return [[Block]]:block
 	 */
@@ -25,8 +26,7 @@ public class LuaGlobals {
 			int x, y, z;
 
 			if (l.isUserdata(1, Vector.class)) {
-				Vector thisVec = (Vector) l.checkUserdata(1, Vector.class,
-						"Vector");
+				Vector thisVec = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 				x = (int) Math.floor(thisVec.x);
 				y = (int) Math.floor(thisVec.y);
 				z = (int) Math.floor(thisVec.z);
@@ -44,7 +44,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Jake
-	 * @function World Get the world that the local player is currently in
+	 * @function World
+	 * @info Get the world that the local player is currently in
 	 * @arguments nil
 	 * @return [[World]]:world
 	 */
@@ -58,7 +59,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Matt
-	 * @function ScrW Get the screen width
+	 * @function ScrW
+	 * @info Get the screen width
 	 * @arguments nil
 	 * @return [[Number]]:width
 	 */
@@ -72,7 +74,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Matt
-	 * @function ScrH Get the screen height
+	 * @function ScrH
+	 * @info Get the screen height
 	 * @arguments nil
 	 * @return [[Number]]:height
 	 */
@@ -86,7 +89,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Matt
-	 * @function LocalPlayer Get your local player object
+	 * @function LocalPlayer
+	 * @info Get your local player object
 	 * @arguments nil
 	 * @return [[Player]]:localplayer
 	 */
@@ -100,7 +104,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Jake
-	 * @function ModelResource Creates a new [[ModelResource]] object
+	 * @function ModelResource
+	 * @info Creates a new [[ModelResource]] object
 	 * @arguments [[String]]:path, [ [[String]]:modid ]
 	 * @return [[ModelResource]]:resource
 	 */
@@ -108,13 +113,9 @@ public class LuaGlobals {
 	public static JavaFunction ModelResource = new JavaFunction() {
 		public int invoke(LuaState l) {
 			if (l.getTop() > 1)
-				l.pushUserdataWithMeta(
-						new ModelResourceLocation(l.checkString(1), l
-								.checkString(2)), "ModelResource");
+				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1), l.checkString(2)), "ModelResource");
 			else
-				l.pushUserdataWithMeta(
-						new ModelResourceLocation(l.checkString(1)),
-						"ModelResource");
+				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1)), "ModelResource");
 			return 1;
 		}
 	};

@@ -17,8 +17,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Jake
-	 * @function PropertyManager Returns a new [[PropertyManager]] for the given
-	 *           file
+	 * @function PropertyManager
+	 * @info Returns a new [[PropertyManager]] for the given file
 	 * @arguments nil
 	 * @return [[PropertyManager]]:manager
 	 */
@@ -34,7 +34,8 @@ public class LuaGlobals {
 
 	/**
 	 * @author Jake
-	 * @function World Get the world for the given dimensionID
+	 * @function World
+	 * @info Get the world for the given dimensionID
 	 * @arguments [[Number]]:dimension
 	 * @return [[World]]:world
 	 */

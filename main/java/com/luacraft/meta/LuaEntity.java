@@ -27,8 +27,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			GetClass.invoke(l);
-			l.pushString(String.format("Entity [%d][%s]", self.getEntityId(),
-					l.toString(-1)));
+			l.pushString(String.format("Entity [%d][%s]", self.getEntityId(), l.toString(-1)));
 			return 1;
 		}
 	};
@@ -44,7 +43,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function AttackFrom Attack an entity using a [[DamageSource]]
+	 * @function AttackFrom
+	 * @info Attack an entity using a [[DamageSource]]
 	 * @arguments [[DamageSource]]:source, [[Number]]:damage
 	 * @return nil
 	 */
@@ -52,8 +52,7 @@ public class LuaEntity {
 	public static JavaFunction AttackFrom = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			DamageSource damage = (DamageSource) l.checkUserdata(2,
-					DamageSource.class, "DamageSource");
+			DamageSource damage = (DamageSource) l.checkUserdata(2, DamageSource.class, "DamageSource");
 			self.attackEntityFrom(damage, (float) l.checkNumber(3));
 			return 0;
 		}
@@ -61,9 +60,10 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetUniqueID Get the entities unique ID that will be persistent
-	 *           If used on a player in online-mode, it will return the
-	 *           Minecraft UUID for the player
+	 * @function GetUniqueID
+	 * @info Get the entities unique ID that will be persistent If used on a
+	 *       player in online-mode, it will return the Minecraft UUID for the
+	 *       player
 	 * @arguments nil
 	 * @return [[String]]:id
 	 */
@@ -78,7 +78,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsAlive Returns if the entity is alive
+	 * @function IsAlive
+	 * @info Returns if the entity is alive
 	 * @arguments nil
 	 * @return [[Boolean]]:alive
 	 */
@@ -93,7 +94,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsOnGround Check if the entity stands on ground
+	 * @function IsOnGround
+	 * @info Check if the entity stands on ground
 	 * @arguments nil
 	 * @return [[Boolean]]:onground
 	 */
@@ -108,7 +110,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsEntity Returns if the argument is an entity
+	 * @function IsEntity
+	 * @info Returns if the argument is an entity
 	 * @arguments arg
 	 * @return [[Boolean]]:entity
 	 */
@@ -122,7 +125,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsPlayer Returns if the entity is a player entity
+	 * @function IsPlayer
+	 * @info Returns if the entity is a player entity
 	 * @arguments nil
 	 * @return [[Boolean]]:player
 	 */
@@ -136,7 +140,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsMob Returns if the entity is a mob entity
+	 * @function IsMob
+	 * @info Returns if the entity is a mob entity
 	 * @arguments nil
 	 * @return [[Boolean]]:mob
 	 */
@@ -150,7 +155,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsAnimal Returns if the entity is an animal entity
+	 * @function IsAnimal
+	 * @info Returns if the entity is an animal entity
 	 * @arguments nil
 	 * @return [[Boolean]]:animal
 	 */
@@ -164,7 +170,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsTameable Returns if the entity is a tameable entity
+	 * @function IsTameable
+	 * @info Returns if the entity is a tameable entity
 	 * @arguments nil
 	 * @return [[Boolean]]:tameable
 	 */
@@ -178,7 +185,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsLiving Returns if the entity is a living entity
+	 * @function IsLiving
+	 * @info Returns if the entity is a living entity
 	 * @arguments nil
 	 * @return [[Boolean]]:living
 	 */
@@ -192,7 +200,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsItem Returns if the entity is an item entity
+	 * @function IsItem
+	 * @info Returns if the entity is an item entity
 	 * @arguments nil
 	 * @return [[Boolean]]:item
 	 */
@@ -206,7 +215,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsInstanceOf Returns if the entity is an instance of the given
+	 * @function IsInstanceOf
+	 * @info Returns if the entity is an instance of the given
 	 * @arguments [[Entity]]:entity
 	 * @return [[Boolean]]:instance
 	 */
@@ -222,7 +232,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsValid Returns if the entity is not null
+	 * @function IsValid
+	 * @info Returns if the entity is not null
 	 * @arguments nil
 	 * @return [[Boolean]]:valid
 	 */
@@ -237,7 +248,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetAngles Returns the entity angles
+	 * @function GetAngles
+	 * @info Returns the entity angles
 	 * @arguments nil
 	 * @return [[Angle]]:ang
 	 */
@@ -253,7 +265,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetAngles Sets the entity angles
+	 * @function SetAngles
+	 * @info Sets the entity angles
 	 * @arguments [[Angle]]:ang
 	 * @return nil
 	 */
@@ -269,7 +282,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetPos Returns the entity position
+	 * @function GetPos
+	 * @info Returns the entity position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
@@ -285,7 +299,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function SetPos Sets the entity position
+	 * @function SetPos
+	 * @info Sets the entity position
 	 * @arguments [[Vector]]:pos
 	 * @return nil
 	 */
@@ -301,7 +316,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsBurning Check if the entity is burning
+	 * @function IsBurning
+	 * @info Check if the entity is burning
 	 * @arguments nil
 	 * @return [[Boolean]]:burning
 	 */
@@ -316,7 +332,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function Ignite Set the entity on fire
+	 * @function Ignite
+	 * @info Set the entity on fire
 	 * @arguments [ [[Number]]:duration ]
 	 * @return nil This is an alternative function to SetBurning
 	 */
@@ -331,7 +348,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function Extinguish Extinguish the entity
+	 * @function Extinguish
+	 * @info Extinguish the entity
 	 * @arguments nil
 	 * @return nil This is an alternative function to SetBurning
 	 */
@@ -346,7 +364,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function SetNoClip Set the entity into noclip mode
+	 * @function SetNoClip
+	 * @info Set the entity into noclip mode
 	 * @arguments [[Boolean]]:noclip
 	 * @return nil
 	 */
@@ -361,7 +380,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetNoClip Get whether or not the entity is in noclip mode
+	 * @function GetNoClip
+	 * @info Get whether or not the entity is in noclip mode
 	 * @arguments nil
 	 * @return [[Boolean]]:noclipping
 	 */
@@ -376,7 +396,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsMounted Check if the entity is mounted by another entity
+	 * @function IsMounted
+	 * @info Check if the entity is mounted by another entity
 	 * @arguments nil
 	 * @return [[Boolean]]:mounted
 	 */
@@ -391,7 +412,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function SetMount Mount the entity to another entity
+	 * @function SetMount
+	 * @info Mount the entity to another entity
 	 * @arguments [[Entity]]:ent
 	 * @return nil
 	 */
@@ -407,7 +429,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetMount Get the entity that is being ridden
+	 * @function GetMount
+	 * @info Get the entity that is being ridden
 	 * @arguments nil
 	 * @return [[Entity]]:riding
 	 */
@@ -422,7 +445,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsSneaking Check if the entity is sneaking
+	 * @function IsSneaking
+	 * @info Check if the entity is sneaking
 	 * @arguments nil
 	 * @return [[Boolean]]:sneak
 	 */
@@ -437,7 +461,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsInWater Check if the entity is in water
+	 * @function IsInWater
+	 * @info Check if the entity is in water
 	 * @arguments nil
 	 * @return [[Boolean]]:inwater
 	 */
@@ -452,7 +477,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetAir Return the entitys air volume
+	 * @function GetAir
+	 * @info Return the entitys air volume
 	 * @arguments nil
 	 * @return [[Number]]:air
 	 */
@@ -467,7 +493,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function SetAir Set the entitys air volume
+	 * @function SetAir
+	 * @info Set the entitys air volume
 	 * @arguments [[Number]]:air
 	 * @return nil
 	 */
@@ -482,8 +509,9 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetFireResistance The amount of ticks you have to stand inside
-	 *           in fire before be set on fire
+	 * @function GetFireResistance
+	 * @info The amount of ticks you have to stand inside in fire before be set
+	 *       on fire
 	 * @arguments nil
 	 * @return [[Number]]:res
 	 */
@@ -498,7 +526,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetFireResistance Sets the entitys resistance to fire
+	 * @function SetFireResistance
+	 * @info Sets the entitys resistance to fire
 	 * @arguments [[Number]]:resistance
 	 * @return nil
 	 */
@@ -513,7 +542,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetEyePos Returns the entitys eye position
+	 * @function GetEyePos
+	 * @info Returns the entitys eye position
 	 * @arguments nil
 	 * @return [[Vector]]:pos
 	 */
@@ -521,8 +551,7 @@ public class LuaEntity {
 	public static JavaFunction GetEyePos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			Vector pos = new Vector(self.posX, self.posZ, self.posY
-					+ self.getEyeHeight());
+			Vector pos = new Vector(self.posX, self.posZ, self.posY + self.getEyeHeight());
 			pos.push(l);
 			return 1;
 		}
@@ -530,7 +559,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function GetEyeHeight Returns the entitys eye height
+	 * @function GetEyeHeight
+	 * @info Returns the entitys eye height
 	 * @arguments nil
 	 * @return [[Number]]:height
 	 */
@@ -545,7 +575,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetVelocity Returns the entitys current velocity
+	 * @function GetVelocity
+	 * @info Returns the entitys current velocity
 	 * @arguments nil
 	 * @return [[Vector]]:vel
 	 */
@@ -561,7 +592,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetVelocity Sets the entitys current velocity
+	 * @function SetVelocity
+	 * @info Sets the entitys current velocity
 	 * @arguments [[Vector]]:vel
 	 * @return nil
 	 */
@@ -579,7 +611,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function AddVelocity Adds to the entitys current velocity
+	 * @function AddVelocity
+	 * @info Adds to the entitys current velocity
 	 * @arguments [[Vector]]:vel
 	 * @return nil
 	 */
@@ -595,7 +628,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsInAir Returns if the entity is airborne
+	 * @function IsInAir
+	 * @info Returns if the entity is airborne
 	 * @arguments nil
 	 * @return [[Boolean]]:inair
 	 */
@@ -610,7 +644,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function IsSprinting Check if the entity is sprinting
+	 * @function IsSprinting
+	 * @info Check if the entity is sprinting
 	 * @arguments nil
 	 * @return [[Boolean]]:sprinting
 	 */
@@ -625,7 +660,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function SetSprinting Set the entity to sprint
+	 * @function SetSprinting
+	 * @info Set the entity to sprint
 	 * @arguments [[Boolean]]:sprinting
 	 * @return nil This onls works if the forward movement is not zero
 	 */
@@ -640,7 +676,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetClass Returns the class the entity is a part of
+	 * @function GetClass
+	 * @info Returns the class the entity is a part of
 	 * @arguments nil
 	 * @return [[Boolean]]:classname
 	 */
@@ -656,7 +693,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function EntIndex Returns the entity index
+	 * @function EntIndex
+	 * @info Returns the entity index
 	 * @arguments nil
 	 * @return [[Number]]:index
 	 */
@@ -671,7 +709,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsInWeb Checks if the entity is in a web
+	 * @function IsInWeb
+	 * @info Checks if the entity is in a web
 	 * @arguments nil
 	 * @return [[Boolean]]:web
 	 */
@@ -686,7 +725,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetStepSize Returns the entity step size
+	 * @function GetStepSize
+	 * @info Returns the entity step size
 	 * @arguments nil
 	 * @return [[Number]]:stepsize
 	 */
@@ -701,7 +741,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetStepSize Sets the entity step size
+	 * @function SetStepSize
+	 * @info Sets the entity step size
 	 * @arguments [[Number]]:stepsize
 	 * @return nil
 	 */
@@ -716,8 +757,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetDimensionID Return the dimension number the entity is
-	 *           currently in
+	 * @function GetDimensionID
+	 * @info Return the dimension number the entity is currently in
 	 * @arguments nil
 	 * @return [[Number]]:dimension
 	 */
@@ -732,7 +773,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetWorld Set the world object in which the entity resides in
+	 * @function SetWorld
+	 * @info Set the world object in which the entity resides in
 	 * @arguments [[World]]:world
 	 * @return nil
 	 */
@@ -748,7 +790,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetWorld Get the world object in which the entity resides in
+	 * @function GetWorld
+	 * @info Get the world object in which the entity resides in
 	 * @arguments nil
 	 * @return [[World]]:world
 	 */
@@ -763,7 +806,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function TravelToWorld Moves the entity to another world
+	 * @function TravelToWorld
+	 * @info Moves the entity to another world
 	 * @arguments [[World]]:world
 	 * @return nil
 	 */
@@ -779,7 +823,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetWidth Get the width of the entity
+	 * @function GetWidth
+	 * @info Get the width of the entity
 	 * @arguments nil
 	 * @return [[Number]]:width
 	 */
@@ -794,7 +839,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetHeight Get the height of the entity
+	 * @function GetHeight
+	 * @info Get the height of the entity
 	 * @arguments nil
 	 * @return [[Number]]:height
 	 */
@@ -809,7 +855,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetSize Get the width and the height of the entity
+	 * @function GetSize
+	 * @info Get the width and the height of the entity
 	 * @arguments nil
 	 * @return [[Number]]:width, [[Number]]:height
 	 */
@@ -825,7 +872,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetSize Set the width and the height of the entity
+	 * @function SetSize
+	 * @info Set the width and the height of the entity
 	 * @arguments [[Number]]:width, [[Number]]:height
 	 * @return nil
 	 */
@@ -840,7 +888,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function Explode Explodes the entity
+	 * @function Explode
+	 * @info Explodes the entity
 	 * @arguments [[Number]]:size
 	 * @return nil
 	 */
@@ -848,8 +897,7 @@ public class LuaEntity {
 	public static JavaFunction Explode = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.worldObj.createExplosion(self, self.posX, self.posY,
-					self.posZ, (float) l.checkNumber(2, 5),
+			self.worldObj.createExplosion(self, self.posX, self.posY, self.posZ, (float) l.checkNumber(2, 5),
 					l.checkBoolean(3, false));
 			return 0;
 		}
@@ -857,7 +905,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function OBBMins Gets the entitys minimum bound
+	 * @function OBBMins
+	 * @info Gets the entitys minimum bound
 	 * @arguments nil
 	 * @return [[Vector]]:mins
 	 */
@@ -874,7 +923,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function OBBMaxs Gets the entitys maximum bound
+	 * @function OBBMaxs
+	 * @info Gets the entitys maximum bound
 	 * @arguments nil
 	 * @return [[Vector]]:maxs
 	 */
@@ -891,8 +941,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function WorldToLocal Get the local vector of a world vector in relation
-	 *           to the entity
+	 * @function WorldToLocal
+	 * @info Get the local vector of a world vector in relation to the entity
 	 * @arguments [[Vector]]:world
 	 * @return [[Vector]]:local
 	 */
@@ -901,8 +951,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			Vector toVec = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			Vector local = new Vector(self.posX - toVec.x, self.posZ - toVec.y,
-					self.posY - toVec.z);
+			Vector local = new Vector(self.posX - toVec.x, self.posZ - toVec.y, self.posY - toVec.z);
 			local.push(l);
 			return 1;
 		}
@@ -910,8 +959,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function LocalToWorld Get the world vector of a local vector in relation
-	 *           to the entity
+	 * @function LocalToWorld
+	 * @info Get the world vector of a local vector in relation to the entity
 	 * @arguments [[Vector]]:local
 	 * @return [[Vector]]:world
 	 */
@@ -920,8 +969,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			Vector toVec = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			Vector local = new Vector(self.posX + toVec.x, self.posZ + toVec.y,
-					self.posY + toVec.z);
+			Vector local = new Vector(self.posX + toVec.x, self.posZ + toVec.y, self.posY + toVec.z);
 			local.push(l);
 			return 1;
 		}
@@ -929,7 +977,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Gregor
-	 * @function Move Try to move the entity to the given position
+	 * @function Move
+	 * @info Try to move the entity to the given position
 	 * @arguments [[Vector]]:pos
 	 * @return nil
 	 */
@@ -945,7 +994,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function PlaySound Play a sound emitting from the entity
+	 * @function PlaySound
+	 * @info Play a sound emitting from the entity
 	 * @arguments [[String]]:Sound name, [ [[Number]]:Volume, [[Number]]:Pitch ]
 	 * @return nil
 	 */
@@ -953,23 +1003,22 @@ public class LuaEntity {
 	public static JavaFunction PlaySound = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.playSound(l.checkString(2), (float) l.checkNumber(3, 1),
-					(float) l.checkNumber(4, 1));
+			self.playSound(l.checkString(2), (float) l.checkNumber(3, 1), (float) l.checkNumber(4, 1));
 			return 0;
 		}
 	};
 
 	/**
 	 * @author Gregor
-	 * @function GetItem Gets the entities [[ItemStack]]
+	 * @function GetItem
+	 * @info Gets the entities [[ItemStack]]
 	 * @arguments nil
 	 * @return [[ItemStack]]:item
 	 */
 
 	public static JavaFunction GetItem = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class,
-					"EntityItem");
+			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			l.pushUserdataWithMeta(self.getEntityItem(), "ItemStack");
 			return 1;
 		}
@@ -977,7 +1026,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function Spawn Spawn an entity in the world
+	 * @function Spawn
+	 * @info Spawn an entity in the world
 	 * @arguments [ [[Boolean]]:force ]
 	 * @return [[Boolean]]:success
 	 */
@@ -993,7 +1043,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function Remove Remove the entity
+	 * @function Remove
+	 * @info Remove the entity
 	 * @arguments nil
 	 * @return nil
 	 */
@@ -1008,7 +1059,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function SetInvisible Sets if the entity is invisible or not
+	 * @function SetInvisible
+	 * @info Sets if the entity is invisible or not
 	 * @arguments [[Boolean]]:invisible
 	 * @return nil
 	 */
@@ -1023,7 +1075,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function IsInvisible Returns if the entity is invisible
+	 * @function IsInvisible
+	 * @info Returns if the entity is invisible
 	 * @arguments nil
 	 * @return [[Boolean]]:invisible
 	 */
@@ -1038,7 +1091,8 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetNBTTag Returns the entities NBTTag compound
+	 * @function GetNBTTag
+	 * @info Returns the entities NBTTag compound
 	 * @arguments nil
 	 * @return [[NBTTag]]:nbttag
 	 */
@@ -1053,8 +1107,9 @@ public class LuaEntity {
 
 	/**
 	 * @author Jake
-	 * @function GetDataWatcher Returns a DataWatcher which can be used to
-	 *           control the entities networked data
+	 * @function GetDataWatcher
+	 * @info Returns a DataWatcher which can be used to control the entities
+	 *       networked data
 	 * @arguments nil
 	 * @return [[DataWatcher]]:networkdata
 	 */

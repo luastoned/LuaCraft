@@ -22,8 +22,7 @@ public class LuaLibHTTP {
 
 					while (l.next(-2)) {
 						StringBuilder out = new StringBuilder();
-						request.connection.setRequestProperty(l.toString(-2),
-								l.toString(-1));
+						request.connection.setRequestProperty(l.toString(-2), l.toString(-1));
 						l.pop(1);
 					}
 				}

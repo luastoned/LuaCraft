@@ -7,12 +7,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.luacraft.LuaCraftState;
@@ -48,10 +54,8 @@ public class LuaLibUtil {
 	}
 
 	public static String decompress(byte[] bytes) throws IOException {
-		GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(
-				bytes));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(gzip,
-				"UTF-8"));
+		GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(bytes));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(gzip, "UTF-8"));
 
 		StringBuilder out = new StringBuilder();
 		String line;
@@ -65,10 +69,63 @@ public class LuaLibUtil {
 		return out.toString();
 	}
 
-	public static void pushTrace(LuaState l, World world, Vector start,
-			Vector endpos, boolean hitWater) {
-		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(),
-				endpos.toVec3(), hitWater);
+	private static Entity traceEntity(World world, Vec3 start, Vec3 end) {
+		double d0 = start.distanceTo(end);
+		double d1 = d0;
+		Vec3 vec3 = start;
+		Vec3 vec31 = start.subtract(end);
+		Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
+		Entity pointedEntity = null;
+		Vec3 vec33 = null;
+		float f1 = 1.0F;
+		
+		AxisAlignedBB bb = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+		
+		List list = world.getEntitiesWithinAABB(Entity.class, bb.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0)
+						.expand((double) f1, (double) f1, (double) f1));
+		double d2 = d1;
+
+		for (int i = 0; i < list.size(); ++i) {
+			Entity entity1 = (Entity) list.get(i);
+
+			if (entity1.canBeCollidedWith()) {
+				float f2 = entity1.getCollisionBorderSize();
+				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double) f2, (double) f2,
+						(double) f2);
+				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
+
+				if (axisalignedbb.isVecInside(vec3)) {
+					if (0.0D < d2 || d2 == 0.0D) {
+						pointedEntity = entity1;
+						vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
+						d2 = 0.0D;
+					}
+				} else if (movingobjectposition != null) {
+					double d3 = vec3.distanceTo(movingobjectposition.hitVec);
+
+					if (d3 < d2 || d2 == 0.0D) {
+						pointedEntity = entity1;
+						vec33 = movingobjectposition.hitVec;
+						d2 = d3;
+					}
+				}
+			}
+		}
+
+		if (pointedEntity != null && d2 < d1)
+			return pointedEntity;
+
+		return null;
+	}
+
+	public static void pushTrace(LuaState l, World world, Vector start, Vector endpos, boolean hitWater) {
+		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(), endpos.toVec3(), hitWater);
+
+		AxisAlignedBB bb = new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
+
+		Vec3 size = new Vec3(0.5, 0.5, 0.5);
+		
+		Entity hitEnt = traceEntity(world, start.toVec3(), endpos.toVec3());
 
 		l.newTable();
 
@@ -90,12 +147,11 @@ public class LuaLibUtil {
 			hitpos.push(l);
 			l.setField(-2, "HitPos");
 
-			if (trace.typeOfHit == MovingObjectType.ENTITY) {
-				LuaUserdataManager.PushUserdata(l, trace.entityHit);
+			if (hitEnt != null) {
+				LuaUserdataManager.PushUserdata(l, hitEnt);
 				l.setField(-2, "HitEntity");
 			} else {
-				LuaJavaBlock thisBlock = new LuaJavaBlock(world,
-						trace.getBlockPos());
+				LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
 				LuaUserdataManager.PushUserdata(l, thisBlock);
 				l.setField(-2, "HitBlock");
 
@@ -108,7 +164,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function CRC32 Get a CRC32-bit number of a string
+	 * @function CRC32
+	 * @info Get a CRC32-bit number of a string
 	 * @arguments nil
 	 * @return [[Number]]:crc32
 	 */
@@ -125,8 +182,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Encrypt Encrypt a string using the specified algorithm Defaults
-	 *           to MD5
+	 * @function Encrypt
+	 * @info Encrypt a string using the specified algorithm Defaults to MD5
 	 * @arguments [[String]]:input, [ [[String]]:algorithm ]
 	 * @return [[String]]:encrypted
 	 */
@@ -149,7 +206,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Base64Encode Encode a string to Base64
+	 * @function Base64Encode
+	 * @info Encode a string to Base64
 	 * @arguments nil
 	 * @return [[String]]:data
 	 */
@@ -164,7 +222,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Base64Decode Decode Base64 encoded data back to a string
+	 * @function Base64Decode
+	 * @info Decode Base64 encoded data back to a string
 	 * @arguments nil
 	 * @return [[String]]:string
 	 */
@@ -179,7 +238,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Compress Compress a string using GZIP
+	 * @function Compress
+	 * @info Compress a string using GZIP
 	 * @arguments nil
 	 * @return [[String]]:data
 	 */
@@ -198,7 +258,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function Decompress Decompress a string using GZIP
+	 * @function Decompress
+	 * @info Decompress a string using GZIP
 	 * @arguments nil
 	 * @return [[String]]:string
 	 */
@@ -217,7 +278,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function GetOS Get the name of the OS
+	 * @function GetOS
+	 * @info Get the name of the OS
 	 * @arguments nil
 	 * @return [[String]]:os
 	 */
@@ -232,7 +294,8 @@ public class LuaLibUtil {
 	/**
 	 * @author Jake
 	 * @library util
-	 * @function GetArchitecture Get the architecture of the computer
+	 * @function GetArchitecture
+	 * @info Get the architecture of the computer
 	 * @arguments nil
 	 * @return [[String]]:arch
 	 */

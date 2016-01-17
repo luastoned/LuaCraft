@@ -25,8 +25,7 @@ public class LuaJavaHTTPRequest extends Thread {
 		return ref;
 	}
 
-	public LuaJavaHTTPRequest(LuaState luaState, URL requestURL, int index)
-			throws IOException {
+	public LuaJavaHTTPRequest(LuaState luaState, URL requestURL, int index) throws IOException {
 		l = luaState;
 		callbackRef = newCallbackRef(index);
 
@@ -44,8 +43,7 @@ public class LuaJavaHTTPRequest extends Thread {
 			StringBuilder contents = new StringBuilder();
 
 			try {
-				InputStreamReader reader = new InputStreamReader(
-						connection.getInputStream());
+				InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 				BufferedReader in = new BufferedReader(reader);
 
 				String line;
