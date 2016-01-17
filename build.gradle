@@ -25,12 +25,17 @@ group= "com.luacraft" // http://maven.apache.org/guides/mini/guide-naming-conven
 archivesBaseName = "LuaCraft"
 ext.modId = "luacraft"
 
-if (Boolean.valueOf(isSnapshot))
-    version += '-SNAPSHOT'
-if (System.getenv().containsKey('BUILD_NUMBER'))
-    version += "-b${System.getenv('BUILD_NUMBER')}"
 minecraft {
-    version = "1.8-11.14.3.1562"
+    version = "1.8-11.14.4.1563"
+    runDir = "run"
+    
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = "stable_18"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 dependencies {
@@ -51,20 +56,11 @@ dependencies {
     //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
-
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-}
-jar {
-	manifest {
-		attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
-		attributes 'FMLCorePluginContainsFMLMod' : 'true'
-	}
-}
 
-println 'Building LuaCraft - version ' + project.version + " for Minecraft " + project.minecraft.version
-defaultTasks 'clean' //, 'packJar'
+}
 
 processResources
 {
@@ -85,6 +81,16 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+jar {
+	manifest {
+		attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
+		attributes 'FMLCorePluginContainsFMLMod' : 'true'
+	}
+}
+
+println 'Building LuaCraft - version ' + project.version + " for Minecraft " + project.minecraft.version
+defaultTasks 'clean' //, 'packJar'
 
 configurations {
     packJar
