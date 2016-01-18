@@ -5,6 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
 import com.luacraft.library.LuaLibHTTP;
+import com.luacraft.library.LuaLibLanguage;
 import com.luacraft.library.LuaLibSQL;
 import com.luacraft.library.LuaLibThread;
 import com.luacraft.library.LuaLibUtil;
@@ -121,6 +122,7 @@ public class LuaShared {
 		// Libs
 		LuaGlobals.Init(l);
 		LuaLibHTTP.Init(l);
+		LuaLibLanguage.Init(l);
 		LuaLibSQL.Init(l);
 		LuaLibThread.Init(l);
 		LuaLibUtil.Init(l);

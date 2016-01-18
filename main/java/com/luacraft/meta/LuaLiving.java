@@ -96,6 +96,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function GetAvoidSun
+	 * @broken
 	 * @info Return if this NPC keeps away from sunlight
 	 * @arguments nil
 	 * @return [[Boolean]]:avoid sun
@@ -112,6 +113,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function SetAge
+	 * @broken
 	 * @info Set the entitys age
 	 * @arguments [[Number]]:age
 	 * @return nil
@@ -128,6 +130,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function GetAvoidWater
+	 * @broken
 	 * @info Return if this NPC keeps away from water
 	 * @arguments nil
 	 * @return [[Boolean]]:avoid water
@@ -144,7 +147,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function SetAvoidWater
-	 * @info Set if this NPC should keep away from water
+	 * @broken keep away from water
 	 * @arguments [[Boolean]]: state
 	 * @return nil
 	 */
@@ -160,6 +163,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function GetBreakDoors
+	 * @broken
 	 * @info Return if this NPC can break down doors
 	 * @arguments nil
 	 * @return [[Boolean]]:door breaking
@@ -176,6 +180,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function SetBreakDoors
+	 * @broken
 	 * @info Set if this NPC should break down doors
 	 * @arguments [[Boolean]]: state
 	 * @return nil
@@ -192,6 +197,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function SetCanSwim
+	 * @broken
 	 * @info Set if this NPC can swim
 	 * @arguments [[Boolean]]: state
 	 * @return nil
@@ -208,6 +214,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function GetCanSwim
+	 * @broken
 	 * @info Return if this NPC can swim
 	 * @arguments nil
 	 * @return [[Boolean]]:swimming
@@ -224,6 +231,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function SetEnterDoors
+	 * @broken
 	 * @info Set if this NPC can enter doors
 	 * @arguments [[Boolean]]: state
 	 * @return nil
@@ -240,6 +248,7 @@ public class LuaLiving {
 	/**
 	 * @author Jake
 	 * @function GetMovementSpeed
+	 * @broken
 	 * @info Return how fast this NPC can move
 	 * @arguments nil
 	 * @return [[Number]]: speed

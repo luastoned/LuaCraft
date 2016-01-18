@@ -128,7 +128,6 @@ public class LuaCraft {
 		return getMinecraftDirectory() + luaDir;
 	}
 
-	@SuppressWarnings("resource")
 	public static InputStream getPackedFileInputStream(String file) throws FileNotFoundException {
 		InputStream in = null;
 		if (luaLoader.isEclipse)

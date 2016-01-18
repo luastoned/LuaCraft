@@ -153,7 +153,7 @@ public class LuaByteBuf {
 	 * @function ReadBool
 	 * @info Reads a boolean from the buffer
 	 * @arguments nil
-	 * @return [[Boolean]]:angle
+	 * @return [[Boolean]]:bool
 	 */
 
 	public static JavaFunction ReadBool = new JavaFunction() {

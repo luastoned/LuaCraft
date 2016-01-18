@@ -12,6 +12,14 @@ public class LuaChannel {
 			return 1;
 		}
 	};
+	
+	/**
+	 * @author Jake
+	 * @function Empty
+	 * @info Tests if this stack is empty.
+	 * @arguments nil
+	 * @return [[Boolean]]:empty
+	 */
 
 	public static JavaFunction Empty = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -20,6 +28,14 @@ public class LuaChannel {
 			return 1;
 		}
 	};
+	
+	/**
+	 * @author Jake
+	 * @function Empty
+	 * @info Looks at the object at the top of this stack without removing it from the stack.
+	 * @arguments nil
+	 * @return [[Object]]:obj
+	 */
 
 	public static JavaFunction Peek = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -28,6 +44,14 @@ public class LuaChannel {
 			return 1;
 		}
 	};
+	
+	/**
+	 * @author Jake
+	 * @function Pop
+	 * @info Removes the object at the top of this stack and returns that object as the value of this function.
+	 * @arguments nil
+	 * @return [[Object]]:obj
+	 */
 
 	public static JavaFunction Pop = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -36,6 +60,14 @@ public class LuaChannel {
 			return 1;
 		}
 	};
+	
+	/**
+	 * @author Jake
+	 * @function Push
+	 * @info Pushes an item onto the top of this stack. 
+	 * @arguments [[Object]]:obj
+	 * @return nil
+	 */
 
 	public static JavaFunction Push = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -44,6 +76,14 @@ public class LuaChannel {
 			return 0;
 		}
 	};
+	
+	/**
+	 * @author Jake
+	 * @function Search
+	 * @info Returns the 1-based position from the top of the stack where the object is located; the return value -1 indicates that the object is not on the stack.
+	 * @arguments [[Object]]:obj
+	 * @return [[Number]]:position
+	 */
 
 	public static JavaFunction Search = new JavaFunction() {
 		public int invoke(LuaState l) {
