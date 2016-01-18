@@ -38,7 +38,7 @@ public class LuaLibThread {
 	 * @library thread
 	 * @function GetChannel
 	 * @info Create a new channel
-	 * @arguments nil
+	 * @arguments [[String]]:name
 	 * @return [[Channel]]:channel
 	 */
 

@@ -15,6 +15,16 @@ import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
 public class LuaLibLanguage {
+
+	/**
+	 * @author Jake
+	 * @library language
+	 * @function Translate
+	 * @info Translate a translation key into its human readable language
+	 * @arguments [[String]]:key, [ [[String]]:... ]
+	 * @return [[String]]:translation
+	 */
+
 	public static JavaFunction Translate = new JavaFunction() {
 		public int invoke(LuaState l) {
 			int top = l.getTop();
@@ -36,6 +46,15 @@ public class LuaLibLanguage {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @library language
+	 * @function ParseFile
+	 * @info Load a language file into the game
+	 * @arguments [[String]]:file
+	 * @return nil
+	 */
+
 	public static JavaFunction ParseFile = new JavaFunction() {
 		public int invoke(LuaState l) {
 			File file = FileMount.GetFile(l.checkString(1));
@@ -48,6 +67,15 @@ public class LuaLibLanguage {
 			return 0;
 		}
 	};
+
+	/**
+	 * @author Jake
+	 * @library language
+	 * @function CanTranslate
+	 * @info Returns true if the given key is translatable
+	 * @arguments [[String]]:key
+	 * @return [[Boolean]]:cantranslate
+	 */
 
 	public static JavaFunction CanTranslate = new JavaFunction() {
 		public int invoke(LuaState l) {

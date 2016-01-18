@@ -14,6 +14,7 @@ local javaDir = "src/main/java/com/luacraft/"
 local pattern           = "/%*%*([%w%s%p]-)%*/"
 
 local fmt_header        = "==== %s(%s) ===="
+local fmt_header_lib    = "==== %s.%s(%s) ===="
 local fmt_alias         = "* '''Alias''' to this function: '''%s'''"
 local fmt_return        = "* Return value: '''%s'''"
 local fmt_info          = "* '''Information''': %s"
@@ -45,6 +46,7 @@ function grabdoc(fileName)
 
 	for doc in str:gmatch(pattern) do
 		local author	= doc:match("@author%s(.-)\r\n")
+		local lib		= doc:match("@library%s(.-)\r\n")
 		local func		= doc:match("@function%s(.-)\r\n")
 		local info		= doc:match("@info%s(.-)\r\n")
 		local alias		= doc:match("@alias%s(.-)\r\n")
@@ -56,7 +58,11 @@ function grabdoc(fileName)
 		ret = ret:gsub(":", " ")
 		
 		local fmt = {}
-		table.insert(fmt, string.format(fmt_header, func, arg))
+		if (lib) then
+			table.insert(fmt, string.format(fmt_header_lib, lib, func, arg))
+		else
+			table.insert(fmt, string.format(fmt_header, func, arg))
+		end
 		if (alias) then table.insert(fmt, string.format(fmt_alias, alias)) end
 		table.insert(fmt, string.format(fmt_return, ret))
 		if (info) then table.insert(fmt, string.format(fmt_info, info)) end
@@ -101,7 +107,7 @@ java2wiki("Game", "Server", "library/server/LuaLibGame", true)
 java2wiki("HTTP", "Shared", "library/LuaLibHTTP")
 java2wiki("Language", "Shared", "library/LuaLibLanguage")
 java2wiki("SQL", "Shared", "library/LuaLibSQL")
-java2wiki("Thread", "Shared", "library/LuaLibThread")
+java2wiki("ThreadLib", "Shared", "library/LuaLibThread")
 java2wiki("Util", "Shared", "library/LuaLibUtil")
 
 java2wiki("Input", "Client", "library/client/LuaLibInput")

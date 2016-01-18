@@ -1,9 +1,12 @@
 package com.luacraft.library.client;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
 
 import com.luacraft.LuaCraftState;
@@ -63,23 +66,25 @@ public class LuaLibGame {
 			if (client.thePlayer == null)
 				return 0;
 
-			/*
-			 * NetHandlerPlayClient net = client.thePlayer.sendQueue;
-			 * List<GuiPlayerInfo> playerInfo = net.playerInfoList;
-			 * l.newTable();
-			 * int i = 1;
-			 * for (GuiPlayerInfo info: playerInfo) {
-			 * 	l.pushInteger(i++);
-			 * 	l.newTable();
-			 * 	l.pushString(info.name);
-			 * 	l.setField(-2, "name");
-			 * 	l.pushInteger(info.responseTime);
-			 * 	l.setField(-2, "ping");
-			 * 	l.setTable(-3);
-			 * }
-			 */
+			NetHandlerPlayClient net = client.thePlayer.sendQueue;
+			Collection playerInfo = net.func_175106_d();
+			Iterator iterator = playerInfo.iterator();
 
-			return 0; // TODO: Fix game.PlayerInfo
+			int i = 1;
+
+			l.newTable();
+			while (iterator.hasNext()) {
+				NetworkPlayerInfo info = (NetworkPlayerInfo) iterator.next();
+				l.pushInteger(i++);
+				l.newTable();
+				l.pushString(info.getGameProfile().getName());
+				l.setField(-2, "name");
+				l.pushInteger(info.getResponseTime());
+				l.setField(-2, "ping");
+				l.setTable(-3);
+			}
+
+			return 1;
 		}
 	};
 
@@ -101,6 +106,7 @@ public class LuaLibGame {
 
 	/**
 	 * @author Jake
+	 * @library game
 	 * @function Say
 	 * @info Force yourself to say something
 	 * @arguments [[String]]:message

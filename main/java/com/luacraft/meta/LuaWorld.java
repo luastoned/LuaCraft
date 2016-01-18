@@ -404,9 +404,7 @@ public class LuaWorld {
 	public static JavaFunction SetDifficulty = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			// self.difficultySetting =
-			// EnumDifficulty.getDifficultyEnum(l.checkInteger(2));
-			// TODO: Fix World:SetDifficulty()
+			self.getWorldInfo().setDifficulty(EnumDifficulty.getDifficultyEnum(l.checkInteger(2)));
 			return 0;
 		}
 	};

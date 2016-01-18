@@ -44,7 +44,7 @@ public class LuaEntityItem {
 
 	/**
 	 * @author Jake
-	 * @function SetItemStack
+	 * @function SetAge
 	 * @info Set how old this item is
 	 * @arguments [[Number]]:age
 	 * @return nil

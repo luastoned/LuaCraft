@@ -9,6 +9,15 @@ import com.naef.jnlua.LuaState;
 
 public class LuaLibHTTP {
 
+	/**
+	 * @author Jake
+	 * @library http
+	 * @function Get
+	 * @info Get page contents of a HTTP address
+	 * @arguments [[String]]:URL, [[Function]]:callback
+	 * @return [[Boolean]]:success, [ [[String]]:error ]
+	 */
+
 	public static JavaFunction Get = new JavaFunction() {
 		public int invoke(LuaState l) {
 			try {

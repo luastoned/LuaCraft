@@ -61,7 +61,7 @@ public class LuaEntity {
 	/**
 	 * @author Jake
 	 * @function GetUniqueID
-	 * @info Get the entities unique ID that will be persistent If used on a player in online-mode, it will return the Minecraft UUID for the player
+	 * @info Get the entities unique ID that will be persistent. If used on a player in online-mode, it will return the Minecraft UUID for the player
 	 * @arguments nil
 	 * @return [[String]]:id
 	 */
@@ -333,7 +333,7 @@ public class LuaEntity {
 	 * @function Ignite
 	 * @info Set the entity on fire
 	 * @arguments [ [[Number]]:duration ]
-	 * @return nil This is an alternative function to SetBurning
+	 * @return nil
 	 */
 
 	public static JavaFunction Ignite = new JavaFunction() {
