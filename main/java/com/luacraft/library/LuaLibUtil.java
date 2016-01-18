@@ -78,11 +78,12 @@ public class LuaLibUtil {
 		Entity pointedEntity = null;
 		Vec3 vec33 = null;
 		float f1 = 1.0F;
-		
+
 		AxisAlignedBB bb = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
-		
-		List list = world.getEntitiesWithinAABB(Entity.class, bb.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0)
-						.expand((double) f1, (double) f1, (double) f1));
+
+		List list = world.getEntitiesWithinAABB(Entity.class,
+				bb.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand((double) f1, (double) f1,
+						(double) f1));
 		double d2 = d1;
 
 		for (int i = 0; i < list.size(); ++i) {
@@ -124,7 +125,7 @@ public class LuaLibUtil {
 		AxisAlignedBB bb = new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
 
 		Vec3 size = new Vec3(0.5, 0.5, 0.5);
-		
+
 		Entity hitEnt = traceEntity(world, start.toVec3(), endpos.toVec3());
 
 		l.newTable();

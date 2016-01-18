@@ -243,8 +243,7 @@ public class LuaPlayer {
 	/**
 	 * @author Jake
 	 * @function GetExperience
-	 * @info Returns the percentage of completion the player has for the current
-	 *       level
+	 * @info Returns the percentage of completion the player has for the current level
 	 * @arguments nil
 	 * @return [[Number]]:exp
 	 */
@@ -457,8 +456,7 @@ public class LuaPlayer {
 	 * @author Jake
 	 * @function SetBedPos
 	 * @info Set a players bed position
-	 * @arguments [[Vector]]:vec, [ [[Boolean]]:override, [[Number]]:dimensionID
-	 *            ]
+	 * @arguments [[Vector]]:vec, [ [[Boolean]]:override, [[Number]]:dimensionID ]
 	 * @return nil
 	 */
 

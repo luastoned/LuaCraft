@@ -12,9 +12,7 @@ import java.io.PrintWriter;
  * Indicates a Lua runtime error.
  * 
  * <p>
- * This exception is thrown if a Lua runtime error occurs, such as indexing a
- * <code>nil</code> value. The class provides access to the Lua stack trace by
- * means of the {@link #getLuaStackTrace()} method.
+ * This exception is thrown if a Lua runtime error occurs, such as indexing a <code>nil</code> value. The class provides access to the Lua stack trace by means of the {@link #getLuaStackTrace()} method.
  * </p>
  */
 public class LuaRuntimeException extends LuaException {
@@ -27,8 +25,7 @@ public class LuaRuntimeException extends LuaException {
 
 	// -- Construction
 	/**
-	 * Creates a new instance. The instance is created with an empty Lua stack
-	 * trace.
+	 * Creates a new instance. The instance is created with an empty Lua stack trace.
 	 * 
 	 * @param msg
 	 *            the message
@@ -39,8 +36,7 @@ public class LuaRuntimeException extends LuaException {
 	}
 
 	/**
-	 * Creates a new instance. The instance is created with an empty Lua stack
-	 * trace.
+	 * Creates a new instance. The instance is created with an empty Lua stack trace.
 	 * 
 	 * @param msg
 	 *            the message
@@ -53,8 +49,7 @@ public class LuaRuntimeException extends LuaException {
 	}
 
 	/**
-	 * Creates a new instance. The instance is created with an empty Lua stack
-	 * trace.
+	 * Creates a new instance. The instance is created with an empty Lua stack trace.
 	 * 
 	 * @param cause
 	 *            the cause of this exception
@@ -74,16 +69,14 @@ public class LuaRuntimeException extends LuaException {
 
 	// -- Operations
 	/**
-	 * Prints this exception and its Lua stack trace to the standard error
-	 * stream.
+	 * Prints this exception and its Lua stack trace to the standard error stream.
 	 */
 	public void printLuaStackTrace() {
 		printLuaStackTrace(System.err);
 	}
 
 	/**
-	 * Prints this exception and its Lua stack trace to the specified print
-	 * stream.
+	 * Prints this exception and its Lua stack trace to the specified print stream.
 	 * 
 	 * @param s
 	 *            the print stream
@@ -98,8 +91,7 @@ public class LuaRuntimeException extends LuaException {
 	}
 
 	/**
-	 * Prints this exception and its Lua stack trace to the specified print
-	 * writer.
+	 * Prints this exception and its Lua stack trace to the specified print writer.
 	 * 
 	 * @param s
 	 *            the print writer
@@ -115,8 +107,7 @@ public class LuaRuntimeException extends LuaException {
 
 	// -- Package private methods
 	/**
-	 * Sets the Lua error in this exception. The method in invoked from the
-	 * native library.
+	 * Sets the Lua error in this exception. The method in invoked from the native library.
 	 */
 	void setLuaError(LuaError luaError) {
 		initCause(luaError.getCause());

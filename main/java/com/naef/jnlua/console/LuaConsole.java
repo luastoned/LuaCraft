@@ -21,20 +21,11 @@ import com.naef.jnlua.LuaState;
  * A simple Lua console.
  * 
  * <p>
- * The console collects input until a line with the sole content of the word
- * <i>go</i> is encountered. At that point, the collected input is run as a Lua
- * chunk. If the Lua chunk loads and runs successfully, the console displays the
- * returned values of the chunk as well as the execution time based on a
- * <code>System.nanoTime()</code> measurement. Otherwise, the console shows the
- * error that has occurred.
+ * The console collects input until a line with the sole content of the word <i>go</i> is encountered. At that point, the collected input is run as a Lua chunk. If the Lua chunk loads and runs successfully, the console displays the returned values of the chunk as well as the execution time based on a <code>System.nanoTime()</code> measurement. Otherwise, the console shows the error that has occurred.
  * </p>
  * 
  * <p>
- * Expressions can be printed by prepending <i>=</i> to the expression at the
- * beginning of a chunk. The console translates <i>=</i> into
- * <code>return</code> followed by a space and executes the chunk immediately.
- * No separate <i>go</i> is required. Therefore, expressions printed this way
- * must be entered on a single line.
+ * Expressions can be printed by prepending <i>=</i> to the expression at the beginning of a chunk. The console translates <i>=</i> into <code>return</code> followed by a space and executes the chunk immediately. No separate <i>go</i> is required. Therefore, expressions printed this way must be entered on a single line.
  * </p>
  */
 public class LuaConsole {
@@ -65,8 +56,7 @@ public class LuaConsole {
 	}
 
 	/**
-	 * Creates a new instance with the specified command line arguments. The
-	 * arguments are passed to Lua as the <code>argv</code> global variable.
+	 * Creates a new instance with the specified command line arguments. The arguments are passed to Lua as the <code>argv</code> global variable.
 	 * 
 	 * @param args
 	 */

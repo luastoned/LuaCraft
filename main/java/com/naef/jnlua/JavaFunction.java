@@ -10,14 +10,10 @@ package com.naef.jnlua;
  */
 public interface JavaFunction {
 	/**
-	 * Invokes this Java function. The function arguments are on the stack. The
-	 * method returns the number of values on the stack which constitute the
-	 * return values of this function.
+	 * Invokes this Java function. The function arguments are on the stack. The method returns the number of values on the stack which constitute the return values of this function.
 	 * 
 	 * <p>
-	 * Java functions should indicate application errors by returning
-	 * appropriate error codes to the caller. Programming errors should be
-	 * indicated by throwing a runtime exception.
+	 * Java functions should indicate application errors by returning appropriate error codes to the caller. Programming errors should be indicated by throwing a runtime exception.
 	 * </p>
 	 * 
 	 * @param luaState

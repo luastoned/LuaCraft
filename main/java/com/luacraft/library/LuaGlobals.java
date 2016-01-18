@@ -70,8 +70,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function Color
 	 * @info Creates a new [[Color]] object
-	 * @arguments [[Number]]:red, [[Number]]:green, [[Number]]:blue, [
-	 *            [[Number]]:alpha ]
+	 * @arguments [[Number]]:red, [[Number]]:green, [[Number]]:blue, [ [[Number]]:alpha ]
 	 * @return [[Color]]:color
 	 */
 

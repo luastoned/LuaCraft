@@ -27,8 +27,7 @@ package org.json;
 import java.util.Iterator;
 
 /**
- * This provides static methods to convert an XML text into a JSONObject, and to
- * covert a JSONObject into an XML text.
+ * This provides static methods to convert an XML text into a JSONObject, and to covert a JSONObject into an XML text.
  * 
  * @author JSON.org
  * @version 2011-02-11
@@ -104,8 +103,7 @@ public class XML {
 	}
 
 	/**
-	 * Throw an exception if the string contains whitespace. Whitespace is not
-	 * allowed in tagNames and attributes.
+	 * Throw an exception if the string contains whitespace. Whitespace is not allowed in tagNames and attributes.
 	 * 
 	 * @param string
 	 * @throws JSONException
@@ -293,11 +291,7 @@ public class XML {
 	}
 
 	/**
-	 * Try to convert a string into a number, boolean, or null. If the string
-	 * can't be converted, return the string. This is much less ambitious than
-	 * JSONObject.stringToValue, especially because it does not attempt to
-	 * convert plus forms, octal forms, hex forms, or E forms lacking decimal
-	 * points.
+	 * Try to convert a string into a number, boolean, or null. If the string can't be converted, return the string. This is much less ambitious than JSONObject.stringToValue, especially because it does not attempt to convert plus forms, octal forms, hex forms, or E forms lacking decimal points.
 	 * 
 	 * @param string
 	 *            A String.
@@ -351,15 +345,7 @@ public class XML {
 	}
 
 	/**
-	 * Convert a well-formed (but not necessarily valid) XML string into a
-	 * JSONObject. Some information may be lost in this transformation because
-	 * JSON is a data format and XML is a document format. XML uses elements,
-	 * attributes, and content text, while JSON uses unordered collections of
-	 * name/value pairs and arrays of values. JSON does not does not like to
-	 * distinguish between elements and attributes. Sequences of similar
-	 * elements are represented as JSONArrays. Content text may be placed in a
-	 * "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code>
-	 * are ignored.
+	 * Convert a well-formed (but not necessarily valid) XML string into a JSONObject. Some information may be lost in this transformation because JSON is a data format and XML is a document format. XML uses elements, attributes, and content text, while JSON uses unordered collections of name/value pairs and arrays of values. JSON does not does not like to distinguish between elements and attributes. Sequences of similar elements are represented as JSONArrays. Content text may be placed in a "content" member. Comments, prologs, DTDs, and <code>&lt;[ [ ]]></code> are ignored.
 	 * 
 	 * @param string
 	 *            The source string.

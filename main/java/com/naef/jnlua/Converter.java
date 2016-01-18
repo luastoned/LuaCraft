@@ -10,10 +10,7 @@ package com.naef.jnlua;
  */
 public interface Converter {
 	/**
-	 * Returns the type distance between a Lua value and a formal Java type.
-	 * Distances are comparable for the same Lua value only. If a Lua value
-	 * cannot be converted to the specified formal type, the method returns
-	 * <code>Integer.MAX_VALUE</code>.
+	 * Returns the type distance between a Lua value and a formal Java type. Distances are comparable for the same Lua value only. If a Lua value cannot be converted to the specified formal type, the method returns <code>Integer.MAX_VALUE</code>.
 	 * 
 	 * @param luaState
 	 *            the Lua state
@@ -21,8 +18,7 @@ public interface Converter {
 	 *            the stack index containing the value
 	 * @param formalType
 	 *            the formal Java type
-	 * @return the type distance, or <code>Integer.MAX_VALUE</code> if the
-	 *         conversion is not supported
+	 * @return the type distance, or <code>Integer.MAX_VALUE</code> if the conversion is not supported
 	 */
 	public int getTypeDistance(LuaState luaState, int index, Class<?> formalType);
 
@@ -30,8 +26,7 @@ public interface Converter {
 	 * Converts a Lua value to a Java object of the specified formal type.
 	 * 
 	 * <p>
-	 * If the Lua value is <code>nil</code>, the method returns
-	 * <code>null</code>.
+	 * If the Lua value is <code>nil</code>, the method returns <code>null</code>.
 	 * </p>
 	 * 
 	 * @param luaState

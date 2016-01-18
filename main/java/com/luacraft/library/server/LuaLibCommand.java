@@ -17,8 +17,7 @@ public class LuaLibCommand {
 	 * @library command
 	 * @function Add
 	 * @info Adds a chat command
-	 * @arguments [[String]]:command, [[Function]]:callback, [ [[String]]:usage
-	 *            ]
+	 * @arguments [[String]]:command, [[Function]]:callback, [ [[String]]:usage ]
 	 * @return nil
 	 */
 

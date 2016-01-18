@@ -13,8 +13,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 /**
- * Compiled script implementation conforming to JSR 223: Scripting for the Java
- * Platform.
+ * Compiled script implementation conforming to JSR 223: Scripting for the Java Platform.
  */
 class CompiledLuaScript extends CompiledScript {
 	// -- State

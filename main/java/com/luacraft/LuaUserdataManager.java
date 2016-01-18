@@ -112,8 +112,7 @@ public class LuaUserdataManager {
 			return "EntityItem";
 
 		/*
-		 * else if (ent instanceof EntityWolf) return "Wolf"; else if (ent
-		 * instanceof LuaHuman) return "NPC";
+		 * else if (ent instanceof EntityWolf) return "Wolf"; else if (ent instanceof LuaHuman) return "NPC";
 		 */
 
 		return "Entity"; // Default

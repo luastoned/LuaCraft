@@ -9,8 +9,7 @@ package com.naef.jnlua;
  * Indicates a Lua message handler error.
  * 
  * <p>
- * This exception is thrown if an error occurs running the message handler of a
- * protected call.
+ * This exception is thrown if an error occurs running the message handler of a protected call.
  * </p>
  * 
  * @since JNLua 1.0.0

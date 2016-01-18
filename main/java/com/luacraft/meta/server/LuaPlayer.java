@@ -74,8 +74,7 @@ public class LuaPlayer {
 	 * @author Gregor
 	 * @function Msg
 	 * @info Print something to a players chat
-	 * @arguments [[String]]:msg / [[Number]]:color See [[color]] for further
-	 *            information
+	 * @arguments [[String]]:msg / [[Number]]:color See [[color]] for further information
 	 * @return nil
 	 */
 

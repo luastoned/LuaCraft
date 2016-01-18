@@ -20,8 +20,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddByte
-	 * @info Adds a byte to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds a byte to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [ [[Number]]:default ]
 	 * @return nil
 	 */
@@ -69,8 +68,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddShort
-	 * @info Adds a short to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds a short to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [ [[Number]]:default ]
 	 * @return nil
 	 */
@@ -118,8 +116,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddInt
-	 * @info Adds an integer to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds an integer to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [ [[Number]]:default ]
 	 * @return nil
 	 */
@@ -167,8 +164,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddFloat
-	 * @info Adds a float to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds a float to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [ [[Number]]:default ]
 	 * @return nil
 	 */
@@ -216,8 +212,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddString
-	 * @info Adds a string to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds a string to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [ [[String]]:default ]
 	 * @return nil
 	 */
@@ -265,8 +260,7 @@ public class LuaDataWatcher {
 	/**
 	 * @author Jake
 	 * @function AddItemStack
-	 * @info Adds an ItemStack to the datawatcher that will be networked to all
-	 *       players
+	 * @info Adds an ItemStack to the datawatcher that will be networked to all players
 	 * @arguments [[Number]]:index, [[ItemStack]]:default
 	 * @return nil
 	 */

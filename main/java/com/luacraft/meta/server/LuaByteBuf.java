@@ -49,8 +49,7 @@ public class LuaByteBuf {
 	/**
 	 * @author Jake
 	 * @function Broadcast
-	 * @info Sends the buffer to all players or all players within a specific
-	 *       dimension
+	 * @info Sends the buffer to all players or all players within a specific dimension
 	 * @arguments [ [[Number]]:Dimension ]
 	 * @return nil
 	 */

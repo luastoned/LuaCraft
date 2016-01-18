@@ -15,8 +15,7 @@ import javax.script.ScriptEngineFactory;
 import com.naef.jnlua.LuaState;
 
 /**
- * Lua script engine factory implementation conforming to JSR 223: Scripting for
- * the Java Platform.
+ * Lua script engine factory implementation conforming to JSR 223: Scripting for the Java Platform.
  */
 public class LuaScriptEngineFactory implements ScriptEngineFactory {
 	// -- Static

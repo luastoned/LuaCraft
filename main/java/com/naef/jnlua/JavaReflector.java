@@ -9,24 +9,16 @@ package com.naef.jnlua;
  * Reflects Java objects for access from Lua.
  * 
  * <p>
- * The interface can be implemented to provide a generic Java reflector that is
- * then configured in a Lua state. It can also be implemented by individual Java
- * classes to provide class-specific Java reflection. If an object implements
- * the Java reflector interface, its own Java reflector is queried first for a
- * requested metamethod. Only if the metamethod requested is not supported, the
- * Java reflector configured in the Lua state is queried.
+ * The interface can be implemented to provide a generic Java reflector that is then configured in a Lua state. It can also be implemented by individual Java classes to provide class-specific Java reflection. If an object implements the Java reflector interface, its own Java reflector is queried first for a requested metamethod. Only if the metamethod requested is not supported, the Java reflector configured in the Lua state is queried.
  * </p>
  */
 public interface JavaReflector {
 	/**
-	 * Returns the metamethod implementation of this Java reflector for the
-	 * specified metamethod. If this reflector does not support the metamethod,
-	 * the method returns <code>null</code>.
+	 * Returns the metamethod implementation of this Java reflector for the specified metamethod. If this reflector does not support the metamethod, the method returns <code>null</code>.
 	 * 
 	 * @param metamethod
 	 *            the metamethod
-	 * @return the implementation, or <code>null</code> if this Java reflector
-	 *         does not support the metamethod
+	 * @return the implementation, or <code>null</code> if this Java reflector does not support the metamethod
 	 */
 	public JavaFunction getMetamethod(Metamethod metamethod);
 

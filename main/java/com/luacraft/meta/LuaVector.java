@@ -179,8 +179,7 @@ public class LuaVector {
 	/**
 	 * @author Jake
 	 * @function Normalize
-	 * @info Normalize the vector. Doesn't return anything, but it directly
-	 *       modifies the vector.
+	 * @info Normalize the vector. Doesn't return anything, but it directly modifies the vector.
 	 * @arguments nil
 	 * @return nil
 	 */
@@ -231,8 +230,7 @@ public class LuaVector {
 	 * @author Jake
 	 * @function RayQuadIntersect
 	 * @info Return a UV point on a plane
-	 * @arguments [[Vector]]:direction, [[Vector]]:plane, [[Vector]]:xcoord,
-	 *            [[Vector]]:ycoord
+	 * @arguments [[Vector]]:direction, [[Vector]]:plane, [[Vector]]:xcoord, [[Vector]]:ycoord
 	 * @return [[Number]]:u, [[Number]]:v
 	 */
 

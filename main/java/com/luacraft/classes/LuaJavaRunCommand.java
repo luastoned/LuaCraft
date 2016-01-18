@@ -30,8 +30,7 @@ public class LuaJavaRunCommand extends CommandBase {
 
 	// TODO: hook for lua command?
 	/*
-	 * public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
-	 * { return true; }
+	 * public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) { return true; }
 	 */
 
 	public void execute(ICommandSender sender, String[] args) throws CommandException {

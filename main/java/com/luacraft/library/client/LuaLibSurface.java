@@ -41,10 +41,8 @@ public class LuaLibSurface {
 	 * @author Jake
 	 * @library surface
 	 * @function CreateFont
-	 * @info Creates a font object that can be used for drawing text to the
-	 *       screen
-	 * @arguments [[String]]:fileResource, [ [[Number]]:size,
-	 *            [[Boolean]]:unicode ]
+	 * @info Creates a font object that can be used for drawing text to the screen
+	 * @arguments [[String]]:fileResource, [ [[Number]]:size, [[Boolean]]:unicode ]
 	 * @return [[Font]]:font
 	 */
 
@@ -82,8 +80,7 @@ public class LuaLibSurface {
 	 * @library surface
 	 * @function SetDrawColor
 	 * @info Sets the current drawing color
-	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR
-	 *            [[Color]]:color
+	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR [[Color]]:color
 	 * @return nil
 	 */
 
@@ -108,8 +105,7 @@ public class LuaLibSurface {
 	 * @library surface
 	 * @function DrawRect
 	 * @info Draws a rectangle
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
-	 *            [[Number]]:height
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height
 	 * @return nil
 	 */
 
@@ -147,8 +143,7 @@ public class LuaLibSurface {
 	 * @library surface
 	 * @function DrawGradientRect
 	 * @info Draws a rectangle with a gradient
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
-	 *            [[Number]]:height, [[Color]]:fadeto
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height, [[Color]]:fadeto
 	 * @return nil
 	 */
 
@@ -208,8 +203,7 @@ public class LuaLibSurface {
 	 * @library surface
 	 * @function DrawTexturedRect
 	 * @info Draws a textured rectangle
-	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width,
-	 *            [[Number]]:height
+	 * @arguments [[Number]]:xPos, [[Number]]:yPos, [[Number]]:width, [[Number]]:height
 	 * @return nil
 	 */
 

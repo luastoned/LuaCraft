@@ -6,8 +6,7 @@
 package com.naef.jnlua;
 
 /**
- * Abstract base class for Lua error conditions. Lua exceptions are unchecked
- * runtime exceptions.
+ * Abstract base class for Lua error conditions. Lua exceptions are unchecked runtime exceptions.
  */
 public abstract class LuaException extends RuntimeException {
 	// -- Static

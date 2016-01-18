@@ -11,8 +11,7 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.util.AbstractTableMap;
 
 /**
- * Lua bindings implementation conforming to JSR 223: Scripting for the Java
- * Platform.
+ * Lua bindings implementation conforming to JSR 223: Scripting for the Java Platform.
  */
 class LuaBindings extends AbstractTableMap<String> implements Bindings {
 	// -- State

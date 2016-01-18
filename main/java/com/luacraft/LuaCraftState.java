@@ -140,14 +140,14 @@ public class LuaCraftState extends LuaState {
 			break;
 		}
 	}
-	
+
 	public void autorun() {
 		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun");
 
 		for (File file : files)
 			includeFile(file);
 	}
-	
+
 	public void autorun(String side) {
 		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side);
 
@@ -192,8 +192,9 @@ public class LuaCraftState extends LuaState {
 	}
 
 	public void includeFile(File file) {
-		if (!file.isFile()) return;
-		
+		if (!file.isFile())
+			return;
+
 		if (!file.getName().endsWith(".lua"))
 			throw new LuaRuntimeException("Cannot open " + file.getName() + ": File is not a lua file");
 

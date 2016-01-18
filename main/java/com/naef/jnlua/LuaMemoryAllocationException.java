@@ -9,8 +9,7 @@ package com.naef.jnlua;
  * Indicates a Lua memory allocation error.
  * 
  * <p>
- * The exception is thrown if the Lua memory allocator runs out of memory or if
- * a JNI allocation fails.
+ * The exception is thrown if the Lua memory allocator runs out of memory or if a JNI allocation fails.
  * </p>
  */
 public class LuaMemoryAllocationException extends LuaException {

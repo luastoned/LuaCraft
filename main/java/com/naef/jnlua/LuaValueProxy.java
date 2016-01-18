@@ -6,9 +6,7 @@
 package com.naef.jnlua;
 
 /**
- * Provides proxy access to a Lua value from Java. Lua value proxies are
- * acquired by invoking one of the <code>getProxy()</code> methods on the Lua
- * state.
+ * Provides proxy access to a Lua value from Java. Lua value proxies are acquired by invoking one of the <code>getProxy()</code> methods on the Lua state.
  * 
  * @see LuaState#getProxy(int)
  * @see LuaState#getProxy(int, Class)

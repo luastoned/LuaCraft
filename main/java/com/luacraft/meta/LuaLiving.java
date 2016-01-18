@@ -14,8 +14,7 @@ public class LuaLiving {
 	 * @author Gregor
 	 * @function LookAt
 	 * @info Forces the entity to look at the vector
-	 * @arguments [[Entity]]:ent, [ [[Number]]:yaw speed, [[Number]]:pitch speed
-	 *            ]
+	 * @arguments [[Entity]]:ent, [ [[Number]]:yaw speed, [[Number]]:pitch speed ]
 	 * @return nil
 	 */
 

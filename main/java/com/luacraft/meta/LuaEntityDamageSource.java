@@ -34,7 +34,7 @@ public class LuaEntityDamageSource {
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function GetSource
@@ -45,7 +45,8 @@ public class LuaEntityDamageSource {
 
 	public static JavaFunction GetSource = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class, "EntityDamageSource");
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
 			LuaUserdataManager.PushUserdata(l, self.getSourceOfDamage());
 			return 1;
 		}
@@ -95,7 +96,8 @@ public class LuaEntityDamageSource {
 
 	public static JavaFunction SetIsThornsDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class, "EntityDamageSource");
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
 			LuaUserdataManager.PushUserdata(l, self.setIsThornsDamage());
 			return 1;
 		}

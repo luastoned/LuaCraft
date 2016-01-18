@@ -24,9 +24,7 @@ import com.naef.jnlua.JavaReflector.Metamethod;
  * JNLua core class representing a Lua instance.
  * 
  * <p>
- * The class performs extensive checking on all arguments and its state.
- * Specifically, the following exceptions are thrown under the indicated
- * conditions:
+ * The class performs extensive checking on all arguments and its state. Specifically, the following exceptions are thrown under the indicated conditions:
  * </p>
  * 
  * <table class="doc">
@@ -36,28 +34,23 @@ import com.naef.jnlua.JavaReflector.Metamethod;
  * </tr>
  * <tr>
  * <td>{@link java.lang.NullPointerException}</td>
- * <td>if an argument is <code>null</code> and the API does not explicitly
- * specify that the argument may be <code>null</code></td>
+ * <td>if an argument is <code>null</code> and the API does not explicitly specify that the argument may be <code>null</code></td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.IllegalStateException}</td>
- * <td>if the Lua state is closed and the API does not explicitly specify that
- * the method may be invoked on a closed Lua state</td>
+ * <td>if the Lua state is closed and the API does not explicitly specify that the method may be invoked on a closed Lua state</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.IllegalArgumentException}</td>
- * <td>if a stack index refers to an undefined stack location and the API does
- * not explicitly specify that the stack index may be undefined</td>
+ * <td>if a stack index refers to an undefined stack location and the API does not explicitly specify that the stack index may be undefined</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.IllegalArgumentException}</td>
- * <td>if a stack index refers to an stack location with value type that is
- * different from the value type explicitly specified in the API</td>
+ * <td>if a stack index refers to an stack location with value type that is different from the value type explicitly specified in the API</td>
  * </tr>
  * <tr>
  * <td>{@link java.lang.IllegalArgumentException}</td>
- * <td>if a count is negative or out of range and the API does not explicitly
- * specify that the count may be negative or out of range</td>
+ * <td>if a count is negative or out of range and the API does not explicitly specify that the count may be negative or out of range</td>
  * </tr>
  * <tr>
  * <td>{@link com.naef.jnlua.LuaRuntimeException}</td>
@@ -69,8 +62,7 @@ import com.naef.jnlua.JavaReflector.Metamethod;
  * </tr>
  * <tr>
  * <td>{@link com.naef.jnlua.LuaMemoryAllocationException}</td>
- * <td>if the Lua memory allocator runs out of memory or if a JNI allocation
- * fails</td>
+ * <td>if the Lua memory allocator runs out of memory or if a JNI allocation fails</td>
  * </tr>
  * </table>
  */
@@ -123,22 +115,17 @@ public class LuaState {
 
 	// -- State
 	/**
-	 * Whether the <code>lua_State</code> on the JNI side is owned by the Java
-	 * state and must be closed when the Java state closes.
+	 * Whether the <code>lua_State</code> on the JNI side is owned by the Java state and must be closed when the Java state closes.
 	 */
 	private boolean ownState;
 
 	/**
-	 * The <code>lua_State</code> pointer on the JNI side. <code>0</code>
-	 * implies that this Lua state is closed. The field is modified exclusively
-	 * on the JNI side and must not be touched on the Java side.
+	 * The <code>lua_State</code> pointer on the JNI side. <code>0</code> implies that this Lua state is closed. The field is modified exclusively on the JNI side and must not be touched on the Java side.
 	 */
 	private long luaState;
 
 	/**
-	 * The <code>lua_State</code> pointer on the JNI side for the running
-	 * coroutine. This field is modified exclusively on the JNI side and must
-	 * not be touched on the Java side.
+	 * The <code>lua_State</code> pointer on the JNI side for the running coroutine. This field is modified exclusively on the JNI side and must not be touched on the Java side.
 	 */
 	private long luaThread;
 
@@ -174,9 +161,7 @@ public class LuaState {
 
 	// -- Construction
 	/**
-	 * Creates a new instance. The class loader of this Lua state is set to the
-	 * context class loader of the calling thread. The Java reflector and the
-	 * converter are initialized with the default implementations.
+	 * Creates a new instance. The class loader of this Lua state is set to the context class loader of the calling thread. The Java reflector and the converter are initialized with the default implementations.
 	 * 
 	 * @see #getClassLoader()
 	 * @see #setClassLoader(ClassLoader)
@@ -233,8 +218,7 @@ public class LuaState {
 
 	// -- Properties
 	/**
-	 * Returns the class loader of this Lua state. The class loader is used for
-	 * dynamically loading classes.
+	 * Returns the class loader of this Lua state. The class loader is used for dynamically loading classes.
 	 * 
 	 * <p>
 	 * The method may be invoked on a closed Lua state.
@@ -247,8 +231,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the class loader of this Lua state. The class loader is used for
-	 * dynamically loading classes.
+	 * Sets the class loader of this Lua state. The class loader is used for dynamically loading classes.
 	 * 
 	 * <p>
 	 * The method may be invoked on a closed Lua state.
@@ -295,15 +278,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns a metamethod for a specified object. If the object implements the
-	 * {@link com.naef.jnlua.JavaReflector} interface, the metamethod is first
-	 * queried from the object. If the object provides the requested metamethod,
-	 * that metamethod is returned. Otherwise, the method returns the metamethod
-	 * provided by the Java reflector configured in this Lua state.
+	 * Returns a metamethod for a specified object. If the object implements the {@link com.naef.jnlua.JavaReflector} interface, the metamethod is first queried from the object. If the object provides the requested metamethod, that metamethod is returned. Otherwise, the method returns the metamethod provided by the Java reflector configured in this Lua state.
 	 * 
 	 * <p>
-	 * Clients requiring access to metamethods should go by this method to
-	 * ensure consistent class-by-class overriding of the Java reflector.
+	 * Clients requiring access to metamethods should go by this method to ensure consistent class-by-class overriding of the Java reflector.
 	 * </p>
 	 * 
 	 * @param obj
@@ -368,8 +346,7 @@ public class LuaState {
 	 * Closes this Lua state and releases all resources.
 	 * 
 	 * <p>
-	 * The method may be invoked on a closed Lua state and has no effect in that
-	 * case.
+	 * The method may be invoked on a closed Lua state and has no effect in that case.
 	 * </p>
 	 */
 	public synchronized void close() {
@@ -382,10 +359,8 @@ public class LuaState {
 	 * @param what
 	 *            the operation to perform
 	 * @param data
-	 *            the argument required by some operations (see Lua Reference
-	 *            Manual)
-	 * @return a return value depending on the GC operation performed (see Lua
-	 *         Reference Manual)
+	 *            the argument required by some operations (see Lua Reference Manual)
+	 * @return a return value depending on the GC operation performed (see Lua Reference Manual)
 	 */
 	public synchronized int gc(GcAction what, int data) {
 		check();
@@ -405,12 +380,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Opens the Lua standard libraries and the JNLua Java module in this Lua
-	 * state.
+	 * Opens the Lua standard libraries and the JNLua Java module in this Lua state.
 	 * 
 	 * <p>
-	 * The method opens all libraries defined by the {@link Library}
-	 * enumeration.
+	 * The method opens all libraries defined by the {@link Library} enumeration.
 	 * </p>
 	 */
 	public synchronized void openLibs() {
@@ -437,8 +410,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Registers a module and pushes the module on the stack. The module name is
-	 * allowed to contain dots to define module hierarchies.
+	 * Registers a module and pushes the module on the stack. The module name is allowed to contain dots to define module hierarchies.
 	 * 
 	 * @param moduleName
 	 *            the module name
@@ -448,9 +420,7 @@ public class LuaState {
 	public synchronized void register(String moduleName, NamedJavaFunction[] namedJavaFunctions) {
 		check();
 		/*
-		 * The following code corresponds to luaL_openlib() and must be kept in
-		 * sync. The original code cannot be called due to the necessity of
-		 * pushing each C function with an individual closure.
+		 * The following code corresponds to luaL_openlib() and must be kept in sync. The original code cannot be called due to the necessity of pushing each C function with an individual closure.
 		 */
 		lua_findtable(REGISTRYINDEX, "_LOADED", 1);
 		getField(-1, moduleName);
@@ -477,9 +447,7 @@ public class LuaState {
 
 	// -- Load and dump
 	/**
-	 * Loads a Lua chunk from an input stream and pushes it on the stack as a
-	 * function. The Lua chunk must be either a UTF-8 encoded source chunk or a
-	 * pre-compiled binary chunk.
+	 * Loads a Lua chunk from an input stream and pushes it on the stack as a function. The Lua chunk must be either a UTF-8 encoded source chunk or a pre-compiled binary chunk.
 	 * 
 	 * @param inputStream
 	 *            the input stream
@@ -497,8 +465,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Loads a Lua chunk from a string and pushes it on the stack as a function.
-	 * The string must contain a source chunk.
+	 * Loads a Lua chunk from a string and pushes it on the stack as a function. The string must contain a source chunk.
 	 * 
 	 * @param chunk
 	 *            the Lua source chunk
@@ -521,8 +488,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Dumps the function on top of the stack as a pre-compiled binary chunk
-	 * into an output stream.
+	 * Dumps the function on top of the stack as a pre-compiled binary chunk into an output stream.
 	 * 
 	 * @param outputStream
 	 *            the output stream
@@ -536,18 +502,12 @@ public class LuaState {
 
 	// -- Call
 	/**
-	 * Calls a Lua function. The function to call and the specified number of
-	 * arguments are on the stack. After the call, the specified number of
-	 * returns values are on stack. If the number of return values has been
-	 * specified as {@link #MULTRET}, the number of values on the stack
-	 * corresponds the to number of values actually returned by the called
-	 * function.
+	 * Calls a Lua function. The function to call and the specified number of arguments are on the stack. After the call, the specified number of returns values are on stack. If the number of return values has been specified as {@link #MULTRET}, the number of values on the stack corresponds the to number of values actually returned by the called function.
 	 * 
 	 * @param argCount
 	 *            the number of arguments
 	 * @param returnCount
-	 *            the number of return values, or {@link #MULTRET} to accept all
-	 *            values returned by the function
+	 *            the number of return values, or {@link #MULTRET} to accept all values returned by the function
 	 */
 	public synchronized void call(int argCount, int returnCount) {
 		check();
@@ -567,8 +527,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the value on top of the stack as a global variable and pops the
-	 * value from the stack.
+	 * Sets the value on top of the stack as a global variable and pops the value from the stack.
 	 * 
 	 * @param name
 	 *            the global variable name
@@ -624,18 +583,14 @@ public class LuaState {
 	}
 
 	/**
-	 * Pushes a Java object on the stack. The object is pushed "as is", i.e.
-	 * without conversion.
+	 * Pushes a Java object on the stack. The object is pushed "as is", i.e. without conversion.
 	 * 
 	 * <p>
-	 * If you require to push a Lua value that represents the Java object, then
-	 * invoke <code>pushJavaObject(object)</code>.
+	 * If you require to push a Lua value that represents the Java object, then invoke <code>pushJavaObject(object)</code>.
 	 * </p>
 	 * 
 	 * <p>
-	 * You cannot push <code>null</code> without conversion since
-	 * <code>null</code> is not a Java object. The converter converts
-	 * <code>null</code> to <code>nil</code>.
+	 * You cannot push <code>null</code> without conversion since <code>null</code> is not a Java object. The converter converts <code>null</code> to <code>nil</code>.
 	 * </p>
 	 * 
 	 * @param object
@@ -648,8 +603,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Pushes a Java object on the stack with conversion. The object is
-	 * processed the by the configured converter.
+	 * Pushes a Java object on the stack with conversion. The object is processed the by the configured converter.
 	 * 
 	 * @param object
 	 *            the Java object
@@ -736,8 +690,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is a function
-	 * (either a C function, a Java function or a Lua function.)
+	 * Returns whether the value at the specified stack index is a function (either a C function, a Java function or a Lua function.)
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -753,8 +706,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is a Java
-	 * function.
+	 * Returns whether the value at the specified stack index is a Java function.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -773,8 +725,7 @@ public class LuaState {
 	 * Returns whether the value at the specified stack index is a Java object.
 	 * 
 	 * <p>
-	 * Note that the method does not perform conversion. If you want to check if
-	 * a value <i>is convertible to</i> a Java object, then invoke <code>
+	 * Note that the method does not perform conversion. If you want to check if a value <i>is convertible to</i> a Java object, then invoke <code>
 	 * isJavaObject(index, Object.class)</code>.
 	 * </p>
 	 * 
@@ -793,9 +744,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is convertible to
-	 * a Java object of the specified type. The conversion is checked by the
-	 * configured converter.
+	 * Returns whether the value at the specified stack index is convertible to a Java object of the specified type. The conversion is checked by the configured converter.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -803,8 +752,7 @@ public class LuaState {
 	 * 
 	 * @param index
 	 *            the stack index
-	 * @return whether the value is convertible to a Java object of the
-	 *         specified type
+	 * @return whether the value is convertible to a Java object of the specified type
 	 * @see #setConverter(Converter)
 	 * @see #getConverter()
 	 */
@@ -814,8 +762,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is
-	 * <code>nil</code>.
+	 * Returns whether the value at the specified stack index is <code>nil</code>.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -847,8 +794,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is undefined or
-	 * <code>nil</code>.
+	 * Returns whether the value at the specified stack index is undefined or <code>nil</code>.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -864,8 +810,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is a number or a
-	 * string convertible to a number.
+	 * Returns whether the value at the specified stack index is a number or a string convertible to a number.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -881,8 +826,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether the value at the specified stack index is a string or a
-	 * number (which is always convertible to a string.)
+	 * Returns whether the value at the specified stack index is a string or a number (which is always convertible to a string.)
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -948,8 +892,7 @@ public class LuaState {
 
 	// -- Stack query
 	/**
-	 * Returns whether the values at two specified stack indexes are equal
-	 * according to Lua semantics.
+	 * Returns whether the values at two specified stack indexes are equal according to Lua semantics.
 	 * 
 	 * @param index1
 	 *            the first stack index
@@ -963,15 +906,13 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns whether a value at a first stack index is less than the value at
-	 * a second stack index according to Lua semantics.
+	 * Returns whether a value at a first stack index is less than the value at a second stack index according to Lua semantics.
 	 * 
 	 * @param index1
 	 *            the first stack index
 	 * @param index2
 	 *            the second stack index
-	 * @return whether the value at the first index is less than the value at
-	 *         the second index
+	 * @return whether the value at the first index is less than the value at the second index
 	 */
 	public synchronized boolean lessThan(int index1, int index2)
 			throws LuaMemoryAllocationException, LuaRuntimeException {
@@ -980,10 +921,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the length of the value at the specified stack index. The
-	 * definition of the length depends on the type of the value. For strings,
-	 * it is the length of the string, for tables it is the result of the length
-	 * operator. For other types, the return value is undefined.
+	 * Returns the length of the value at the specified stack index. The definition of the length depends on the type of the value. For strings, it is the length of the string, for tables it is the result of the length operator. For other types, the return value is undefined.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -995,8 +933,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Bypassing metatable logic, returns whether the values at two specified
-	 * stack indexes are equal according to Lua semantics.
+	 * Bypassing metatable logic, returns whether the values at two specified stack indexes are equal according to Lua semantics.
 	 * 
 	 * @param index1
 	 *            the first stack index
@@ -1010,9 +947,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the boolean representation of the value at the specified stack
-	 * index. The boolean representation is <code>true</code> for all values
-	 * except <code>false</code> and <code>nil</code>.
+	 * Returns the boolean representation of the value at the specified stack index. The boolean representation is <code>true</code> for all values except <code>false</code> and <code>nil</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1024,10 +959,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the byte array representation of the value at the specified stack
-	 * index. The value must be a string or a number. If the value is a number,
-	 * it is in place converted to a string. Otherwise, the method returns
-	 * <code>null</code>.
+	 * Returns the byte array representation of the value at the specified stack index. The value must be a string or a number. If the value is a number, it is in place converted to a string. Otherwise, the method returns <code>null</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1039,9 +971,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the integer representation of the value at the specified stack
-	 * index. The value must be a number or a string convertible to a number.
-	 * Otherwise, the method returns <code>0</code>.
+	 * Returns the integer representation of the value at the specified stack index. The value must be a number or a string convertible to a number. Otherwise, the method returns <code>0</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1053,8 +983,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the Java function of the value at the specified stack index. If
-	 * the value is not a Java function, the method returns <code>null</code>.
+	 * Returns the Java function of the value at the specified stack index. If the value is not a Java function, the method returns <code>null</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1066,13 +995,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the Java object of the value at the specified stack index. If the
-	 * value is not a Java object, the method returns <code>null</code>.
+	 * Returns the Java object of the value at the specified stack index. If the value is not a Java object, the method returns <code>null</code>.
 	 * 
 	 * <p>
-	 * Note that the method does not convert values to Java objects. If you
-	 * require <i>any</i> Java object that represents the value at the specified
-	 * index, then invoke <code>toJavaObject(index, Object.class)</code>.
+	 * Note that the method does not convert values to Java objects. If you require <i>any</i> Java object that represents the value at the specified index, then invoke <code>toJavaObject(index, Object.class)</code>.
 	 * </p>
 	 * 
 	 * @param index
@@ -1086,10 +1012,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns a Java object of the specified type representing the value at the
-	 * specified stack index. The value must be convertible to a Java object of
-	 * the specified type. The conversion is executed by the configured
-	 * converter.
+	 * Returns a Java object of the specified type representing the value at the specified stack index. The value must be convertible to a Java object of the specified type. The conversion is executed by the configured converter.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1112,9 +1035,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the number representation of the value at the specified stack
-	 * index. The value must be a number or a string convertible to a number.
-	 * Otherwise, the method returns <code>0.0</code>.
+	 * Returns the number representation of the value at the specified stack index. The value must be a number or a string convertible to a number. Otherwise, the method returns <code>0.0</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1126,11 +1047,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the pointer representation of the value at the specified stack
-	 * index. The value must be a table, thread, function or userdata (such as a
-	 * Java object.) Otherwise, the method returns <code>0L</code>. Different
-	 * values return different pointers. Other than that, the returned value has
-	 * no portable significance.
+	 * Returns the pointer representation of the value at the specified stack index. The value must be a table, thread, function or userdata (such as a Java object.) Otherwise, the method returns <code>0L</code>. Different values return different pointers. Other than that, the returned value has no portable significance.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1142,10 +1059,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the string representation of the value at the specified stack
-	 * index. The value must be a string or a number. If the value is a number,
-	 * it is in place converted to a string. Otherwise, the method returns
-	 * <code>null</code>.
+	 * Returns the string representation of the value at the specified stack index. The value must be a string or a number. If the value is a number, it is in place converted to a string. Otherwise, the method returns <code>null</code>.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1174,9 +1088,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the name of the type at the specified stack index. The type name
-	 * is the display text for the Lua type except for Java objects where the
-	 * type name is the canonical class name.
+	 * Returns the name of the type at the specified stack index. The type name is the display text for the Lua type except for Java objects where the type name is the canonical class name.
 	 * 
 	 * <p>
 	 * The stack index may be undefined.
@@ -1220,8 +1132,7 @@ public class LuaState {
 
 	// -- Stack operation
 	/**
-	 * Concatenates the specified number values on top of the stack and replaces
-	 * them with the concatenated value.
+	 * Concatenates the specified number values on top of the stack and replaces them with the concatenated value.
 	 * 
 	 * @param n
 	 *            the number of values to concatenate
@@ -1242,8 +1153,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Pops the value on top of the stack inserting it at the specified index
-	 * and moving up elements above that index.
+	 * Pops the value on top of the stack inserting it at the specified index and moving up elements above that index.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1276,8 +1186,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Removes the value at the specified stack index moving down elements above
-	 * that index.
+	 * Removes the value at the specified stack index moving down elements above that index.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1288,8 +1197,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Replaces the value at the specified index with the value popped from the
-	 * top of the stack.
+	 * Replaces the value at the specified index with the value popped from the top of the stack.
 	 * 
 	 * @param index
 	 *            the stack index
@@ -1303,8 +1211,7 @@ public class LuaState {
 	 * Sets the specified index as the new top of the stack.
 	 * 
 	 * <p>
-	 * The new top of the stack may be above the current top of the stack. In
-	 * this case, new values are set to <code>nil</code>.
+	 * The new top of the stack may be above the current top of the stack. In this case, new values are set to <code>nil</code>.
 	 * </p>
 	 * 
 	 * @param index
@@ -1317,9 +1224,7 @@ public class LuaState {
 
 	// -- Table
 	/**
-	 * Pushes on the stack the value indexed by the key on top of the stack in
-	 * the table at the specified index. The key is replaced by the value from
-	 * the table.
+	 * Pushes on the stack the value indexed by the key on top of the stack in the table at the specified index. The key is replaced by the value from the table.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1330,8 +1235,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Pushes on the stack the value indexed by the specified string key in the
-	 * table at the specified index.
+	 * Pushes on the stack the value indexed by the specified string key in the table at the specified index.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1365,8 +1269,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Creates a new table with pre-allocated space for a number of array
-	 * elements and record elements and pushes it on the stack.
+	 * Creates a new table with pre-allocated space for a number of array elements and record elements and pushes it on the stack.
 	 * 
 	 * @param arrayCount
 	 *            the number of array elements
@@ -1379,10 +1282,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Pops a key from the stack and pushes on the stack the next key and its
-	 * value in the table at the specified index. If there is no next key, the
-	 * key is popped but nothing is pushed. The method returns whether there is
-	 * a next key.
+	 * Pops a key from the stack and pushes on the stack the next key and its value in the table at the specified index. If there is no next key, the key is popped but nothing is pushed. The method returns whether there is a next key.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1394,9 +1294,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Bypassing metatable logic, pushes on the stack the value indexed by the
-	 * key on top of the stack in the table at the specified index. The key is
-	 * replaced by the value from the table.
+	 * Bypassing metatable logic, pushes on the stack the value indexed by the key on top of the stack in the table at the specified index. The key is replaced by the value from the table.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1407,8 +1305,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Bypassing metatable logic, pushes on the stack the value indexed by the
-	 * specified integer key in the table at the specified index.
+	 * Bypassing metatable logic, pushes on the stack the value indexed by the specified integer key in the table at the specified index.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1421,10 +1318,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Bypassing metatable logic, sets the value on top of the stack in the
-	 * table at the specified index using the value on the second highest stack
-	 * position as the key. Both the value and the key are popped from the
-	 * stack.
+	 * Bypassing metatable logic, sets the value on top of the stack in the table at the specified index using the value on the second highest stack position as the key. Both the value and the key are popped from the stack.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1435,9 +1329,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Bypassing metatable logic, sets the value on top of the stack in the
-	 * table at the specified index using the specified integer key. The value
-	 * is popped from the stack.
+	 * Bypassing metatable logic, sets the value on top of the stack in the table at the specified index using the specified integer key. The value is popped from the stack.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1450,9 +1342,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the value on top of the stack in the table at the specified index
-	 * using the value on the second highest stack position as the key. Both the
-	 * value and the key are popped from the stack.
+	 * Sets the value on top of the stack in the table at the specified index using the value on the second highest stack position as the key. Both the value and the key are popped from the stack.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1463,8 +1353,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the value on top of the stack in the table at the specified index
-	 * using the specified string key. The value is popped from the stack.
+	 * Sets the value on top of the stack in the table at the specified index using the specified string key. The value is popped from the stack.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -1478,10 +1367,7 @@ public class LuaState {
 
 	// -- Metatable
 	/**
-	 * Pushes on the stack the value of the named field in the metatable of the
-	 * value at the specified index and returns <code>true</code>. If the value
-	 * does not have a metatable or if the metatable does not contain the named
-	 * field, nothing is pushed and the method returns <code>false</code>.
+	 * Pushes on the stack the value of the named field in the metatable of the value at the specified index and returns <code>true</code>. If the value does not have a metatable or if the metatable does not contain the named field, nothing is pushed and the method returns <code>false</code>.
 	 * 
 	 * @param index
 	 *            the stack index containing the value to get the metafield from
@@ -1495,9 +1381,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Pushes on the stack the metatable of the value at the specified index. If
-	 * the value does not have a metatable, the method returns
-	 * <code>false</code> and nothing is pushed.
+	 * Pushes on the stack the metatable of the value at the specified index. If the value does not have a metatable, the method returns <code>false</code> and nothing is pushed.
 	 * 
 	 * @param index
 	 *            the stack index containing the value to get the metatable from
@@ -1509,9 +1393,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the value on top of the stack as the metatable of the value at the
-	 * specified index. The metatable to be set is popped from the stack
-	 * regardless whether it can be set or not.
+	 * Sets the value on top of the stack as the metatable of the value at the specified index. The metatable to be set is popped from the stack regardless whether it can be set or not.
 	 * 
 	 * @param index
 	 *            the stack index containing the value to set the metatable for
@@ -1524,13 +1406,10 @@ public class LuaState {
 
 	// -- Environment table
 	/**
-	 * Pushes on the stack the environment table of the value at the specified
-	 * index. If the value does not have an environment table, <code>nil</code>
-	 * is pushed on the stack.
+	 * Pushes on the stack the environment table of the value at the specified index. If the value does not have an environment table, <code>nil</code> is pushed on the stack.
 	 * 
 	 * @param index
-	 *            the stack index containing the value to get the environment
-	 *            table from
+	 *            the stack index containing the value to get the environment table from
 	 */
 	public synchronized void getFEnv(int index) {
 		check();
@@ -1538,13 +1417,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Sets the value on top of the stack as the environment table of the value
-	 * at the specified index. The environment table to be set is popped from
-	 * the stack regardless whether it can be set or not.
+	 * Sets the value on top of the stack as the environment table of the value at the specified index. The environment table to be set is popped from the stack regardless whether it can be set or not.
 	 * 
 	 * @param index
-	 *            the stack index containing the value to set the environment
-	 *            table for
+	 *            the stack index containing the value to set the environment table for
 	 * @return whether the environment table was set
 	 */
 	public synchronized boolean setFEnv(int index) {
@@ -1554,9 +1430,7 @@ public class LuaState {
 
 	// -- Thread
 	/**
-	 * Pops the start function of a new Lua thread from the stack and creates
-	 * the new thread with that start function. The new thread is pushed on the
-	 * stack.
+	 * Pops the start function of a new Lua thread from the stack and creates the new thread with that start function. The new thread is pushed on the stack.
 	 */
 	public synchronized void newThread() {
 		check();
@@ -1564,10 +1438,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Resumes the thread at the specified stack index, popping the specified
-	 * number of arguments from the top of the stack and passing them to the
-	 * resumed thread. The method returns the number of values pushed on the
-	 * stack as the return values of the resumed thread.
+	 * Resumes the thread at the specified stack index, popping the specified number of arguments from the top of the stack and passing them to the resumed thread. The method returns the number of values pushed on the stack as the return values of the resumed thread.
 	 * 
 	 * @param index
 	 *            the stack index containing the thread
@@ -1581,11 +1452,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns the status of the thread at the specified stack index. If the
-	 * thread is in initial state of has finished its execution, the method
-	 * returns <code>0</code>. If the thread has yielded, the method returns
-	 * {@link #YIELD}. Other return values indicate errors for which an
-	 * exception has been thrown.
+	 * Returns the status of the thread at the specified stack index. If the thread is in initial state of has finished its execution, the method returns <code>0</code>. If the thread has yielded, the method returns {@link #YIELD}. Other return values indicate errors for which an exception has been thrown.
 	 * 
 	 * @param index
 	 *            the index
@@ -1597,11 +1464,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Yields the running thread, popping the specified number of values from
-	 * the top of the stack and passing them as return values to the thread
-	 * which has resumed the running thread. The method must be used exclusively
-	 * at the exit point of Java functions, i.e.
-	 * <code>return luaState.yield(n)</code>.
+	 * Yields the running thread, popping the specified number of values from the top of the stack and passing them as return values to the thread which has resumed the running thread. The method must be used exclusively at the exit point of Java functions, i.e. <code>return luaState.yield(n)</code>.
 	 * 
 	 * @param returnCount
 	 *            the number of results to pass
@@ -1614,9 +1477,7 @@ public class LuaState {
 
 	// -- Reference
 	/**
-	 * Stores the value on top of the stack in the table at the specified index
-	 * and returns the integer key of the value in that table as a reference.
-	 * The value is popped from the stack.
+	 * Stores the value on top of the stack in the table at the specified index and returns the integer key of the value in that table as a reference. The value is popped from the stack.
 	 * 
 	 * @param index
 	 *            the stack index containing the table where to store the value
@@ -1630,13 +1491,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Removes a previously created reference from the table at the specified
-	 * index. The value is removed from the table and its integer key of the
-	 * reference is freed for reuse.
+	 * Removes a previously created reference from the table at the specified index. The value is removed from the table and its integer key of the reference is freed for reuse.
 	 * 
 	 * @param index
-	 *            the stack index containing the table where the value was
-	 *            stored
+	 *            the stack index containing the table where the value was stored
 	 * @param reference
 	 *            the reference integer key
 	 * @see #ref(int)
@@ -1651,8 +1509,7 @@ public class LuaState {
 	 * Counts the number of entries in a table.
 	 * 
 	 * <p>
-	 * The method provides optimized performance over a Java implementation of
-	 * the same functionality due to the reduced number of JNI transitions.
+	 * The method provides optimized performance over a Java implementation of the same functionality due to the reduced number of JNI transitions.
 	 * </p>
 	 * 
 	 * @param index
@@ -1665,12 +1522,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Moves the specified number of sequential elements in a table used as an
-	 * array from one index to another.
+	 * Moves the specified number of sequential elements in a table used as an array from one index to another.
 	 * 
 	 * <p>
-	 * The method provides optimized performance over a Java implementation of
-	 * the same functionality due to the reduced number of JNI transitions.
+	 * The method provides optimized performance over a Java implementation of the same functionality due to the reduced number of JNI transitions.
 	 * </p>
 	 * 
 	 * @param index
@@ -1689,9 +1544,7 @@ public class LuaState {
 
 	// -- Argument checking
 	/**
-	 * Checks if a condition is true for the specified function argument. If
-	 * not, the method throws a Lua runtime exception with the specified error
-	 * message.
+	 * Checks if a condition is true for the specified function argument. If not, the method throws a Lua runtime exception with the specified error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1709,9 +1562,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a boolean. If
-	 * so, the argument value is returned as a boolean. Otherwise, the method
-	 * throws a Lua runtime exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a boolean. If so, the argument value is returned as a boolean. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1726,11 +1577,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a boolean. If
-	 * so, the argument value is returned as a boolean. If the value of the
-	 * specified argument is undefined or <code>nil</code>, the method returns
-	 * the specified default value. Otherwise, the method throws a Lua runtime
-	 * exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a boolean. If so, the argument value is returned as a boolean. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1747,10 +1594,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number. If so, the argument value is returned as a byte array. Otherwise,
-	 * the method throws a Lua runtime exception with a descriptive error
-	 * message.
+	 * Checks if the value of the specified function argument is a string or a number. If so, the argument value is returned as a byte array. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1765,11 +1609,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number. If so, the argument value is returned as a byte array. If the
-	 * value of the specified argument is undefined or <code>nil</code>, the
-	 * method returns the specified default value. Otherwise, the method throws
-	 * a Lua runtime exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a string or a number. If so, the argument value is returned as a byte array. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1786,10 +1626,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a number or a
-	 * string convertible to a number. If so, the argument value is returned as
-	 * an integer. Otherwise, the method throws a Lua runtime exception with a
-	 * descriptive error message.
+	 * Checks if the value of the specified function argument is a number or a string convertible to a number. If so, the argument value is returned as an integer. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1804,12 +1641,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a number or a
-	 * string convertible to a number. If so, the argument value is returned as
-	 * an integer. If the value of the specified argument is undefined or
-	 * <code>nil</code>, the method returns the specified default value.
-	 * Otherwise, the method throws a Lua runtime exception with a descriptive
-	 * error message.
+	 * Checks if the value of the specified function argument is a number or a string convertible to a number. If so, the argument value is returned as an integer. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1826,10 +1658,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a number or a
-	 * string convertible to a number. If so, the argument value is returned as
-	 * a number. Otherwise, the method throws a Lua runtime exception with a
-	 * descriptive error message.
+	 * Checks if the value of the specified function argument is a number or a string convertible to a number. If so, the argument value is returned as a number. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1844,12 +1673,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a number or a
-	 * string convertible to a number. If so, the argument value is returned as
-	 * a number. If the value of the specified argument is undefined or
-	 * <code>nil</code>, the method returns the specified default value.
-	 * Otherwise, the method throws a Lua runtime exception with a descriptive
-	 * error message.
+	 * Checks if the value of the specified function argument is a number or a string convertible to a number. If so, the argument value is returned as a number. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1872,15 +1696,10 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is convertible to
-	 * a Java object of the specified type. If so, the argument value is
-	 * returned as a Java object of the specified type. Otherwise, the method
-	 * throws a Lua runtime exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is convertible to a Java object of the specified type. If so, the argument value is returned as a Java object of the specified type. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * <p>
-	 * Note that the converter converts <code>nil</code> to <code>null</code>.
-	 * Therefore, the method may return <code>null</code> if the value is
-	 * <code>nil</code>.
+	 * Note that the converter converts <code>nil</code> to <code>null</code>. Therefore, the method may return <code>null</code> if the value is <code>nil</code>.
 	 * </p>
 	 * 
 	 * @param index
@@ -1899,12 +1718,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is convertible to
-	 * a Java object of the specified type. If so, the argument value is
-	 * returned as a Java object of the specified type. If the value of the
-	 * specified argument is undefined or <code>nil</code>, the method returns
-	 * the specified default value. Otherwise, the method throws a Lua runtime
-	 * exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is convertible to a Java object of the specified type. If so, the argument value is returned as a Java object of the specified type. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1923,10 +1737,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number matching one of the specified options. If so, the argument value
-	 * is returned as a string. Otherwise, the method throws a Lua runtime
-	 * exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a string or a number matching one of the specified options. If so, the argument value is returned as a string. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1946,12 +1757,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number matching one of the specified options. If so, argument value is
-	 * returned as a string. If the value of the specified argument is undefined
-	 * or <code>nil</code>, the method returns the specified default value.
-	 * Otherwise, the method throws a Lua runtime exception with a descriptive
-	 * error message.
+	 * Checks if the value of the specified function argument is a string or a number matching one of the specified options. If so, argument value is returned as a string. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1970,9 +1776,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number. If so, the argument value is returned as a string. Otherwise, the
-	 * method throws a Lua runtime exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a string or a number. If so, the argument value is returned as a string. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -1987,11 +1791,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is a string or a
-	 * number. If so, the argument value is returned as a string. If the value
-	 * of the specified argument is undefined or <code>nil</code>, the method
-	 * returns the specified default value. Otherwise, the method throws a Lua
-	 * runtime exception with a descriptive error message.
+	 * Checks if the value of the specified function argument is a string or a number. If so, the argument value is returned as a string. If the value of the specified argument is undefined or <code>nil</code>, the method returns the specified default value. Otherwise, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -2025,9 +1825,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Checks if the value of the specified function argument is of the
-	 * specified type. If not, the method throws a Lua runtime exception with a
-	 * descriptive error message.
+	 * Checks if the value of the specified function argument is of the specified type. If not, the method throws a Lua runtime exception with a descriptive error message.
 	 * 
 	 * @param index
 	 *            the argument index
@@ -2055,11 +1853,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns a proxy object implementing the specified interface in Lua. The
-	 * table at the specified stack index contains the method names from the
-	 * interface as keys and the Lua functions implementing the interface
-	 * methods as values. The returned object always implements the
-	 * {@link LuaValueProxy} interface in addition to the specified interface.
+	 * Returns a proxy object implementing the specified interface in Lua. The table at the specified stack index contains the method names from the interface as keys and the Lua functions implementing the interface methods as values. The returned object always implements the {@link LuaValueProxy} interface in addition to the specified interface.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -2073,11 +1867,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Returns a proxy object implementing the specified list of interfaces in
-	 * Lua. The table at the specified stack index contains the method names
-	 * from the interfaces as keys and the Lua functions implementing the
-	 * interface methods as values. The returned object always implements the
-	 * {@link LuaValueProxy} interface in addition to the specified interfaces.
+	 * Returns a proxy object implementing the specified list of interfaces in Lua. The table at the specified stack index contains the method names from the interfaces as keys and the Lua functions implementing the interface methods as values. The returned object always implements the {@link LuaValueProxy} interface in addition to the specified interfaces.
 	 * 
 	 * @param index
 	 *            the stack index containing the table
@@ -2413,8 +2203,7 @@ public class LuaState {
 	}
 
 	/**
-	 * Represents a Lua garbage collector action. See the Lua Reference Manual
-	 * for an explanation of these actions.
+	 * Represents a Lua garbage collector action. See the Lua Reference Manual for an explanation of these actions.
 	 */
 	public enum GcAction {
 		/**

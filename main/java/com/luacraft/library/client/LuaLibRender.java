@@ -68,8 +68,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function SetDrawColor
 	 * @info Sets the current drawing color
-	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR
-	 *            [[Color]]:color
+	 * @arguments ( [[Number]]:r, [[Number]]:g, [[Number]]:b, [[Number]]:a ) OR [[Color]]:color
 	 * @return nil
 	 */
 
@@ -94,8 +93,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function DrawText
 	 * @info Draws text to the current screen
-	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang,
-	 *            [[Number]]:scale, [[Boolean]]:shadow
+	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang, [[Number]]:scale, [[Boolean]]:shadow
 	 * @return nil
 	 */
 
@@ -297,8 +295,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function DrawCircle
 	 * @info Draws a circle in 3D space
-	 * @arguments [[Vector]]:pos, [[Number]]:radius1, [ [[Number]]:radius2,
-	 *            [[Angle]]:ang ]
+	 * @arguments [[Vector]]:pos, [[Number]]:radius1, [ [[Number]]:radius2, [[Angle]]:ang ]
 	 * @return nil
 	 */
 
@@ -362,8 +359,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function DrawCylinder
 	 * @info Draws a cylinder in 3D space
-	 * @arguments [[Vector]]:pos, [[Number]]:length, [[Number]]:radius1, [
-	 *            [[Number]]:radius2, [[Angle]]:ang, [[Number]]:numSlices ]
+	 * @arguments [[Vector]]:pos, [[Number]]:length, [[Number]]:radius1, [ [[Number]]:radius2, [[Angle]]:ang, [[Number]]:numSlices ]
 	 * @return nil
 	 */
 

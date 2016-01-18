@@ -198,7 +198,7 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function ReadByte
+	 * @function ReadUByte
 	 * @info Reads an unsigned byte from the buffer
 	 * @arguments nil
 	 * @return [[Number]]:byte
@@ -342,7 +342,7 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function ReadInt
+	 * @function ReadUInt
 	 * @info Reads a 32-bit unsigned number from the buffer
 	 * @arguments nil
 	 * @return [[Number]]:integer
@@ -438,7 +438,7 @@ public class LuaByteBuf {
 
 	/**
 	 * @author Jake
-	 * @function WriteMedium
+	 * @function WriteShort
 	 * @info Writes a 16-bit number to the buffer
 	 * @arguments [[Number]]:medium
 	 * @return nil

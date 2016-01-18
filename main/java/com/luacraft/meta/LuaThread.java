@@ -48,8 +48,7 @@ public class LuaThread {
 	/**
 	 * @author Jake
 	 * @function IsAlive
-	 * @info Tests if this [[Thread]] is alive. A [[Thread]] is alive if it has
-	 *       been started and has not yet died.
+	 * @info Tests if this [[Thread]] is alive. A [[Thread]] is alive if it has been started and has not yet died.
 	 * @arguments nil
 	 * @return [[Boolean]]:alive
 	 */

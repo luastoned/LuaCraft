@@ -84,8 +84,7 @@ public class LuaDamageSource {
 	/**
 	 * @author Jake
 	 * @function IsAbsolute
-	 * @info Whether or not the damage ignores modification by potion effects or
-	 *       enchantments.
+	 * @info Whether or not the damage ignores modification by potion effects or enchantments.
 	 * @arguments nil
 	 * @return [[Boolean]]:absolute
 	 */
@@ -101,8 +100,7 @@ public class LuaDamageSource {
 	/**
 	 * @author Jake
 	 * @function IsDifficultyScaled
-	 * @info Return whether this damage source will have its damage amount
-	 *       scaled based on the current difficulty.
+	 * @info Return whether this damage source will have its damage amount scaled based on the current difficulty.
 	 * @arguments nil
 	 * @return [[Boolean]]:scaled
 	 */
@@ -230,9 +228,7 @@ public class LuaDamageSource {
 	/**
 	 * @author Jake
 	 * @function SetIsAbsolute
-	 * @info Sets a value indicating whether the damage is absolute (ignores
-	 *       modification by potion effects or enchantments), and also clears
-	 *       out hunger damage.
+	 * @info Sets a value indicating whether the damage is absolute (ignores modification by potion effects or enchantments), and also clears out hunger damage.
 	 * @arguments nil
 	 * @return [[DamageSource]]:this
 	 */
@@ -248,8 +244,7 @@ public class LuaDamageSource {
 	/**
 	 * @author Jake
 	 * @function SetDifficultyScaled
-	 * @info Set whether this damage source will have its damage amount scaled
-	 *       based on the current difficulty.
+	 * @info Set whether this damage source will have its damage amount scaled based on the current difficulty.
 	 * @arguments nil
 	 * @return [[DamageSource]]:this
 	 */

@@ -33,22 +33,16 @@ public class LuaStackTraceElement {
 
 	// -- Properties
 	/**
-	 * Returns the name of the function containing the execution point
-	 * represented by this stack trace element. If there is no function name for
-	 * the execution point, the method returns <code>null</code>.
+	 * Returns the name of the function containing the execution point represented by this stack trace element. If there is no function name for the execution point, the method returns <code>null</code>.
 	 * 
-	 * @return the name of the function containing the execution point
-	 *         represented by this stack trace element, or <code>null</code>
+	 * @return the name of the function containing the execution point represented by this stack trace element, or <code>null</code>
 	 */
 	public String getFunctionName() {
 		return functionName;
 	}
 
 	/**
-	 * Returns the name of the source containing the execution point represented
-	 * by this this stack trace element. The source name is passed to the Lua
-	 * state when the Lua source code is loaded. If there is no source name for
-	 * the execution point, the method returns <code>null</code>.
+	 * Returns the name of the source containing the execution point represented by this this stack trace element. The source name is passed to the Lua state when the Lua source code is loaded. If there is no source name for the execution point, the method returns <code>null</code>.
 	 * 
 	 * @return the source name, or <code>null</code>
 	 * @see LuaState#load(java.io.InputStream, String)
@@ -59,9 +53,7 @@ public class LuaStackTraceElement {
 	}
 
 	/**
-	 * Returns the line number in the source containing the execution point
-	 * represented by this stack trace element. If there is no line number for
-	 * the execution point, the method returns a negative number.
+	 * Returns the line number in the source containing the execution point represented by this stack trace element. If there is no line number for the execution point, the method returns a negative number.
 	 * 
 	 * @return the line number, or a negative number if there is no line number
 	 */

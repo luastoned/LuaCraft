@@ -72,8 +72,7 @@ public class LuaFont {
 	 * @author Jake
 	 * @function DrawText
 	 * @info Draws text on the screen
-	 * @arguments [[String]]:text, [[Number]]:x, [[Number]]:y,
-	 *            [[Boolean]]:shadow
+	 * @arguments [[String]]:text, [[Number]]:x, [[Number]]:y, [[Boolean]]:shadow
 	 * @return nil
 	 */
 

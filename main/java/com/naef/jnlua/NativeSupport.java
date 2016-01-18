@@ -8,13 +8,7 @@ package com.naef.jnlua;
 /**
  * Loads the JNLua native library.
  * 
- * The class provides and configures a default loader implementation that loads
- * the JNLua native library by means of the <code>System.loadLibrary</code>
- * method. In some situations, you may want to override this behavior. For
- * example, when using JNLua as an OSGi bundle, the native library is loaded by
- * the OSGi runtime. Therefore, the OSGi bundle activator replaces the loader by
- * a no-op implementaion. Note that the loader must be configured before
- * LuaState is accessed.
+ * The class provides and configures a default loader implementation that loads the JNLua native library by means of the <code>System.loadLibrary</code> method. In some situations, you may want to override this behavior. For example, when using JNLua as an OSGi bundle, the native library is loaded by the OSGi runtime. Therefore, the OSGi bundle activator replaces the loader by a no-op implementaion. Note that the loader must be configured before LuaState is accessed.
  */
 public final class NativeSupport {
 	// -- Static

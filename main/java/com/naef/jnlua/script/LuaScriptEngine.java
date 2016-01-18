@@ -31,8 +31,7 @@ import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaState;
 
 /**
- * Lua script engine implementation conforming to JSR 223: Scripting for the
- * Java Platform.
+ * Lua script engine implementation conforming to JSR 223: Scripting for the Java Platform.
  */
 class LuaScriptEngine extends AbstractScriptEngine implements Compilable, Invocable {
 	// -- Static
@@ -292,8 +291,7 @@ class LuaScriptEngine extends AbstractScriptEngine implements Compilable, Invoca
 	}
 
 	/**
-	 * Dumps a loaded chunk into an output stream. The chunk is left on the
-	 * stack.
+	 * Dumps a loaded chunk into an output stream. The chunk is left on the stack.
 	 */
 	void dumpChunk(OutputStream out) throws ScriptException {
 		try {

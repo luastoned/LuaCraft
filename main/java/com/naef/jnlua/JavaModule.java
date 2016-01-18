@@ -15,8 +15,7 @@ import java.util.NavigableMap;
 import com.naef.jnlua.JavaReflector.Metamethod;
 
 /**
- * Provides the Java module for Lua. The Java module contains Java functions for
- * using Java in Lua.
+ * Provides the Java module for Lua. The Java module contains Java functions for using Java in Lua.
  */
 public class JavaModule {
 	// -- Static
@@ -60,10 +59,7 @@ public class JavaModule {
 
 	// -- Operations
 	/**
-	 * Opens this module in a Lua state. The method is invoked by
-	 * {@link LuaState#openLibs()} or by
-	 * {@link LuaState#openLib(com.naef.jnlua.LuaState.Library)} if
-	 * {@link LuaState.Library#JAVA} is passed.
+	 * Opens this module in a Lua state. The method is invoked by {@link LuaState#openLibs()} or by {@link LuaState#openLib(com.naef.jnlua.LuaState.Library)} if {@link LuaState.Library#JAVA} is passed.
 	 * 
 	 * @param luaState
 	 *            the Lua state to open in
@@ -76,9 +72,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Returns a table-like Lua value for the specified map. The returned value
-	 * corresponds to the return value of the <code>totable()</code> function
-	 * provided by this Java module.
+	 * Returns a table-like Lua value for the specified map. The returned value corresponds to the return value of the <code>totable()</code> function provided by this Java module.
 	 * 
 	 * @param map
 	 *            the map
@@ -89,9 +83,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Returns a table-like Lua value for the specified list. The returned value
-	 * corresponds to the return value of the <code>totable()</code> function
-	 * provided by this Java module.
+	 * Returns a table-like Lua value for the specified list. The returned value corresponds to the return value of the <code>totable()</code> function provided by this Java module.
 	 * 
 	 * @param list
 	 *            the list
@@ -120,10 +112,7 @@ public class JavaModule {
 
 	// -- Nested types
 	/**
-	 * Imports a Java class into the Lua namespace. Returns the class and a
-	 * status code. The status code indicates if the class was stored in the Lua
-	 * namespace. Primitive types and classes without a package are not stored
-	 * in the Lua namespace.
+	 * Imports a Java class into the Lua namespace. Returns the class and a status code. The status code indicates if the class was stored in the Lua namespace. Primitive types and classes without a package are not stored in the Lua namespace.
 	 */
 	private static class Require implements NamedJavaFunction {
 		// -- JavaFunction methods
@@ -166,9 +155,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Creates and returns a new Java object or array thereof. The first
-	 * argument designates the type to instantiate, either as a class or a
-	 * string. The remaining arguments are the dimensions.
+	 * Creates and returns a new Java object or array thereof. The first argument designates the type to instantiate, either as a class or a string. The remaining arguments are the dimensions.
 	 */
 	private static class New implements NamedJavaFunction {
 		// -- JavaFunction methods
@@ -219,9 +206,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Returns whether an object is an instance of a type. The object is given
-	 * as the first argument. the type is given as the second argument, either
-	 * as a class or as a type name.
+	 * Returns whether an object is an instance of a type. The object is given as the first argument. the type is given as the second argument, either as a class or as a type name.
 	 */
 	private static class InstanceOf implements NamedJavaFunction {
 		// -- JavaFunction methods
@@ -296,8 +281,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Creates a dynamic proxy object the implements a set of Java interfaces in
-	 * Lua.
+	 * Creates a dynamic proxy object the implements a set of Java interfaces in Lua.
 	 */
 	private static class Proxy implements NamedJavaFunction {
 		// -- JavaFunction methods
@@ -331,11 +315,7 @@ public class JavaModule {
 	}
 
 	/**
-	 * Provides an iterator for maps. For <code>NavigableMap</code> objects, the
-	 * function returns a stateless iterator which allows concurrent
-	 * modifications to the map. For other maps, the function returns an
-	 * iterator based on <code>Iterator</code> which does not support concurrent
-	 * modifications.
+	 * Provides an iterator for maps. For <code>NavigableMap</code> objects, the function returns a stateless iterator which allows concurrent modifications to the map. For other maps, the function returns an iterator based on <code>Iterator</code> which does not support concurrent modifications.
 	 */
 	private static class Pairs implements NamedJavaFunction {
 		// -- Static

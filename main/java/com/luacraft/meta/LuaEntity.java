@@ -61,9 +61,7 @@ public class LuaEntity {
 	/**
 	 * @author Jake
 	 * @function GetUniqueID
-	 * @info Get the entities unique ID that will be persistent If used on a
-	 *       player in online-mode, it will return the Minecraft UUID for the
-	 *       player
+	 * @info Get the entities unique ID that will be persistent If used on a player in online-mode, it will return the Minecraft UUID for the player
 	 * @arguments nil
 	 * @return [[String]]:id
 	 */
@@ -351,7 +349,7 @@ public class LuaEntity {
 	 * @function Extinguish
 	 * @info Extinguish the entity
 	 * @arguments nil
-	 * @return nil This is an alternative function to SetBurning
+	 * @return nil
 	 */
 
 	public static JavaFunction Extinguish = new JavaFunction() {
@@ -510,8 +508,7 @@ public class LuaEntity {
 	/**
 	 * @author Jake
 	 * @function GetFireResistance
-	 * @info The amount of ticks you have to stand inside in fire before be set
-	 *       on fire
+	 * @info The amount of ticks you have to stand inside in fire before be set on fire
 	 * @arguments nil
 	 * @return [[Number]]:res
 	 */
@@ -1108,8 +1105,7 @@ public class LuaEntity {
 	/**
 	 * @author Jake
 	 * @function GetDataWatcher
-	 * @info Returns a DataWatcher which can be used to control the entities
-	 *       networked data
+	 * @info Returns a DataWatcher which can be used to control the entities networked data
 	 * @arguments nil
 	 * @return [[DataWatcher]]:networkdata
 	 */

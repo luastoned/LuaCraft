@@ -66,10 +66,17 @@ public class LuaLibGame {
 			/*
 			 * NetHandlerPlayClient net = client.thePlayer.sendQueue;
 			 * List<GuiPlayerInfo> playerInfo = net.playerInfoList;
-			 * l.newTable(); int i = 1; for (GuiPlayerInfo info: playerInfo) {
-			 * l.pushInteger(i++); l.newTable(); l.pushString(info.name);
-			 * l.setField(-2, "name"); l.pushInteger(info.responseTime);
-			 * l.setField(-2, "ping"); l.setTable(-3); }
+			 * l.newTable();
+			 * int i = 1;
+			 * for (GuiPlayerInfo info: playerInfo) {
+			 * 	l.pushInteger(i++);
+			 * 	l.newTable();
+			 * 	l.pushString(info.name);
+			 * 	l.setField(-2, "name");
+			 * 	l.pushInteger(info.responseTime);
+			 * 	l.setField(-2, "ping");
+			 * 	l.setTable(-3);
+			 * }
 			 */
 
 			return 0; // TODO: Fix game.PlayerInfo

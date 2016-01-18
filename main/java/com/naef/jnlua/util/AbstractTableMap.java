@@ -107,13 +107,10 @@ public abstract class AbstractTableMap<K> extends AbstractMap<K, Object> impleme
 
 	// -- Protected methods
 	/**
-	 * Checks a key for validity. If the key is not valid, the method throws an
-	 * appropriate runtime exception. The method is invoked for all input keys.
+	 * Checks a key for validity. If the key is not valid, the method throws an appropriate runtime exception. The method is invoked for all input keys.
 	 * 
 	 * <p>
-	 * This implementation checks that the key is not <code>null</code>. Lua
-	 * does not allow <code>nil</code> as a table key. Subclasses may implement
-	 * more restrictive checks.
+	 * This implementation checks that the key is not <code>null</code>. Lua does not allow <code>nil</code> as a table key. Subclasses may implement more restrictive checks.
 	 * </p>
 	 * 
 	 * @param key
@@ -128,14 +125,10 @@ public abstract class AbstractTableMap<K> extends AbstractMap<K, Object> impleme
 	}
 
 	/**
-	 * Indicates if this table map filters keys from the Lua table. If the
-	 * method returns <code>true</code>, the table map invokes
-	 * {@link #acceptKey(int)} on each key retrieved from the underlying table
-	 * to determine whether the key is accepted or rejected.
+	 * Indicates if this table map filters keys from the Lua table. If the method returns <code>true</code>, the table map invokes {@link #acceptKey(int)} on each key retrieved from the underlying table to determine whether the key is accepted or rejected.
 	 * 
 	 * <p>
-	 * This implementation returns <code>false</code>. Subclasses may override
-	 * the method alongside {@link #acceptKey(int)} to implement key filtering.
+	 * This implementation returns <code>false</code>. Subclasses may override the method alongside {@link #acceptKey(int)} to implement key filtering.
 	 * </p>
 	 * 
 	 * @return whether this table map filters keys from the Lua table
@@ -145,15 +138,10 @@ public abstract class AbstractTableMap<K> extends AbstractMap<K, Object> impleme
 	}
 
 	/**
-	 * Accepts or rejects a key from the Lua table. Only table keys that are
-	 * accepted are processed. The method allows subclasses to filter the Lua
-	 * table. The method is called only if {@link #filterKeys()} returns
-	 * <code>true</code>.
+	 * Accepts or rejects a key from the Lua table. Only table keys that are accepted are processed. The method allows subclasses to filter the Lua table. The method is called only if {@link #filterKeys()} returns <code>true</code>.
 	 * 
 	 * <p>
-	 * This implementation returns <code>true</code> regardless of the input,
-	 * thus accepting all keys. Subclasses may override the method alongside
-	 * {@link #filterKeys()} to implement key filtering.
+	 * This implementation returns <code>true</code> regardless of the input, thus accepting all keys. Subclasses may override the method alongside {@link #filterKeys()} to implement key filtering.
 	 * </p>
 	 * 
 	 * @param index
@@ -165,9 +153,7 @@ public abstract class AbstractTableMap<K> extends AbstractMap<K, Object> impleme
 	}
 
 	/**
-	 * Converts the key at the specified stack index to a Java object. If this
-	 * table maps performs key filtering, the method is invoked only for keys it
-	 * has accepted.
+	 * Converts the key at the specified stack index to a Java object. If this table maps performs key filtering, the method is invoked only for keys it has accepted.
 	 * 
 	 * @param index
 	 *            the stack index containing the key

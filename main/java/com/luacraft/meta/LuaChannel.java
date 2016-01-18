@@ -12,7 +12,7 @@ public class LuaChannel {
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function Empty
@@ -28,7 +28,7 @@ public class LuaChannel {
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function Empty
@@ -44,7 +44,7 @@ public class LuaChannel {
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function Pop
@@ -60,11 +60,11 @@ public class LuaChannel {
 			return 1;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function Push
-	 * @info Pushes an item onto the top of this stack. 
+	 * @info Pushes an item onto the top of this stack.
 	 * @arguments [[Object]]:obj
 	 * @return nil
 	 */
@@ -76,7 +76,7 @@ public class LuaChannel {
 			return 0;
 		}
 	};
-	
+
 	/**
 	 * @author Jake
 	 * @function Search

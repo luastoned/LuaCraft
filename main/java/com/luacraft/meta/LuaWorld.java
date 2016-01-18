@@ -45,8 +45,7 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function GetBlock
 	 * @info Get a block at position within the world
-	 * @arguments [[Vector]]:position OR [ [[Number]]:x, [[Number]]:y,
-	 *            [[Number]]:z ]
+	 * @arguments [[Vector]]:position OR [ [[Number]]:x, [[Number]]:y, [[Number]]:z ]
 	 * @return [[Block]]:block
 	 */
 
@@ -581,8 +580,7 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function AddExplosion
 	 * @info Adds an explosion to the world
-	 * @arguments [[Vector]]:pos, [ [[Number]]:size, [[Boolean]]:flaming,
-	 *            [[Boolean]]:smoking ]
+	 * @arguments [[Vector]]:pos, [ [[Number]]:size, [[Boolean]]:flaming, [[Boolean]]:smoking ]
 	 * @return nil
 	 */
 
@@ -634,8 +632,7 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function EmitSound
 	 * @info Play a sound emitting from the position given
-	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [
-	 *            [[Number]]:Pitch, [[Number]]:Volume ]
+	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [ [[Number]]:Pitch, [[Number]]:Volume ]
 	 * @return nil
 	 */
 

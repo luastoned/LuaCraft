@@ -15,8 +15,7 @@ public class LuaLibSQL {
 	 * @library sql
 	 * @function Connect
 	 * @info Connect to a database via JDBC
-	 * @arguments [[String]]:JDBC URL, [ [[String]]:username,
-	 *            [[String]]:password ]
+	 * @arguments [[String]]:JDBC URL, [ [[String]]:username, [[String]]:password ]
 	 * @return [[SQLDatabase]]:database, [ [[String]]:error ]
 	 */
 

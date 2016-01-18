@@ -242,8 +242,7 @@ public class DefaultJavaReflector implements JavaReflector {
 	}
 
 	/**
-	 * Returns a public class method matching a method name and parameter list.
-	 * The public class can be a superclass or interface.
+	 * Returns a public class method matching a method name and parameter list. The public class can be a superclass or interface.
 	 */
 	private Method getPublicClassMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		Method method = getPublicSuperclassMethod(clazz, methodName, parameterTypes);
@@ -254,8 +253,7 @@ public class DefaultJavaReflector implements JavaReflector {
 	}
 
 	/**
-	 * Returns a public superclass method matching a method name and parameter
-	 * list.
+	 * Returns a public superclass method matching a method name and parameter list.
 	 */
 	private Method getPublicSuperclassMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
 		Class<?> superclass = clazz.getSuperclass();
@@ -317,8 +315,7 @@ public class DefaultJavaReflector implements JavaReflector {
 	}
 
 	/**
-	 * Returns the class of an object, or the class itself if the object is
-	 * already a class.
+	 * Returns the class of an object, or the class itself if the object is already a class.
 	 */
 	private Class<?> getObjectClass(Object object) {
 		return object instanceof Class<?> ? (Class<?>) object : object.getClass();
@@ -979,8 +976,7 @@ public class DefaultJavaReflector implements JavaReflector {
 		}
 
 		/**
-		 * Returns a Lua runtime exception indicating that no matching invocable
-		 * has been found.
+		 * Returns a Lua runtime exception indicating that no matching invocable has been found.
 		 */
 		private LuaRuntimeException getSignatureMismatchException(LuaState luaState) {
 			return new LuaRuntimeException(String.format("no %s of class %s matches '%s(%s)'", getWhat(),
@@ -988,8 +984,7 @@ public class DefaultJavaReflector implements JavaReflector {
 		}
 
 		/**
-		 * Returns a Lua runtime exception indicating that an invocable is
-		 * ambivalent.
+		 * Returns a Lua runtime exception indicating that an invocable is ambivalent.
 		 */
 		private LuaRuntimeException getSignatureAmbivalenceException(LuaState luaState, Set<Invocable> candidates) {
 			StringBuffer sb = new StringBuffer();
@@ -1136,8 +1131,7 @@ public class DefaultJavaReflector implements JavaReflector {
 		public Class<?> getReturnType();
 
 		/**
-		 * Returns whether this invocable has a return value that must be pushed
-		 * raw.
+		 * Returns whether this invocable has a return value that must be pushed raw.
 		 */
 		public boolean isRawReturn();
 

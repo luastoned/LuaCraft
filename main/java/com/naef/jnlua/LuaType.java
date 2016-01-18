@@ -57,8 +57,7 @@ public enum LuaType {
 
 	// -- Properties
 	/**
-	 * Returns the display text of this Lua type. The display text is the type
-	 * name in lower case.
+	 * Returns the display text of this Lua type. The display text is the type name in lower case.
 	 * 
 	 * @return the display text
 	 */

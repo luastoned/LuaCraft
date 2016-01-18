@@ -118,8 +118,7 @@ public class LuaContainer {
 	/**
 	 * @author Jake
 	 * @function IsItemValidForSlot
-	 * @info Returns whether or not this item is allowed to be placed in the
-	 *       slot
+	 * @info Returns whether or not this item is allowed to be placed in the slot
 	 * @arguments [[Number]]:slot, [[ItemStack]]:item
 	 * @return [[Boolean]]:isvalid
 	 */
@@ -136,8 +135,7 @@ public class LuaContainer {
 	/**
 	 * @author Jake
 	 * @function GetAll
-	 * @info Returns a table of all the items within the container Format: [
-	 *       SlotNumber ] = ItemStack
+	 * @info Returns a table of all the items within the container Format: [ SlotNumber ] = ItemStack
 	 * @arguments nil
 	 * @return [[Table]]:items
 	 */

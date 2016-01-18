@@ -46,8 +46,7 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function render.gameoverlay Calls whenever a frame is drawn Used for
-	 *           rendering 2D text, textures, etc.
+	 * @function render.gameoverlay Calls whenever a frame is drawn Used for rendering 2D text, textures, etc.
 	 * @arguments [[Number]]:ticks, [[Number]]:x, [[Number]]:y
 	 * @return nil
 	 */
@@ -77,8 +76,7 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function render.world Calls whenever a frame within the world is drawn
-	 *           Used for rendering 3D objects
+	 * @function render.world Calls whenever a frame within the world is drawn Used for rendering 3D objects
 	 * @arguments [[Number]]:ticks
 	 * @return nil
 	 */
