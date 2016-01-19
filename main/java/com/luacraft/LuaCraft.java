@@ -41,20 +41,14 @@ public class LuaCraft {
 	public static final String MODID = "luacraft";
 	public static final String VERSION = "1.2";
 
-	@SidedProxy(clientSide = "com.luacraft.LuaClient", serverSide = "com.luacraft.LuaServer")
-	public static LuaShared luaProxy;
-
 	public static HashMap<String, LuaJavaChannel> threadChannels = new HashMap<String, LuaJavaChannel>();
-
-	public static LuaServer serverLibs = new LuaServer();
-	public static LuaClient clientLibs = new LuaClient();
 
 	public static String luaDir = "lua" + File.separator;
 	public static String rootDir = System.getProperty("user.dir") + File.separator;
 
 	private static Logger luaLogger;
 	private static LuaLoader luaLoader = new LuaLoader(rootDir);
-	public static HashMap<Side, LuaCraftState> luaStates = new HashMap<Side, LuaCraftState>();
+	private static HashMap<Side, LuaCraftState> luaStates = new HashMap<Side, LuaCraftState>();
 
 	public static FMLEventChannel channel = null;
 
@@ -69,11 +63,23 @@ public class LuaCraft {
 		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("LuaCraft");
 
 		NativeSupport.getInstance().setLoader(luaLoader);
-		LuaCraftState luaState = new LuaCraftState();
-		synchronized (luaState) {
-			luaStates.put(event.getSide(), luaState);
-			luaProxy.Initialize(luaState);
-			luaProxy.Autorun(luaState);
+
+		if (event.getSide() == Side.CLIENT) {
+			LuaClient luaState = new LuaClient();
+			synchronized (luaState) {
+				luaState.initialize();
+			}
+			synchronized (luaStates) {
+				luaStates.put(Side.CLIENT, luaState);
+			}
+		} else {
+			LuaServer luaState = new LuaServer();
+			synchronized (luaState) {
+				luaState.initialize();
+			}
+			synchronized (luaStates) {
+				luaStates.put(Side.SERVER, luaState);
+			}
 		}
 	}
 
@@ -87,12 +93,13 @@ public class LuaCraft {
 		event.registerServerCommand(new LuaJavaRunCommand());
 
 		if (event.getSide().isClient() && luaStates.get(Side.SERVER) == null) {
-			LuaCraftState luaState = new LuaCraftState();
+			LuaServer luaState = new LuaServer();
 			synchronized (luaState) {
-				luaState.setSideOverride(Side.CLIENT);
+				luaState.setSideOverride(Side.CLIENT); // Singleplayer fix..
+				luaState.initialize();
+			}
+			synchronized (luaStates) {
 				luaStates.put(Side.SERVER, luaState);
-				serverLibs.Initialize(luaState);
-				serverLibs.Autorun(luaState);
 			}
 		}
 	}
@@ -174,34 +181,19 @@ public class LuaCraft {
 		return extractedFile;
 	}
 
-	public static void reloadLuaStates() {
-		for (Entry<Side, LuaCraftState> entry : luaStates.entrySet()) {
-			Side side = entry.getKey();
-			LuaCraftState state = entry.getValue();
+	public static void reloadClientState() {
+		LuaClient state = (LuaClient) getLuaState(Side.CLIENT);
 
-			synchronized (state) {
-				if (side == Side.CLIENT)
-					LuaCraft.clientLibs.Shutdown();
-				else
-					LuaCraft.serverLibs.Shutdown();
-				state.close();
-			}
+		synchronized (state) {
+			state.runScripts();
+		}
+	}
 
-			LuaCraftState newState = new LuaCraftState();
+	public static void reloadServerState() {
+		LuaServer state = (LuaServer) getLuaState(Side.SERVER);
 
-			synchronized (newState) {
-				newState.setSideOverride(state.getSideOverride());
-
-				luaStates.put(side, newState);
-
-				if (side == Side.CLIENT) {
-					clientLibs.Initialize(newState);
-					clientLibs.Autorun(newState);
-				} else {
-					serverLibs.Initialize(newState);
-					serverLibs.Autorun(newState);
-				}
-			}
+		synchronized (state) {
+			state.runScripts();
 		}
 	}
 

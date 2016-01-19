@@ -16,52 +16,56 @@ import com.luacraft.meta.client.LuaModelResource;
 import com.luacraft.meta.client.LuaVector;
 
 public class LuaClient extends LuaShared {
-	private static LuaEventManagerClient luaEvent = null;
+	private LuaEventManagerClient luaClientEvent;
 
-	public void Initialize(final LuaCraftState l) {
-		luaEvent = new LuaEventManagerClient(l);
-		super.Initialize(l);
+	public void initialize() {
+		super.initialize();
 
-		LoadLibraries(l);
+		luaClientEvent = new LuaEventManagerClient(this);
 
-		MinecraftForge.EVENT_BUS.register(luaEvent);
-		FMLCommonHandler.instance().bus().register(luaEvent);
+		print("Registering client event manager");
+		MinecraftForge.EVENT_BUS.register(luaClientEvent);
+
+		runScripts();
 	}
 
-	public void Autorun(final LuaCraftState l) {
-		super.Autorun(l);
-		l.print("Loading autorun/client");
-		l.autorun("client"); // Load all files within autorun/client
+	public void runScripts() {
+		super.runScripts();
+		loadLibraries();
+
+		super.autorun();
+		print("Loading autorun/client");
+		super.autorun("client"); // Load all files within autorun/client
 	}
 
-	public void Shutdown() {
-		MinecraftForge.EVENT_BUS.unregister(luaEvent);
-		FMLCommonHandler.instance().bus().unregister(luaEvent);
-		luaEvent = null;
-		super.Shutdown();
+	public void close() {
+		super.close();
+		print("Unregistering client event manager");
+		MinecraftForge.EVENT_BUS.unregister(luaClientEvent);
+		luaClientEvent = null;
 	}
 
-	private static void LoadLibraries(final LuaCraftState l) {
-		l.print("Loading Client LuaState...");
+	private void loadLibraries() {
+		print("Loading client Lua...");
 
 		// Libs
-		LuaGlobals.Init(l);
-		LuaLibGame.Init(l);
-		LuaLibInput.Init(l);
-		LuaLibProfiler.Init(l);
-		LuaLibRender.Init(l);
-		LuaLibSurface.Init(l);
+		LuaGlobals.Init(this);
+		LuaLibGame.Init(this);
+		LuaLibInput.Init(this);
+		LuaLibProfiler.Init(this);
+		LuaLibRender.Init(this);
+		LuaLibSurface.Init(this);
 
 		// Meta
-		LuaByteBuf.Init(l);
-		LuaEntity.Init(l);
-		LuaFont.Init(l);
-		LuaModelResource.Init(l);
-		LuaVector.Init(l);
+		LuaByteBuf.Init(this);
+		LuaEntity.Init(this);
+		LuaFont.Init(this);
+		LuaModelResource.Init(this);
+		LuaVector.Init(this);
 
-		l.pushBoolean(true);
-		l.setGlobal("CLIENT");
-		l.pushBoolean(false);
-		l.setGlobal("SERVER");
+		pushBoolean(true);
+		setGlobal("CLIENT");
+		pushBoolean(false);
+		setGlobal("SERVER");
 	}
 }

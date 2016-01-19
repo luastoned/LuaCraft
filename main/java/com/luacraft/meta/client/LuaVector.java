@@ -19,7 +19,7 @@ import com.naef.jnlua.LuaState;
 
 public class LuaVector {
 	private static Minecraft client = null;
-	static ClippingHelperImpl clippingHelper = null;
+	static ClippingHelperImpl clippingHelper = new ClippingHelperImpl();
 
 	public static Vector3f Vec3Transform(Vector3f vec, Matrix4f matrix) {
 		Vector3f vOutput = new Vector3f(0, 0, 0);
@@ -101,7 +101,6 @@ public class LuaVector {
 
 	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
-		clippingHelper = new ClippingHelperImpl();
 		clippingHelper.init();
 
 		l.newMetatable("Vector");

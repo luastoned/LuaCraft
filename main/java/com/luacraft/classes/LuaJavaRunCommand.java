@@ -11,6 +11,7 @@ import net.minecraft.util.StatCollector;
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.LuaException;
+import com.naef.jnlua.LuaRuntimeException;
 
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -28,10 +29,9 @@ public class LuaJavaRunCommand extends CommandBase {
 		return "commands.lua.usage";
 	}
 
-	// TODO: hook for lua command?
-	/*
-	 * public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) { return true; }
-	 */
+	public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) {
+		return true;
+	}
 
 	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		String strLua = "";
@@ -45,16 +45,23 @@ public class LuaJavaRunCommand extends CommandBase {
 			return;
 		}
 
-		if (args[0].equals("switch")) {
+		if (args[0].equalsIgnoreCase("switch")) {
 			switchState = !switchState;
 
 			ChatComponentTranslation chatCT = new ChatComponentTranslation("luacraft.state.changed",
 					switchState ? clientName : serverName);
-			chatCT.getChatStyle().setColor(EnumChatFormatting.GREEN);
+			chatCT.getChatStyle().setColor(switchState ? EnumChatFormatting.GOLD : EnumChatFormatting.DARK_AQUA);
 			sender.addChatMessage(chatCT);
 			return;
-		} else if (args[0].equals("reload")) {
-			LuaCraft.reloadLuaStates();
+		} else if (args[0].equalsIgnoreCase("reload")) {
+			if (args.length < 2) {
+				LuaCraft.reloadServerState();
+				LuaCraft.reloadClientState();
+			} else if (args[1].equalsIgnoreCase("client"))
+				LuaCraft.reloadClientState();
+			else if (args[1].equalsIgnoreCase("server"))
+				LuaCraft.reloadServerState();
+
 			return;
 		}
 

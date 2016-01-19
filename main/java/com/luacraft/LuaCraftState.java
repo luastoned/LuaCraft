@@ -63,6 +63,10 @@ public class LuaCraftState extends LuaState {
 			return getForgeServer().getServer();
 	}
 
+	public void downloadLuaFile(String filename, byte[] data) {
+
+	}
+
 	public void getLoadedAddons() {
 		// TODO: Addon list
 	}
@@ -196,14 +200,14 @@ public class LuaCraftState extends LuaState {
 			return;
 
 		if (!file.getName().endsWith(".lua"))
-			throw new LuaRuntimeException("Cannot open " + file.getName() + ": File is not a lua file");
+			throw new LuaRuntimeException("Cannot open " + file.getPath() + ": File is not a lua file");
 
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
-			includeFileStream(in, file.getName());
+			includeFileStream(in, FileMount.CleanPath(file));
 		} catch (FileNotFoundException e) {
-			throw new LuaRuntimeException("Cannot open " + file.getName() + ": No such file or directory");
+			throw new LuaRuntimeException("Cannot open " + file.getPath() + ": No such file or directory");
 		} catch (Exception e) {
 			handleException(e);
 		} finally {

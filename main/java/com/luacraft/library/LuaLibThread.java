@@ -18,7 +18,7 @@ public class LuaLibThread {
 	 * @author Jake
 	 * @library thread
 	 * @function NewThread
-	 * @info Create a new thread
+	 * @info Load a lua file into a seperate thread
 	 * @arguments [[String]]:filename
 	 * @return [[Thread]]:thread
 	 */
@@ -37,7 +37,7 @@ public class LuaLibThread {
 	 * @author Jake
 	 * @library thread
 	 * @function GetChannel
-	 * @info Create a new channel
+	 * @info Create a new channel that can be shared between threads
 	 * @arguments [[String]]:name
 	 * @return [[Channel]]:channel
 	 */

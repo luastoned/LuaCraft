@@ -576,15 +576,14 @@ public class LuaByteBuf {
 	 * @author Jake
 	 * @function ReadString
 	 * @info Reads a string from the buffer
-	 * @arguments nil
+	 * @arguments [ [[Number]]:maxlength ]
 	 * @return [[String]]:string
 	 */
 
 	public static JavaFunction ReadString = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			int j = self.readVarIntFromBuffer();
-			l.pushString(new String(self.readBytes(j).array(), Charsets.UTF_8));
+			l.pushString(self.readStringFromBuffer((int) l.checkNumber(2, 32767)));
 			return 1;
 		}
 	};

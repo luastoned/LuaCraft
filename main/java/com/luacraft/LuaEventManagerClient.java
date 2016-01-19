@@ -11,7 +11,6 @@ public class LuaEventManagerClient {
 	LuaCraftState l = null;
 
 	public LuaEventManagerClient(LuaCraftState state) {
-		state.print(state.toString());
 		l = state;
 	}
 
@@ -54,13 +53,13 @@ public class LuaEventManagerClient {
 	@SubscribeEvent
 	public void onRenderGameOverlay(RenderGameOverlayEvent event) {
 		synchronized (l) {
-			if (!l.isOpen())
-				return;
-
 			if (event.type != RenderGameOverlayEvent.ElementType.ALL)
 				return;
 
 			if (l.getMinecraft().thePlayer == null)
+				return;
+
+			if (!l.isOpen())
 				return;
 
 			try {

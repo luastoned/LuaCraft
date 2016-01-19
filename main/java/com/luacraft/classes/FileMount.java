@@ -9,6 +9,15 @@ import com.luacraft.LuaCraft;
 public class FileMount {
 	static ArrayList<File> mounted = new ArrayList<File>();
 
+	public static String CleanPath(File file) {
+		String clean = file.getPath();
+
+		if (clean.startsWith(LuaCraft.rootDir))
+			return clean.replace(LuaCraft.rootDir, "");
+
+		return file.getName();
+	}
+
 	public static File GetFileInRoot(String file) {
 		return new File(LuaCraft.rootDir, file);
 	}

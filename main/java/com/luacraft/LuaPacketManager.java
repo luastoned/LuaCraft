@@ -3,7 +3,9 @@ package com.luacraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.MinecraftServer;
 
+import com.google.common.base.Charsets;
 import com.naef.jnlua.LuaException;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -26,6 +28,19 @@ public class LuaPacketManager {
 
 			try {
 				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
+
+				// Peek into the packet
+				String func = buffer.readStringFromBuffer(32767);
+
+				// If it's a LuaFile handle it internally
+				if (func.equals("LuaFile")) {
+					String file = buffer.readStringFromBuffer(32767);
+					byte[] data = buffer.readByteArray();
+					l.downloadLuaFile(file, data);
+					return;
+				}
+
+				buffer.readerIndex(0);
 				l.pushIncomingNet();
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.call(1, 0);

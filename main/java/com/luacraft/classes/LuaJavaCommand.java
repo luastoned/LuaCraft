@@ -35,8 +35,7 @@ public class LuaJavaCommand extends CommandBase {
 	}
 
 	public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) {
-		return true; // The command callback should be checking whether or not
-						// the command can be ran
+		return true; // The command callback should be checking whether or not the command can be ran
 	}
 
 	@Override

@@ -36,120 +36,125 @@ import com.naef.jnlua.LuaState.Library;
 
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class LuaShared {
-	private static LuaEventManager luaEvent = null;
-	private static LuaPacketManager packet = null;
+public class LuaShared extends LuaCraftState {
+	private LuaEventManager luaEvent;
+	private LuaPacketManager packet;
 
-	public void Initialize(final LuaCraftState l) {
-		packet = new LuaPacketManager(l);
-		luaEvent = new LuaEventManager(l);
+	public void initialize() {
+		packet = new LuaPacketManager(this);
+		luaEvent = new LuaEventManager(this);
 
-		LoadLibraries(l);
-		LoadExtensions(l);
-
+		print("Registering packet manager");
 		LuaCraft.channel.register(packet);
+		print("Registering shared event manager");
 		MinecraftForge.EVENT_BUS.register(luaEvent);
-		FMLCommonHandler.instance().bus().register(luaEvent);
+
+		runScripts();
 	}
 
-	public void Shutdown() {
+	public void runScripts() {
+		loadLibraries();
+		loadExtensions();
+
+		print("Loading autorun");
+		super.autorun(); // Load all files within autorun
+		super.autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
+	}
+
+	public void close() {
+		print("Unregistering packet manager");
 		LuaCraft.channel.unregister(packet);
-		MinecraftForge.EVENT_BUS.unregister(luaEvent);
-		FMLCommonHandler.instance().bus().unregister(luaEvent);
 		packet = null;
+		print("Unregistering shared event manager");
+		MinecraftForge.EVENT_BUS.unregister(luaEvent);
 		luaEvent = null;
+		super.close();
 	}
 
-	public void Autorun(final LuaCraftState l) {
-		l.print("Loading autorun");
-		l.autorun(); // Load all files within autorun
-		l.autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
-	}
-
-	private static void LoadExtensions(final LuaCraftState l) {
+	private void loadExtensions() {
 		// Load all packed modules from our Jar
-		l.includePackedFile("/lua/modules/hook.lua");
-		l.includePackedFile("/lua/modules/net.lua");
+		includePackedFile("/lua/modules/hook.lua");
+		includePackedFile("/lua/modules/net.lua");
 
 		// Load all packed extensions from our Jar
-		l.includePackedFile("/lua/extensions/math.lua");
-		l.includePackedFile("/lua/extensions/player.lua");
-		l.includePackedFile("/lua/extensions/string.lua");
-		l.includePackedFile("/lua/extensions/table.lua");
+		includePackedFile("/lua/extensions/math.lua");
+		includePackedFile("/lua/extensions/player.lua");
+		includePackedFile("/lua/extensions/string.lua");
+		includePackedFile("/lua/extensions/table.lua");
 
-		l.includeDirectory("extensions"); // Load any extensions a user made
+		includeDirectory("extensions"); // Load any extensions a user made
 	}
 
-	private static void LoadLibraries(final LuaCraftState l) {
-		l.print("Loading Shared LuaState...");
+	private void loadLibraries() {
+		print("Loading shared Lua...");
 
-		l.openLib(Library.BASE);
-		l.openLib(Library.PACKAGE);
-		l.openLib(Library.TABLE);
-		l.openLib(Library.IO);
-		l.openLib(Library.OS);
-		l.openLib(Library.STRING);
-		l.openLib(Library.MATH);
-		l.openLib(Library.DEBUG);
-		l.openLib(Library.BIT);
-		l.openLib(Library.JIT);
-		l.openLib(Library.FFI);
+		openLib(Library.BASE);
+		openLib(Library.PACKAGE);
+		openLib(Library.TABLE);
+		openLib(Library.IO);
+		openLib(Library.OS);
+		openLib(Library.STRING);
+		openLib(Library.MATH);
+		openLib(Library.DEBUG);
+		openLib(Library.BIT);
+		openLib(Library.JIT);
+		openLib(Library.FFI);
 
 		// Set the registry to support _R
-		l.pushValue(LuaState.REGISTRYINDEX);
-		l.setGlobal("_R");
+		pushValue(LuaState.REGISTRYINDEX);
+		setGlobal("_R");
 
 		// Disable the output/input buffer
-		l.load("io.stdout:setvbuf('no')", "=LuaShared.LoadLibraries");
-		l.call(0, 0);
-		l.load("io.stderr:setvbuf('no')", "=LuaShared.LoadLibraries");
-		l.call(0, 0);
+		load("io.stdout:setvbuf('no')", "=LuaShared.LoadLibraries");
+		call(0, 0);
+		load("io.stderr:setvbuf('no')", "=LuaShared.LoadLibraries");
+		call(0, 0);
 
 		String lua = LuaCraft.getRootLuaDirectory();
 
 		// Set the package path to the correct location
-		l.getGlobal("package");
-		l.pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua + "modules/?/init.lua");
-		l.setField(-2, "path");
-		l.pop(1);
+		getGlobal("package");
+		pushString(lua + "modules/?.lua;" + lua + "modules/bin/?.lua;" + lua + "modules/?/init.lua");
+		setField(-2, "path");
+		pop(1);
 
 		// Set the package path to the correct location
-		l.getGlobal("package");
-		l.pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua + "modules/bin/loadall.dll");
-		l.setField(-2, "cpath");
-		l.pop(1);
+		getGlobal("package");
+		pushString(lua + "modules/?.dll;" + lua + "modules/bin/?.dll;" + lua + "modules/bin/loadall.dll");
+		setField(-2, "cpath");
+		pop(1);
 
 		// Libs
-		LuaGlobals.Init(l);
-		LuaLibHTTP.Init(l);
-		LuaLibLanguage.Init(l);
-		LuaLibSQL.Init(l);
-		LuaLibThread.Init(l);
-		LuaLibUtil.Init(l);
+		LuaGlobals.Init(this);
+		LuaLibHTTP.Init(this);
+		LuaLibLanguage.Init(this);
+		LuaLibSQL.Init(this);
+		LuaLibThread.Init(this);
+		LuaLibUtil.Init(this);
 
 		// Meta
-		LuaAngle.Init(l);
-		LuaBlock.Init(l);
-		LuaByteBuf.Init(l);
-		LuaChannel.Init(l);
-		LuaColor.Init(l);
-		LuaContainer.Init(l);
-		LuaDamageSource.Init(l);
-		LuaDataWatcher.Init(l);
-		LuaEntity.Init(l);
-		LuaEntityDamageSource.Init(l);
-		LuaEntityItem.Init(l);
-		LuaScriptedItem.Init(l);
-		LuaItemStack.Init(l);
-		LuaLiving.Init(l);
-		LuaLivingBase.Init(l);
-		LuaNBTTag.Init(l);
-		LuaPlayer.Init(l);
-		LuaResource.Init(l);
-		LuaThread.Init(l);
-		LuaSQLDatabase.Init(l);
-		LuaSQLQuery.Init(l);
-		LuaVector.Init(l);
-		LuaWorld.Init(l);
+		LuaAngle.Init(this);
+		LuaBlock.Init(this);
+		LuaByteBuf.Init(this);
+		LuaChannel.Init(this);
+		LuaColor.Init(this);
+		LuaContainer.Init(this);
+		LuaDamageSource.Init(this);
+		LuaDataWatcher.Init(this);
+		LuaEntity.Init(this);
+		LuaEntityDamageSource.Init(this);
+		LuaEntityItem.Init(this);
+		LuaScriptedItem.Init(this);
+		LuaItemStack.Init(this);
+		LuaLiving.Init(this);
+		LuaLivingBase.Init(this);
+		LuaNBTTag.Init(this);
+		LuaPlayer.Init(this);
+		LuaResource.Init(this);
+		LuaThread.Init(this);
+		LuaSQLDatabase.Init(this);
+		LuaSQLQuery.Init(this);
+		LuaVector.Init(this);
+		LuaWorld.Init(this);
 	}
 }

@@ -1,5 +1,6 @@
 package com.luacraft.meta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -7,6 +8,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
@@ -661,7 +663,29 @@ public class LuaWorld {
 			boolean hitWater = l.toBoolean(-1);
 			l.pop(1);
 
-			LuaLibUtil.pushTrace(l, self, start, endpos, hitWater);
+			List<Entity> filter = new ArrayList<Entity>();
+
+			l.getField(2, "filter");
+			if (!l.isNil(-1)) {
+
+				if (l.isUserdata(-1, Entity.class))
+					filter.add((Entity) l.toUserdata(-1));
+
+				if (l.isTable(-1)) {
+					l.pushNil();
+
+					while (l.next(-2)) {
+
+						if (l.isUserdata(-1, Entity.class))
+							filter.add((Entity) l.toUserdata(-1));
+
+						l.pop(1); // Pop the value, keep the key
+					}
+				}
+			}
+			l.pop(1);
+
+			LuaLibUtil.pushTrace((LuaCraftState) l, self, start, endpos, hitWater, filter);
 			return 1;
 		}
 	};

@@ -1,8 +1,14 @@
 package com.luacraft.meta;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
@@ -160,7 +166,10 @@ public class LuaLivingBase {
 			Vector dir = new Vector(self.getLook(1F));
 			Vector endpos = start.copy().add(dir.mul(160));
 
-			LuaLibUtil.pushTrace(l, self.worldObj, start, endpos, true);
+			List<Entity> filter = new ArrayList<Entity>();
+			filter.add(self);
+
+			LuaLibUtil.pushTrace((LuaCraftState) l, self.worldObj, start, endpos, true, filter);
 			return 1;
 		}
 	};

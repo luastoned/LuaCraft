@@ -7,19 +7,30 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.codec.binary.Hex;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ClassInheritanceMultiMap;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
@@ -28,17 +39,15 @@ import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 public class LuaLibUtil {
 
 	public static String base64encode(String str) {
-		return Base64.encode(str.getBytes());
+		return DatatypeConverter.printBase64Binary(str.getBytes());
 	}
 
 	public static byte[] base64decode(String str) {
-		return Base64.decode(str);
+		return DatatypeConverter.parseBase64Binary(str);
 	}
 
 	public static byte[] compress(String str) throws IOException {
@@ -69,96 +78,82 @@ public class LuaLibUtil {
 		return out.toString();
 	}
 
-	private static Entity traceEntity(World world, Vec3 start, Vec3 end) {
-		double d0 = start.distanceTo(end);
-		double d1 = d0;
-		Vec3 vec3 = start;
-		Vec3 vec31 = start.subtract(end);
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
-		Entity pointedEntity = null;
-		Vec3 vec33 = null;
-		float f1 = 1.0F;
+	private static MovingObjectPosition traceEntity(World world, Vec3 start, Vec3 end, List<Entity> filter) {
+		Chunk chunk = world.getChunkFromBlockCoords(new BlockPos(start));
 
-		AxisAlignedBB bb = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+		MovingObjectPosition result = null;
+		double hitDistance = -1;
 
-		List list = world.getEntitiesWithinAABB(Entity.class,
-				bb.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand((double) f1, (double) f1,
-						(double) f1));
-		double d2 = d1;
+		for (Object obj : world.loadedEntityList) {
+			Entity entity = (Entity) obj;
 
-		for (int i = 0; i < list.size(); ++i) {
-			Entity entity1 = (Entity) list.get(i);
+			if (filter.contains(entity))
+				continue;
 
-			if (entity1.canBeCollidedWith()) {
-				float f2 = entity1.getCollisionBorderSize();
-				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double) f2, (double) f2,
-						(double) f2);
-				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
+			double distance = start.distanceTo(entity.getPositionVector());
+			MovingObjectPosition trace = entity.getEntityBoundingBox().calculateIntercept(start, end);
 
-				if (axisalignedbb.isVecInside(vec3)) {
-					if (0.0D < d2 || d2 == 0.0D) {
-						pointedEntity = entity1;
-						vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
-						d2 = 0.0D;
-					}
-				} else if (movingobjectposition != null) {
-					double d3 = vec3.distanceTo(movingobjectposition.hitVec);
-
-					if (d3 < d2 || d2 == 0.0D) {
-						pointedEntity = entity1;
-						vec33 = movingobjectposition.hitVec;
-						d2 = d3;
-					}
-				}
+			if (trace != null && (hitDistance == -1 || distance < hitDistance)) {
+				hitDistance = distance;
+				result = trace;
+				result.entityHit = entity;
 			}
 		}
 
-		if (pointedEntity != null && d2 < d1)
-			return pointedEntity;
-
-		return null;
+		return result;
 	}
 
-	public static void pushTrace(LuaState l, World world, Vector start, Vector endpos, boolean hitWater) {
+	public static void pushTrace(LuaCraftState l, World worldObj, Vector start, Vector endpos, boolean b) {
+		pushTrace(l, worldObj, start, endpos, b, new ArrayList<Entity>());
+	}
+
+	public static void pushTrace(LuaCraftState l, World world, Vector start, Vector endpos, boolean hitWater,
+			List<Entity> filter) {
 		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(), endpos.toVec3(), hitWater);
 
-		AxisAlignedBB bb = new AxisAlignedBB(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5);
-
-		Vec3 size = new Vec3(0.5, 0.5, 0.5);
-
-		Entity hitEnt = traceEntity(world, start.toVec3(), endpos.toVec3());
+		// Use the block trace end position so we can't find entities through blocks
+		MovingObjectPosition entTrace = traceEntity(world, start.toVec3(),
+				trace != null ? trace.hitVec : endpos.toVec3(), filter);
 
 		l.newTable();
 
 		start.push(l);
 		l.setField(-2, "StartPos");
 
-		if (trace == null) {
-			l.pushBoolean(false);
-			l.setField(-2, "Hit");
-
-			endpos.push(l);
-			l.setField(-2, "HitPos");
-		} else {
+		if (entTrace != null) {
 			l.pushBoolean(true);
 			l.setField(-2, "Hit");
 
-			Vector hitpos = new Vector(trace.hitVec);
+			LuaUserdataManager.PushUserdata(l, entTrace.entityHit);
+			l.setField(-2, "HitEntity");
 
+			Vector hitpos = new Vector(entTrace.hitVec);
 			hitpos.push(l);
 			l.setField(-2, "HitPos");
 
-			if (hitEnt != null) {
-				LuaUserdataManager.PushUserdata(l, hitEnt);
-				l.setField(-2, "HitEntity");
-			} else {
-				LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
-				LuaUserdataManager.PushUserdata(l, thisBlock);
-				l.setField(-2, "HitBlock");
+			l.pushFace(entTrace.sideHit);
+			l.setField(-2, "HitNormal");
+		} else if (trace != null) {
+			l.pushBoolean(true);
+			l.setField(-2, "Hit");
 
-				((LuaCraftState) l).pushFace(trace.sideHit);
-				l.setField(-2, "HitNormal");
-			}
+			LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
+			LuaUserdataManager.PushUserdata(l, thisBlock);
+			l.setField(-2, "HitBlock");
+
+			Vector hitpos = new Vector(trace.hitVec);
+			hitpos.push(l);
+			l.setField(-2, "HitPos");
+
+			l.pushFace(trace.sideHit);
+			l.setField(-2, "HitNormal");
+		} else {
+			l.pushBoolean(false);
+			l.setField(-2, "Hit");
+
+			Vector hitpos = new Vector(endpos.toVec3());
+			hitpos.push(l);
+			l.setField(-2, "HitPos");
 		}
 	}
 
@@ -167,7 +162,7 @@ public class LuaLibUtil {
 	 * @library util
 	 * @function CRC32
 	 * @info Get a CRC32-bit number of a string
-	 * @arguments nil
+	 * @arguments [[String]]:string
 	 * @return [[Number]]:crc32
 	 */
 
@@ -199,7 +194,7 @@ public class LuaLibUtil {
 				throw new LuaRuntimeException("Invalid crypto type: " + mode);
 			}
 			ecrypt.update(l.checkByteArray(1));
-			l.pushString(HexBin.encode(ecrypt.digest()));
+			l.pushString(Hex.encodeHexString(ecrypt.digest()));
 			return 1;
 		}
 	};
@@ -209,8 +204,8 @@ public class LuaLibUtil {
 	 * @library util
 	 * @function Base64Encode
 	 * @info Encode a string to Base64
-	 * @arguments nil
-	 * @return [[String]]:data
+	 * @arguments [[String]]:string
+	 * @return [[String]]:encoded
 	 */
 
 	public static JavaFunction Base64Encode = new JavaFunction() {
@@ -225,8 +220,8 @@ public class LuaLibUtil {
 	 * @library util
 	 * @function Base64Decode
 	 * @info Decode Base64 encoded data back to a string
-	 * @arguments nil
-	 * @return [[String]]:string
+	 * @arguments [[String]]:base64
+	 * @return [[String]]:decoded
 	 */
 
 	public static JavaFunction Base64Decode = new JavaFunction() {
@@ -241,7 +236,7 @@ public class LuaLibUtil {
 	 * @library util
 	 * @function Compress
 	 * @info Compress a string using GZIP
-	 * @arguments nil
+	 * @arguments [[String]]:string
 	 * @return [[String]]:data
 	 */
 
@@ -261,7 +256,7 @@ public class LuaLibUtil {
 	 * @library util
 	 * @function Decompress
 	 * @info Decompress a string using GZIP
-	 * @arguments nil
+	 * @arguments [[String]]:data
 	 * @return [[String]]:string
 	 */
 

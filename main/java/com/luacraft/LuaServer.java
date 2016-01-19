@@ -8,33 +8,37 @@ import com.luacraft.meta.server.LuaPlayer;
 import com.luacraft.meta.server.LuaPropertyManager;
 
 public class LuaServer extends LuaShared {
-	public void Initialize(final LuaCraftState l) {
-		super.Initialize(l);
-		LoadLibraries(l);
+
+	public void initialize() {
+		super.initialize();
+		runScripts();
 	}
 
-	public void Autorun(final LuaCraftState l) {
-		super.Autorun(l);
-		l.print("Loading autorun/server");
-		l.autorun("server"); // Load all files within autorun/server
+	public void runScripts() {
+		super.runScripts();
+		loadLibraries();
+
+		super.autorun();
+		print("Loading autorun/server");
+		super.autorun("server"); // Load all files within autorun/server
 	}
 
-	private static void LoadLibraries(final LuaCraftState l) {
-		l.print("Loading Server LuaState...");
+	private void loadLibraries() {
+		print("Loading server Lua...");
 
 		// Libs
-		LuaGlobals.Init(l);
-		LuaLibCommand.Init(l);
-		LuaLibGame.Init(l);
+		LuaGlobals.Init(this);
+		LuaLibCommand.Init(this);
+		LuaLibGame.Init(this);
 
 		// Meta
-		LuaPlayer.Init(l);
-		LuaByteBuf.Init(l);
-		LuaPropertyManager.Init(l);
+		LuaPlayer.Init(this);
+		LuaByteBuf.Init(this);
+		LuaPropertyManager.Init(this);
 
-		l.pushBoolean(false);
-		l.setGlobal("CLIENT");
-		l.pushBoolean(true);
-		l.setGlobal("SERVER");
+		pushBoolean(false);
+		setGlobal("CLIENT");
+		pushBoolean(true);
+		setGlobal("SERVER");
 	}
 }
