@@ -22,7 +22,7 @@ public class LuaLoader implements Loader {
 		rootDir = dir;
 
 		if (rootDir.contains("eclipse")) {
-			libraryDir = "../src/main/resources/bin/";
+			libraryDir = "../src/main/resources/bins/";
 			isEclipse = true;
 		}
 
@@ -49,7 +49,7 @@ public class LuaLoader implements Loader {
 		if (isEclipse) {
 			System.load(rootDir + libraryDir + archType + lib + fileExt);
 		} else {
-			LuaCraft.extractFile("/bin/" + archType + lib + fileExt, libraryDir + lib + fileExt);
+			LuaCraft.extractFile("/bins/" + archType + lib + fileExt, libraryDir + lib + fileExt);
 			System.load(rootDir + libraryDir + lib + fileExt);
 		}
 	}

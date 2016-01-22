@@ -18,7 +18,7 @@ public class LuaLibThread {
 	 * @author Jake
 	 * @library thread
 	 * @function NewThread
-	 * @info Load a lua file into a seperate thread
+	 * @info Load a lua file into a separate thread
 	 * @arguments [[String]]:filename
 	 * @return [[Thread]]:thread
 	 */

@@ -34,7 +34,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not allways work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "stable_18"
+    mappings = "snapshot_20141130"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -60,6 +60,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+    compile 'mysql:mysql-connector-java:5.1.38'
+    runtime 'org.xerial:sqlite-jdbc:3.8.11.2'
 }
 
 processResources
@@ -86,12 +88,9 @@ jar {
 	manifest {
 		attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
 		attributes 'FMLCorePluginContainsFMLMod' : 'true'
+        attributes 'Class-Path' : 'libs/'
 	}
 }
 
 println 'Building LuaCraft - version ' + project.version + " for Minecraft " + project.minecraft.version
-defaultTasks 'clean' //, 'packJar'
-
-configurations {
-    packJar
-}
+defaultTasks 'clean'
