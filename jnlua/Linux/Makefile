@@ -9,6 +9,8 @@ ARCH=i386
 CC=gcc
 LD=gcc
 
+#-m32
+
 # Default arguments
 CFLAGS=-m32 -c -fno-strict-aliasing -fPIC -O2 -Wall -DNDEBUG -D_REENTRANT -DLUA_USE_LINUX -DLUA_USE_POSIX
 LDFLAGS=-m32 -shared
