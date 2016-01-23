@@ -911,7 +911,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMins = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getBoundingBox();
+			AxisAlignedBB bb = self.getEntityBoundingBox();
 			Vector mins = new Vector(bb.minX, bb.minZ, bb.minY);
 			mins.push(l);
 			return 1;
@@ -929,7 +929,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMaxs = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getBoundingBox();
+			AxisAlignedBB bb = self.getEntityBoundingBox();
 			Vector maxs = new Vector(bb.maxX, bb.maxZ, bb.maxY);
 			maxs.push(l);
 			return 1;

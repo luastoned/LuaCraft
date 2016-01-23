@@ -22,9 +22,9 @@ public class LuaEntity {
 	public static JavaFunction GetPos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX);
-			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY);
-			double posZ = self.lastTickPosZ + (self.posZ - self.lastTickPosZ);
+			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX) * client.timer.renderPartialTicks;
+			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY) * client.timer.renderPartialTicks;
+			double posZ = self.lastTickPosZ + (self.posZ - self.lastTickPosZ) * client.timer.renderPartialTicks;
 
 			Vector pos = new Vector(posX, posZ, posY);
 			pos.push(l);
@@ -43,9 +43,9 @@ public class LuaEntity {
 	public static JavaFunction GetEyePos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX);
-			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY);
-			double posZ = self.lastTickPosZ + (self.posZ - self.lastTickPosZ);
+			double posX = self.lastTickPosX + (self.posX - self.lastTickPosX) * client.timer.renderPartialTicks;
+			double posY = self.lastTickPosY + (self.posY - self.lastTickPosY) * client.timer.renderPartialTicks;
+			double posZ = self.lastTickPosZ + (self.posZ - self.lastTickPosZ) * client.timer.renderPartialTicks;
 
 			Vector pos = new Vector(posX, posZ, posY + self.getEyeHeight());
 			pos.push(l);

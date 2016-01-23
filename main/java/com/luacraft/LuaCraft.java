@@ -21,6 +21,7 @@ import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -52,10 +53,20 @@ public class LuaCraft {
 
 	public static FMLEventChannel channel = null;
 
+	public static Configuration config;
+
+	public static boolean scriptEnforcer = true;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ModContainer modContainer = FMLCommonHandler.instance().findContainerFor(this);
 		luaLogger = LogManager.getLogger(modContainer.getName());
+
+		config = new Configuration(event.getSuggestedConfigurationFile());
+		config.load();
+		scriptEnforcer = config.getBoolean("script-enforcer", "server", true,
+				"Prevent clients from running their own Lua scripts");
+		config.save();
 	}
 
 	@EventHandler

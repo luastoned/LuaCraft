@@ -11,12 +11,12 @@ public class LuaServer extends LuaShared {
 
 	public void initialize() {
 		super.initialize();
+		loadLibraries();
 		runScripts();
 	}
 
 	public void runScripts() {
 		super.runScripts();
-		loadLibraries();
 
 		super.autorun();
 		print("Loading autorun/server");

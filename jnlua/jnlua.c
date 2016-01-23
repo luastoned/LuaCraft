@@ -2068,9 +2068,6 @@ static void pushuserdata (lua_State *L, jobject object) {
 	
 /* Returns the Java object at the specified index, or NULL if such an object is unobtainable. */
 static jobject touserdata (lua_State *L, int index) {
-	int result;
-	jobject object;
-
 	if (!lua_isuserdata(L, index)) {
 		return NULL;
 	}

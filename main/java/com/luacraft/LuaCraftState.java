@@ -104,7 +104,7 @@ public class LuaCraftState extends LuaState {
 	public void handleException(Exception e) {
 		String error = e.getMessage();
 		error(traceback(error));
-		e.printStackTrace();
+		//e.printStackTrace();
 	}
 
 	public void pushHookCall() {

@@ -1817,11 +1817,10 @@ public class LuaState {
 
 	public synchronized <T> Object checkUserdata(int index, Class<T> formalType, String expected) {
 		check();
-		Object userdata = toUserdata(index);
-		if (!isUserdata(index) || !formalType.isAssignableFrom(userdata.getClass())) {
+		if (!isUserdata(index) || !formalType.isAssignableFrom(toUserdata(index).getClass())) {
 			throw getArgException(index, String.format("exptected %s, got %s", expected, typeName(index)));
 		}
-		return userdata;
+		return toUserdata(index);
 	}
 
 	/**

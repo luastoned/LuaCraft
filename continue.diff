@@ -1,0 +1,145 @@
+diff -ru LuaJIT-2.0.4/src/lj_errmsg.h LuaJIT-2.0.4-continue/src/lj_errmsg.h
+--- LuaJIT-2.0.4/src/lj_errmsg.h	2015-05-14 14:30:00.000000000 -0400
++++ LuaJIT-2.0.4-continue/src/lj_errmsg.h	2016-01-22 18:56:30.912108200 -0500
+@@ -145,6 +145,7 @@
+ ERRDEF(XSYNTAX,	"syntax error")
+ ERRDEF(XFOR,	LUA_QL("=") " or " LUA_QL("in") " expected")
+ ERRDEF(XBREAK,	"no loop to break")
++ERRDEF(XCONTINUE, "no loop to continue")
+ ERRDEF(XLUNDEF,	"undefined label " LUA_QS)
+ ERRDEF(XLDUP,	"duplicate label " LUA_QS)
+ ERRDEF(XGSCOPE,	"<goto %s> jumps into the scope of local " LUA_QS)
+
+diff -ru LuaJIT-2.0.4/src/lj_lex.h LuaJIT-2.0.4-continue/src/lj_lex.h
+--- LuaJIT-2.0.4/src/lj_lex.h	2015-05-14 14:30:00.000000000 -0400
++++ LuaJIT-2.0.4-continue/src/lj_lex.h	2016-01-22 18:57:13.121558200 -0500
+@@ -13,7 +13,7 @@
+ 
+ /* Lua lexer tokens. */
+ #define TKDEF(_, __) \
+-  _(and) _(break) _(do) _(else) _(elseif) _(end) _(false) \
++  _(and) _(break) _(continue) _(do) _(else) _(elseif) _(end) _(false) \
+   _(for) _(function) _(goto) _(if) _(in) _(local) _(nil) _(not) _(or) \
+   _(repeat) _(return) _(then) _(true) _(until) _(while) \
+   __(concat, ..) __(dots, ...) __(eq, ==) __(ge, >=) __(le, <=) __(ne, ~=) \
+
+diff -ru LuaJIT-2.0.4/src/lj_parse.c LuaJIT-2.0.4-continue/src/lj_parse.c
+--- LuaJIT-2.0.4/src/lj_parse.c	2015-05-14 14:30:00.000000000 -0400
++++ LuaJIT-2.0.4-continue/src/lj_parse.c	2016-01-23 14:14:08.820682000 -0500
+@@ -98,6 +98,7 @@
+   MSize vstart;			/* Start of block-local variables. */
+   uint8_t nactvar;		/* Number of active vars outside the scope. */
+   uint8_t flags;		/* Scope flags. */
++  BCPos continuelist;		/* list of jumps onto next loop iteration */
+ } FuncScope;
+ #define FSCOPE_LOOP		0x01	/* Scope is a (breakable) loop. */
+@@ -1257,6 +1258,7 @@
+ static void fscope_begin(FuncState *fs, FuncScope *bl, int flags)
+ {
+   bl->nactvar = (uint8_t)fs->nactvar;
++  bl->continuelist = NO_JMP;
+   bl->flags = flags;
+   bl->vstart = fs->ls->vtop;
+   bl->prev = fs->bl;
+@@ -2375,6 +2377,23 @@
+   gola_new(ls, NAME_BREAK, VSTACK_GOTO, bcemit_jmp(ls->fs));
+ }
+
++static void parse_continue(LexState *ls) {
++  FuncState *fs = ls->fs;
++  FuncScope *bl;
++  BCReg savefr;
++  int upval = 0;
++  for (bl = fs->bl; bl && !(bl->flags & FSCOPE_LOOP); bl = bl->prev)
++    upval |= (bl->flags & FSCOPE_UPVAL);  /* Collect upvalues in intervening scopes. */
++  if (!bl)  /* Error if no continueable scope found. */
++    err_syntax(ls, LJ_ERR_XCONTINUE);
++  savefr = fs->freereg;
++  fs->freereg = bl->nactvar;  /* Shrink slots to help data-flow analysis. */
++  if (upval)
++    bcemit_AJ(fs, BC_UCLO, bl->nactvar, 0);  /* Close upvalues. */
++  jmp_append(fs, &bl->continuelist, bcemit_jmp(fs));
++  fs->freereg = savefr;
++}
++
+ /* Parse 'goto' statement. */
+ static void parse_goto(LexState *ls)
+ {
+@@ -2447,6 +2466,7 @@
+   jmp_patch(fs, bcemit_jmp(fs), start);
+   lex_match(ls, TK_end, TK_while, line);
+   fscope_end(fs);
++  jmp_patch(fs, bl.continuelist, start); /* patch 'continue' jumps */
+   jmp_tohere(fs, condexit);
+   jmp_patchins(fs, loop, fs->pc);
+ }
+@@ -2464,6 +2484,7 @@
+   bcemit_AD(fs, BC_LOOP, fs->nactvar, 0);
+   parse_chunk(ls);
+   lex_match(ls, TK_until, TK_repeat, line);
++  jmp_tohere(fs, bl1.continuelist); /* patch 'continue' jumps */
+   condexit = expr_cond(ls);  /* Parse condition (still inside inner scope). */
+   if (!(bl2.flags & FSCOPE_UPVAL)) {  /* No upvalues? Just end inner scope. */
+     fscope_end(fs);
+@@ -2509,6 +2530,7 @@
+   bcreg_reserve(fs, 1);
+   parse_block(ls);
+   fscope_end(fs);
++  jmp_tohere(fs, bl.prev->continuelist); /* patch 'continue' jumps */
+   /* Perform loop inversion. Loop control instructions are at the end. */
+   loopend = bcemit_AJ(fs, BC_FORL, base, NO_JMP);
+   fs->bcbase[loopend].line = line;  /* Fix line for control ins. */
+@@ -2580,6 +2602,7 @@
+   bcreg_reserve(fs, nvars-3);
+   parse_block(ls);
+   fscope_end(fs);
++  jmp_tohere(fs, bl.prev->continuelist); /* patch 'continue' jumps */
+   /* Perform loop inversion. Loop control instructions are at the end. */
+   jmp_patchins(fs, loop, fs->pc);
+   bcemit_ABC(fs, isnext ? BC_ITERN : BC_ITERC, base, nvars-3+1, 2+1);
+@@ -2681,6 +2704,10 @@
+     lj_lex_next(ls);
+     parse_break(ls);
+     return !LJ_52;  /* Must be last in Lua 5.1. */
++  case TK_continue:
++    lj_lex_next(ls);
++    parse_continue(ls);
++    return 1;  /* Must be last. */
+ #if LJ_52
+   case ';':
+     lj_lex_next(ls);
+
+diff -ru LuaJIT-2.0.4/src/Makefile LuaJIT-2.0.4-continue/src/Makefile
+--- LuaJIT-2.0.4/src/Makefile	2015-05-14 14:30:00.000000000 -0400
++++ LuaJIT-2.0.4-continue/src/Makefile	2016-01-22 19:49:25.211912900 -0500
+@@ -88,7 +88,7 @@
+ ##############################################################################
+ # Enable/disable these features as needed, but make sure you force a full
+ # recompile with "make clean", followed by "make".
+-XCFLAGS=
++XCFLAGS= -DLUAJIT_ENABLE_LUA52COMPAT
+ #
+ # Permanently disable the FFI extension to reduce the size of the LuaJIT
+ # executable. But please consider that the FFI library is compiled-in,
+@@ -181,7 +181,7 @@
+ HOST_ALDFLAGS= $(LDOPTIONS) $(HOST_XLDFLAGS) $(HOST_LDFLAGS)
+ HOST_ALIBS= $(HOST_XLIBS) $(LIBS) $(HOST_LIBS)
+ 
+-STATIC_CC = $(CROSS)$(CC)
++STATIC_CC = $(CROSS)$(CC) -fPIC
+ DYNAMIC_CC = $(CROSS)$(CC) -fPIC
+ TARGET_CC= $(STATIC_CC)
+ TARGET_STCC= $(STATIC_CC)
+
+diff -ru LuaJIT-2.0.4/src/msvcbuild.bat LuaJIT-2.0.4-continue/src/msvcbuild.bat
+--- LuaJIT-2.0.4/src/msvcbuild.bat	2015-05-14 14:30:00.000000000 -0400
++++ LuaJIT-2.0.4-continue/src/msvcbuild.bat	2016-01-22 18:45:06.187775500 -0500
+@@ -14,7 +14,7 @@
+ @if not defined INCLUDE goto :FAIL
+ 
+ @setlocal
+-@set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE
++@set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /DLUAJIT_ENABLE_LUA52COMPAT
+ @set LJLINK=link /nologo
+ @set LJMT=mt /nologo
+ @set LJLIB=lib /nologo /nodefaultlib

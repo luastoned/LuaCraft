@@ -49,11 +49,11 @@ public class LuaShared extends LuaCraftState {
 		print("Registering shared event manager");
 		MinecraftForge.EVENT_BUS.register(luaEvent);
 
+		loadLibraries();
 		runScripts();
 	}
 
 	public void runScripts() {
-		loadLibraries();
 		loadExtensions();
 
 		print("Loading autorun");
