@@ -59,36 +59,6 @@ public class LuaGlobals {
 
 	/**
 	 * @author Matt
-	 * @function ScrW
-	 * @info Get the screen width
-	 * @arguments nil
-	 * @return [[Number]]:width
-	 */
-
-	public static JavaFunction ScrW = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushNumber(client.displayWidth);
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Matt
-	 * @function ScrH
-	 * @info Get the screen height
-	 * @arguments nil
-	 * @return [[Number]]:height
-	 */
-
-	public static JavaFunction ScrH = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushNumber(client.displayHeight);
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Matt
 	 * @function LocalPlayer
 	 * @info Get your local player object
 	 * @arguments nil
@@ -125,20 +95,66 @@ public class LuaGlobals {
 
 		l.pushJavaFunction(Block);
 		l.setGlobal("Block");
-
 		l.pushJavaFunction(World);
 		l.setGlobal("World");
-
-		l.pushJavaFunction(ScrW);
-		l.setGlobal("ScrW");
-
-		l.pushJavaFunction(ScrH);
-		l.setGlobal("ScrH");
-
 		l.pushJavaFunction(LocalPlayer);
 		l.setGlobal("LocalPlayer");
-
 		l.pushJavaFunction(ModelResource);
 		l.setGlobal("ModelResource");
+
+		/**
+		 * @author Jake
+		 * @function EyeAngles
+		 * @info Get your local player's camera position
+		 * @arguments nil
+		 * @return [[Vector]]:camera
+		 */
+
+		l.pushJavaFunction(LuaLibRender.EyeAngles);
+		l.setGlobal("EyeAngles");
+
+		/**
+		 * @author Jake
+		 * @function EyePos
+		 * @info Get your local player's camera position
+		 * @arguments nil
+		 * @return [[Vector]]:camera
+		 */
+
+		l.pushJavaFunction(LuaLibRender.EyePos);
+		l.setGlobal("EyePos");
+
+		/**
+		 * @author Jake
+		 * @function GetViewEntity
+		 * @info Returns the entity the camera is using to see with
+		 * @arguments nil
+		 * @return [[Entity]]:view
+		 */
+
+		l.pushJavaFunction(LuaLibRender.GetViewEntity);
+		l.setGlobal("GetViewEntity");
+
+		/**
+		 * @author Matt
+		 * @function ScrW
+		 * @info Get the screen width
+		 * @arguments nil
+		 * @return [[Number]]:width
+		 */
+
+		l.pushJavaFunction(LuaLibRender.ScrW);
+		l.setGlobal("ScrW");
+
+		/**
+		 * @author Matt
+		 * @function ScrH
+		 * @info Get the screen height
+		 * @arguments nil
+		 * @return [[Number]]:height
+		 */
+
+		l.pushJavaFunction(LuaLibRender.ScrH);
+		l.setGlobal("ScrH");
 	}
 }

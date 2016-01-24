@@ -1,7 +1,6 @@
 package com.luacraft.meta.client;
 
-import javax.vecmath.Matrix4f;
-
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.luacraft.LuaCraftState;
@@ -12,13 +11,14 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 
 public class LuaVector {
 	private static Minecraft client = null;
-	static ClippingHelperImpl clippingHelper = new ClippingHelperImpl();
+
+	static Matrix4f viewMatrix = new Matrix4f();
+	static Matrix4f projectionMatrix = new Matrix4f();
 
 	public static Vector3f Vec3Transform(Vector3f vec, Matrix4f matrix) {
 		Vector3f vOutput = new Vector3f(0, 0, 0);
@@ -47,60 +47,51 @@ public class LuaVector {
 
 	/**
 	 * @author Gregor
-	 * @function ToScreen
-	 * @info Get x, y for a 3D Vector
+	 * @function ToScreen Get x, y for a 3D Vector
 	 * @arguments [[Vector]]:vec
 	 * @return [[Number]]:x, [[Number]]:y, [[Boolean]]:visible
 	 */
 
 	public static JavaFunction ToScreen = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Entity renderView = client.getRenderViewEntity();
-			if (renderView != null) {
-				Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
+			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 
-				Vec3 viewNormal = renderView.getLook(1F).normalize();
-				Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(renderView, client.timer.renderPartialTicks);
+			Entity view = client.getRenderViewEntity();
 
-				float vecX = (float) (eyePos.xCoord - self.x);
-				float vecY = (float) (eyePos.zCoord - self.y);
-				float vecZ = (float) (eyePos.yCoord - self.z);
+			Vec3 viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
+			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
-				Vector3f viewVec = new Vector3f(vecX, vecZ, vecY);
+			float vecX = (float) (eyePos.xCoord - self.x);
+			float vecY = (float) (eyePos.zCoord - self.y);
+			float vecZ = (float) (eyePos.yCoord - self.z);
 
-				Matrix4f viewMatrix = new Matrix4f(clippingHelper.modelviewMatrix);
-				Matrix4f projectionMatrix = new Matrix4f(clippingHelper.projectionMatrix);
+			Vector3f viewVec = new Vector3f(vecX, vecZ, vecY);
 
-				viewVec = Vec3TransformCoordinate(viewVec, viewMatrix);
-				viewVec = Vec3TransformCoordinate(viewVec, projectionMatrix);
+			viewMatrix.load(ActiveRenderInfo.field_178812_b.asReadOnlyBuffer());
+			projectionMatrix.load(ActiveRenderInfo.field_178813_c.asReadOnlyBuffer());
 
-				ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
-				viewVec.x = (float) ((scaledRes.getScaledWidth() * (viewVec.x + 1.0)) / 2.0);
-				viewVec.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((viewVec.y + 1.0) / 2.0)));
+			viewVec = Vec3TransformCoordinate(viewVec, viewMatrix);
+			viewVec = Vec3TransformCoordinate(viewVec, projectionMatrix);
 
-				boolean bVisible = false;
-				double w = viewNormal.dotProduct(new Vec3(vecX, vecZ, vecY));
+			ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+			viewVec.x = (float) ((scaledRes.getScaledWidth() * (viewVec.x + 1.0)) / 2.0);
+			viewVec.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((viewVec.y + 1.0) / 2.0)));
 
-				if (w < 0) // We only want vectors that are in front of the
-							// player
-					bVisible = true;
+			boolean bVisible = false;
+			double w = viewNormal.dotProduct(new Vec3(vecX, vecZ, vecY));
 
-				l.pushNumber(viewVec.x);
-				l.pushNumber(viewVec.y);
-				l.pushBoolean(bVisible);
-				return 3;
-			} else {
-				l.pushNumber(-1);
-				l.pushNumber(-1);
-				l.pushBoolean(false);
-				return 3;
-			}
+			if (w < 0) // We only want vectors that are in front of the player
+				bVisible = true;
+
+			l.pushNumber(viewVec.x);
+			l.pushNumber(viewVec.y);
+			l.pushBoolean(bVisible);
+			return 3;
 		}
 	};
 
 	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
-		clippingHelper.init();
 
 		l.newMetatable("Vector");
 		{

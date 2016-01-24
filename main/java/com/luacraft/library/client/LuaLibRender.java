@@ -6,6 +6,7 @@ import org.lwjgl.util.glu.Disk;
 import org.lwjgl.util.glu.Sphere;
 
 import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
@@ -15,9 +16,11 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
 
 public class LuaLibRender {
 	private static Minecraft client;
@@ -473,6 +476,95 @@ public class LuaLibRender {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @library render
+	 * @function EyeAngles
+	 * @info Get your local player's camera position
+	 * @arguments nil
+	 * @return [[Vector]]:camera
+	 */
+
+	public static JavaFunction EyeAngles = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Entity view = client.getRenderViewEntity();
+			float p = view.prevRotationPitch
+					+ (view.rotationPitch - view.prevRotationPitch) * client.timer.renderPartialTicks;
+			float y = view.prevRotationYaw
+					+ (view.rotationYaw - view.prevRotationYaw) * client.timer.renderPartialTicks;
+			Angle ang = new Angle(p, y);
+			ang.push(l);
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library render
+	 * @function EyePos
+	 * @info Get your local player's camera position
+	 * @arguments nil
+	 * @return [[Vector]]:camera
+	 */
+
+	public static JavaFunction EyePos = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Entity view = client.getRenderViewEntity();
+			Vector pos = new Vector(ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks));
+			pos.push(l);
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library render
+	 * @function GetViewEntity
+	 * @info Returns the entity the camera is using to see with
+	 * @arguments nil
+	 * @return [[Entity]]:view
+	 */
+
+	public static JavaFunction GetViewEntity = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Entity view = client.getRenderViewEntity();
+			LuaUserdataManager.PushUserdata(l, view);
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Matt
+	 * @library render
+	 * @function ScrW
+	 * @info Get the screen width
+	 * @arguments nil
+	 * @return [[Number]]:width
+	 */
+
+	public static JavaFunction ScrW = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushNumber(client.displayWidth);
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Matt
+	 * @library render
+	 * @function ScrH
+	 * @info Get the screen height
+	 * @arguments nil
+	 * @return [[Number]]:height
+	 */
+
+	public static JavaFunction ScrH = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushNumber(client.displayHeight);
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		client = l.getMinecraft();
 		currentFont = client.fontRendererObj;
@@ -497,6 +589,17 @@ public class LuaLibRender {
 			l.setField(-2, "DrawCylinder");
 			l.pushJavaFunction(DrawSphere);
 			l.setField(-2, "DrawSphere");
+
+			l.pushJavaFunction(EyeAngles);
+			l.setField(-2, "EyeAngles");
+			l.pushJavaFunction(EyePos);
+			l.setField(-2, "EyePos");
+			l.pushJavaFunction(GetViewEntity);
+			l.setField(-2, "GetViewEntity");
+			l.pushJavaFunction(ScrW);
+			l.setField(-2, "ScrW");
+			l.pushJavaFunction(ScrH);
+			l.setField(-2, "ScrH");
 		}
 		l.setGlobal("render");
 	}
