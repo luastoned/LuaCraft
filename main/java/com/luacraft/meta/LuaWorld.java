@@ -646,6 +646,14 @@ public class LuaWorld {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @function TraceLine
+	 * @info Trace a line from one point to another
+	 * @arguments [[TraceTable]]:trace
+	 * @return [[TraceHitTable]]:hit
+	 */
+
 	public static JavaFunction TraceLine = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");

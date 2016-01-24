@@ -128,10 +128,10 @@ public class LuaCraftState extends LuaState {
 			new Vector(0, 0, 1).push(this);
 			break;
 		case SOUTH:
-			new Vector(0, -1, 0).push(this);
+			new Vector(0, 1, 0).push(this);
 			break;
 		case NORTH:
-			new Vector(0, 1, 0).push(this);
+			new Vector(0, -1, 0).push(this);
 			break;
 		case WEST:
 			new Vector(-1, 0, 0).push(this);

@@ -41,7 +41,7 @@ public class LuaJavaCommand extends CommandBase {
 	@Override
 	public void execute(ICommandSender sender, String[] args) throws CommandException {
 		synchronized (l) {
-			String rawString = "";
+			StringBuilder rawString = new StringBuilder();
 
 			pushCommandFunc(commandName);
 
@@ -57,9 +57,10 @@ public class LuaJavaCommand extends CommandBase {
 				l.pushInteger(i + 1);
 				l.pushString(s);
 				l.setTable(-3);
-				rawString += s + " ";
+				rawString.append(s);
+				rawString.append(' ');
 			}
-			l.pushString(rawString);
+			l.pushString(rawString.toString());
 			l.call(4, 0);
 		}
 	}
