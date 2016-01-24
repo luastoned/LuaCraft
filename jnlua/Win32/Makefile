@@ -15,7 +15,6 @@ MTFLAGS=-nologo
 
 # Description blocks
 all: jnlua$(VERSION).dll
-	#javavm.dll
 
 jnlua$(VERSION).dll: jnlua.obj
 	$(LD) $(LDFLAGS) /OUT:jnlua$(VERSION).dll /LIBPATH:"$(LUA_DIR)" jnlua.obj lua$(VERSION).lib
@@ -23,12 +22,5 @@ jnlua$(VERSION).dll: jnlua.obj
 jnlua.obj: ..\jnlua.c
 	$(CC) $(CFLAGS) /MD /DLUA_BUILD_AS_DLL /I"$(JDK_DIR)\include" /I"$(JDK_DIR)\include\win32" /I"$(LUA_DIR)" ..\jnlua.c
 
-#javavm.dll: javavm.obj
-#	$(LD) $(LDFLAGS) /OUT:javavm.dll /LIBPATH:"$(LUA_DIR)" /LIBPATH:"$(JDK_DIR)\lib" javavm.obj lua$(VERSION).lib jvm.lib 
-
-#javavm.obj: ..\javavm.c ..\javavm.h
-#	$(CC) $(CFLAGS) /MD /DLUA_BUILD_AS_DLL /DLUA_LIB /I"$(JDK_DIR)\include" /I"$(JDK_DIR)\include\win32" /I"$(LUA_DIR)" ..\javavm.c
-
 clean:
 	-del jnlua$(VERSION).dll jnlua$(VERSION).dll.manifest jnlua$(VERSION).exp jnlua$(VERSION).lib jnlua.obj
-#	-del javavm.dll javavm.dll.manifest javavm.exp javavm.lib javavm.obj
