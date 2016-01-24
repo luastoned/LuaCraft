@@ -495,7 +495,9 @@ public class LuaEventManager {
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
-				event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+				if (!l.isNil(-1))
+					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+				
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
@@ -515,7 +517,9 @@ public class LuaEventManager {
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
-				event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+				if (!l.isNil(-1))
+					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+				
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);

@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,7 @@ import com.luacraft.LuaCraft;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.FileMount;
+import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.LuaJavaThread;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -177,7 +179,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsFunction
 	 * @info Returns if the argument is a function
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:function
 	 */
 
@@ -192,7 +194,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsNumber
 	 * @info Returns if the argument is a number
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:number
 	 */
 
@@ -207,7 +209,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsString
 	 * @info Returns if the argument is a string
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:string
 	 */
 
@@ -222,7 +224,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsBool
 	 * @info Returns if the argument is a bool
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:bool
 	 */
 
@@ -237,7 +239,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsTable
 	 * @info Returns if the argument is a table
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:table
 	 */
 
@@ -252,11 +254,26 @@ public class LuaGlobals {
 	 * @author Gregor
 	 * @function IsBlock
 	 * @info Returns if the argument is a block
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:block
 	 */
 
 	public static JavaFunction IsBlock = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, LuaJavaBlock.class));
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function IsWorld
+	 * @info Returns if the argument is a world
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:world
+	 */
+
+	public static JavaFunction IsWorld = new JavaFunction() {
 		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, World.class));
 			return 1;
@@ -267,7 +284,7 @@ public class LuaGlobals {
 	 * @author Jake
 	 * @function IsThread
 	 * @info Returns if the argument is a thread
-	 * @arguments arg
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:thread
 	 */
 
@@ -282,7 +299,7 @@ public class LuaGlobals {
 	 * @author Gregor
 	 * @function IsVector
 	 * @info Check if the argument is an vector
-	 * @arguments [[Vector]]:vec
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:vec
 	 */
 
@@ -297,13 +314,58 @@ public class LuaGlobals {
 	 * @author Gregor
 	 * @function IsAngle
 	 * @info Check if the argument is an angle
-	 * @arguments [[Angle]]:angle
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:angle
 	 */
 
 	public static JavaFunction IsAngle = new JavaFunction() {
 		public int invoke(LuaState l) {
 			l.pushBoolean(l.isUserdata(1, Angle.class));
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function IsColor
+	 * @info Check if the argument is an angle
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:color
+	 */
+
+	public static JavaFunction IsColor = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, Color.class));
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function IsEntity
+	 * @info Check if the argument is an entity
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:entity
+	 */
+
+	public static JavaFunction IsEntity = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, Entity.class));
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function IsPlayer
+	 * @info Check if the argument is a player
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:player
+	 */
+
+	public static JavaFunction IsPlayer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, EntityPlayer.class));
 			return 1;
 		}
 	};
@@ -403,12 +465,20 @@ public class LuaGlobals {
 		l.setGlobal("IsTable");
 		l.pushJavaFunction(IsBlock);
 		l.setGlobal("IsBlock");
+		l.pushJavaFunction(IsWorld);
+		l.setGlobal("IsWorld");
 		l.pushJavaFunction(IsThread);
 		l.setGlobal("IsThread");
 		l.pushJavaFunction(IsAngle);
 		l.setGlobal("IsAngle");
 		l.pushJavaFunction(IsVector);
 		l.setGlobal("IsVector");
+		l.pushJavaFunction(IsColor);
+		l.setGlobal("IsColor");
+		l.pushJavaFunction(IsEntity);
+		l.setGlobal("IsEntity");
+		l.pushJavaFunction(IsPlayer);
+		l.setGlobal("IsPlayer");
 
 		l.pushJavaFunction(FindMetaTable);
 		l.setGlobal("FindMetaTable");

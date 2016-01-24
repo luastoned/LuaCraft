@@ -7,6 +7,9 @@ import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.mojang.authlib.GameProfile;
@@ -183,7 +186,7 @@ public class LuaPlayer {
 	 * @author Gregor
 	 * @function Ban
 	 * @info Ban a player from the server
-	 * @arguments [ [[String]]:reason ]
+	 * @arguments [ [[String]]:reason, [[Number]]:minutes, [[String]]:banner ]
 	 * @return nil
 	 */
 
@@ -192,10 +195,21 @@ public class LuaPlayer {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			String reason = l.checkString(2, "You have been banned.");
 
+			Date date = new Date();
+
+			Calendar cal = null;
+			
+			if (l.isNumber(3)) {
+				cal = Calendar.getInstance();
+				cal.setTime(new Date());
+				cal.add(Calendar.MINUTE, l.checkInteger(3, 0));
+			}
+			
+			String banner = l.checkString(4, "LuaCraft");
+
 			ServerConfigurationManager config = server.getConfigurationManager();
 
-			// TODO: Add date to Player:Ban()
-			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), null, null, null, reason);
+			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), date, banner, cal != null ? cal.getTime() : null, reason);
 
 			self.playerNetServerHandler.kickPlayerFromServer(reason);
 			config.getBannedPlayers().addEntry(banEntry);

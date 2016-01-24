@@ -39,34 +39,38 @@ public class LuaJavaHTTPRequest extends Thread {
 	}
 
 	public void run() {
-		synchronized (l) {
-			StringBuilder contents = new StringBuilder();
+		StringBuilder contents = new StringBuilder();
 
-			try {
-				InputStreamReader reader = new InputStreamReader(connection.getInputStream());
-				BufferedReader in = new BufferedReader(reader);
+		try {
+			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+			BufferedReader in = new BufferedReader(reader);
 
-				String line;
-				while ((line = in.readLine()) != null) {
-					contents.append(line);
-					contents.append(System.lineSeparator());
-				}
-				in.close();
+			String line;
+			while ((line = in.readLine()) != null) {
+				contents.append(line);
+				contents.append(System.lineSeparator());
+			}
+			in.close();
 
+			synchronized (l) {
 				pushCallbackFunc();
 				if (l.isFunction(-1)) {
 					l.pushInteger(connection.getResponseCode());
 					l.pushString(contents.toString());
 					l.call(2, 0);
 				}
-			} catch (IOException e) {
+			}
+		} catch (IOException e) {
+			synchronized (l) {
 				pushCallbackFunc();
 				if (l.isFunction(-1)) {
 					l.pushNil();
 					l.pushString("Failed to resolve: " + e.getMessage());
 					l.call(2, 0);
 				}
-			} finally {
+			}
+		} finally {
+			synchronized (l) {
 				l.newMetatable("PendingHTTPRequests");
 				l.unref(-1, callbackRef);
 				l.setTop(0);
