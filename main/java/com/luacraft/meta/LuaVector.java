@@ -1,5 +1,6 @@
 package com.luacraft.meta;
 
+import com.luacraft.classes.Angle;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -87,9 +88,9 @@ public class LuaVector {
 				ret.mul(other);
 			} else if (l.isNumber(2)) {
 				double other = l.toNumber(2);
-				self.mul(other);
+				ret.mul(other);
 			}
-			self.push(l);
+			ret.push(l);
 			return 1;
 		}
 	};
@@ -254,6 +255,27 @@ public class LuaVector {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @function Angle
+	 * @info Converts a vector into an angle (pitch and yaw)
+	 * @arguments [[Vector]]:vector
+	 * @return [[Angle]]:angle
+	 */
+
+	public static JavaFunction Angle = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
+
+			double pitch = Math.toDegrees(Math.asin(-self.y));
+			double yaw = Math.toDegrees(Math.atan2(self.x, self.z));
+
+			Angle ang = new Angle(pitch, yaw);
+			ang.push(l);
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaState l) {
 		l.newMetatable("Vector");
 		{
@@ -293,6 +315,8 @@ public class LuaVector {
 			l.setField(-2, "Cross");
 			l.pushJavaFunction(RayQuadIntersect);
 			l.setField(-2, "RayQuadIntersect");
+			l.pushJavaFunction(Angle);
+			l.setField(-2, "Angle");
 		}
 		l.pop(1);
 	}
