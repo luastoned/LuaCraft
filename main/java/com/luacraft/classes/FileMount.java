@@ -1,7 +1,6 @@
 package com.luacraft.classes;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.luacraft.LuaCraft;

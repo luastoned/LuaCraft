@@ -1,14 +1,14 @@
 package com.luacraft.library.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 
 public class LuaGlobals {
 	private static Minecraft client = null;

@@ -1,9 +1,9 @@
 package com.luacraft.meta;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.nbt.NBTTagCompound;
 
 public class LuaNBTTag {
 	public static JavaFunction __tostring = new JavaFunction() {

@@ -1,5 +1,9 @@
 package com.luacraft.classes;
 
+import com.luacraft.LuaCraft;
+import com.luacraft.LuaCraftState;
+import com.naef.jnlua.LuaException;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -7,12 +11,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-
-import com.luacraft.LuaCraft;
-import com.luacraft.LuaCraftState;
-import com.naef.jnlua.LuaException;
-import com.naef.jnlua.LuaRuntimeException;
-
 import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaRunCommand extends CommandBase {

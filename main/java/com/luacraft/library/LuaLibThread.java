@@ -1,10 +1,5 @@
 package com.luacraft.library;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import net.minecraftforge.fml.relauncher.Side;
-
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaChannel;

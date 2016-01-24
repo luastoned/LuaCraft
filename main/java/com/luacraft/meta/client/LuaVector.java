@@ -2,20 +2,19 @@ package com.luacraft.meta.client;
 
 import javax.vecmath.Matrix4f;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import com.luacraft.LuaCraftState;
+import com.luacraft.classes.Vector;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.culling.ClippingHelperImpl;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import com.luacraft.LuaCraftState;
-import com.luacraft.classes.Vector;
-import com.luacraft.library.client.LuaLibRender;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaVector {
 	private static Minecraft client = null;

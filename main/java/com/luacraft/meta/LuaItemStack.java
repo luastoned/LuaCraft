@@ -1,13 +1,13 @@
 package com.luacraft.meta;
 
+import com.luacraft.LuaCraftState;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-
-import com.luacraft.LuaCraftState;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaItemStack {
 	public static JavaFunction __tostring = new JavaFunction() {

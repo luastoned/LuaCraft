@@ -1,17 +1,17 @@
 package com.luacraft.meta;
 
+import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdataManager;
+import com.luacraft.classes.Vector;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
-import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
-import com.luacraft.classes.Vector;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaPlayer {
 	public static JavaFunction __tostring = new JavaFunction() {

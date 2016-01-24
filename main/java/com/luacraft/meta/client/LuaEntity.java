@@ -1,12 +1,12 @@
 package com.luacraft.meta.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 
 public class LuaEntity {
 	private static Minecraft client = null;

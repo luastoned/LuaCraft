@@ -1,12 +1,12 @@
 package com.luacraft.classes;
 
+import com.luacraft.LuaUserdataManager;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-
-import com.luacraft.LuaUserdataManager;
-import com.naef.jnlua.LuaState;
 
 public class LuaJavaCommand extends CommandBase {
 	private LuaState l;

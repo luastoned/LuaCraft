@@ -2,9 +2,9 @@ package com.luacraft.classes.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.gui.GuiScreen;
-
 import com.luacraft.LuaCraftState;
+
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiLuaPanel extends GuiScreen {
 	LuaGuiHandler l = null;

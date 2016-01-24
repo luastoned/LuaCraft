@@ -1,9 +1,9 @@
 package com.luacraft.meta.server;
 
-import net.minecraft.server.dedicated.PropertyManager;
-
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.server.dedicated.PropertyManager;
 
 public class LuaPropertyManager {
 	public static JavaFunction __tostring = new JavaFunction() {

@@ -1,5 +1,11 @@
 package com.luacraft.classes;
 
+import com.luacraft.LuaUserdataManager;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+import com.naef.jnlua.LuaType;
+import com.naef.jnlua.LuaUserdata;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
@@ -8,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
@@ -16,12 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import com.luacraft.LuaUserdataManager;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
-import com.naef.jnlua.LuaType;
-import com.naef.jnlua.LuaUserdata;
 
 public class LuaScriptedItem extends Item implements LuaUserdata {
 	public LuaState l;

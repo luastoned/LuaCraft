@@ -1,9 +1,9 @@
 package com.luacraft.classes.gui;
 
+import com.luacraft.LuaCraftState;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-
-import com.luacraft.LuaCraftState;
 
 public class GuiLuaButton extends GuiButton {
 	LuaGuiHandler l = null;

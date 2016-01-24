@@ -1,10 +1,10 @@
 package com.luacraft.library.server;
 
-import net.minecraft.server.MinecraftServer;
-
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.server.MinecraftServer;
 
 public class LuaLibGame {
 	private static MinecraftServer server = null;

@@ -1,6 +1,5 @@
 package com.luacraft;
 
-import net.minecraft.profiler.Profiler;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;

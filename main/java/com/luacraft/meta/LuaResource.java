@@ -1,10 +1,10 @@
 package com.luacraft.meta;
 
-import net.minecraft.util.ResourceLocation;
-
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.util.ResourceLocation;
 
 public class LuaResource {
 	public static JavaFunction __tostring = new JavaFunction() {

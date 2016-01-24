@@ -7,15 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
-
 import com.luacraft.classes.FileMount;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -104,7 +103,7 @@ public class LuaCraftState extends LuaState {
 	public void handleException(Exception e) {
 		String error = e.getMessage();
 		error(traceback(error));
-		//e.printStackTrace();
+		// e.printStackTrace();
 	}
 
 	public void pushHookCall() {

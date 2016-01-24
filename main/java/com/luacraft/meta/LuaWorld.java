@@ -3,18 +3,6 @@ package com.luacraft.meta;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.LuaJavaBlock;
@@ -23,6 +11,17 @@ import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class LuaWorld {
 	public static JavaFunction __tostring = new JavaFunction() {

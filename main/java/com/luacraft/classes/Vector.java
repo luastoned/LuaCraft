@@ -1,9 +1,9 @@
 package com.luacraft.classes;
 
-import net.minecraft.util.Vec3;
-
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaUserdata;
+
+import net.minecraft.util.Vec3;
 
 public class Vector implements LuaUserdata {
 	public double x = 0;

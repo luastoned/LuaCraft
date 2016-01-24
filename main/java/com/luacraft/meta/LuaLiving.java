@@ -1,13 +1,13 @@
 package com.luacraft.meta;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 
 public class LuaLiving {
 	/**

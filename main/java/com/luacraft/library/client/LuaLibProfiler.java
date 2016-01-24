@@ -1,11 +1,11 @@
 package com.luacraft.library.client;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.profiler.Profiler;
-
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.profiler.Profiler;
 
 public class LuaLibProfiler {
 	private static Minecraft client = null;

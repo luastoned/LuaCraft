@@ -1,14 +1,14 @@
 package com.luacraft.meta.client;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-
 import org.lwjgl.opengl.GL11;
 
 import com.luacraft.LuaCraftState;
 import com.luacraft.library.client.LuaLibSurface;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class LuaFont {
 	public static JavaFunction __tostring = new JavaFunction() {

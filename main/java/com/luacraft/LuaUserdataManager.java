@@ -1,15 +1,15 @@
 package com.luacraft;
 
+import com.luacraft.classes.LuaJavaBlock;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-
-import com.luacraft.classes.LuaJavaBlock;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaUserdataManager {
 	private static boolean RecursiveBaseMetaCheck(LuaState l) {

@@ -1,13 +1,13 @@
 package com.luacraft.meta.server;
 
+import com.luacraft.LuaCraftState;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.S3FPacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
-
-import com.luacraft.LuaCraftState;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaByteBuf {
 

@@ -1,11 +1,11 @@
 package com.luacraft.meta;
 
-import net.minecraft.entity.DataWatcher;
-import net.minecraft.item.ItemStack;
-
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.entity.DataWatcher;
+import net.minecraft.item.ItemStack;
 
 public class LuaDataWatcher {
 

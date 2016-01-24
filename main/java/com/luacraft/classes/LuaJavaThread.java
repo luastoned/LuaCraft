@@ -1,14 +1,9 @@
 package com.luacraft.classes;
 
-import java.io.File;
-
 import com.luacraft.LuaClient;
-import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaServer;
 import com.naef.jnlua.LuaUserdata;
-
-import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaThread extends Thread implements LuaUserdata {
 	private LuaCraftState l;

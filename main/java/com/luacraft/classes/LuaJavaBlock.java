@@ -1,11 +1,11 @@
 package com.luacraft.classes;
 
+import com.naef.jnlua.LuaUserdata;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-
-import com.naef.jnlua.LuaUserdata;
 
 public class LuaJavaBlock implements LuaUserdata {
 	public int x = 0;

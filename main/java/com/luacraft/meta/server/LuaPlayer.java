@@ -1,12 +1,5 @@
 package com.luacraft.meta.server;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.server.management.UserListBansEntry;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,6 +9,13 @@ import com.mojang.authlib.GameProfile;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
+
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.server.management.UserListBansEntry;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 public class LuaPlayer {
 	public static MinecraftServer server = null;
@@ -198,18 +198,19 @@ public class LuaPlayer {
 			Date date = new Date();
 
 			Calendar cal = null;
-			
+
 			if (l.isNumber(3)) {
 				cal = Calendar.getInstance();
 				cal.setTime(new Date());
 				cal.add(Calendar.MINUTE, l.checkInteger(3, 0));
 			}
-			
+
 			String banner = l.checkString(4, "LuaCraft");
 
 			ServerConfigurationManager config = server.getConfigurationManager();
 
-			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), date, banner, cal != null ? cal.getTime() : null, reason);
+			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), date, banner,
+					cal != null ? cal.getTime() : null, reason);
 
 			self.playerNetServerHandler.kickPlayerFromServer(reason);
 			config.getBannedPlayers().addEntry(banEntry);

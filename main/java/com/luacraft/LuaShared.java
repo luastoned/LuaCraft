@@ -1,7 +1,5 @@
 package com.luacraft;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
 import com.luacraft.library.LuaLibHTTP;
@@ -32,9 +30,8 @@ import com.luacraft.meta.LuaThread;
 import com.luacraft.meta.LuaVector;
 import com.luacraft.meta.LuaWorld;
 import com.naef.jnlua.LuaState;
-import com.naef.jnlua.LuaState.Library;
 
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 
 public class LuaShared extends LuaCraftState {
 	private LuaEventManager luaEvent;

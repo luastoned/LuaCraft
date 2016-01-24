@@ -1,8 +1,5 @@
 package com.luacraft.library;
 
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringTranslate;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +10,9 @@ import com.luacraft.classes.FileMount;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringTranslate;
 
 public class LuaLibLanguage {
 

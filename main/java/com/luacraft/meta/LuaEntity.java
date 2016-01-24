@@ -1,7 +1,11 @@
 package com.luacraft.meta;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdataManager;
+import com.luacraft.classes.Angle;
+import com.luacraft.classes.Vector;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -14,13 +18,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-
-import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
-import com.luacraft.classes.Angle;
-import com.luacraft.classes.Vector;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaEntity {
 	public static JavaFunction __tostring = new JavaFunction() {

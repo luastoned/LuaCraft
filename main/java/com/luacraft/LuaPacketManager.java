@@ -1,13 +1,10 @@
 package com.luacraft;
 
+import com.naef.jnlua.LuaException;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.server.MinecraftServer;
-
-import com.google.common.base.Charsets;
-import com.naef.jnlua.LuaException;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;

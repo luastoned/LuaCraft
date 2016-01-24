@@ -1,10 +1,5 @@
 package com.luacraft.meta;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.DamageSource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +9,10 @@ import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.DamageSource;
 
 public class LuaLivingBase {
 	/**

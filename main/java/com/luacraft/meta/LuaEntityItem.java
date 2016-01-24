@@ -1,12 +1,12 @@
 package com.luacraft.meta;
 
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 
 public class LuaEntityItem {
 	/**

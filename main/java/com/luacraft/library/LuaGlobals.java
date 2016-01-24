@@ -1,14 +1,23 @@
 package com.luacraft.library;
 
-import io.netty.buffer.Unpooled;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import com.luacraft.classes.Angle;
+import com.luacraft.classes.Color;
+import com.luacraft.classes.FileMount;
+import com.luacraft.classes.LuaJavaBlock;
+import com.luacraft.classes.LuaJavaThread;
+import com.luacraft.classes.Vector;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaException;
+import com.naef.jnlua.LuaRuntimeException;
+import com.naef.jnlua.LuaState;
+
+import io.netty.buffer.Unpooled;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,18 +31,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings.GameType;
-
-import com.luacraft.LuaCraft;
-import com.luacraft.classes.Angle;
-import com.luacraft.classes.Color;
-import com.luacraft.classes.FileMount;
-import com.luacraft.classes.LuaJavaBlock;
-import com.luacraft.classes.LuaJavaThread;
-import com.luacraft.classes.Vector;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaException;
-import com.naef.jnlua.LuaRuntimeException;
-import com.naef.jnlua.LuaState;
 
 public class LuaGlobals {
 	/**

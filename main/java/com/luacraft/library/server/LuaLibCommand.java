@@ -1,13 +1,13 @@
 package com.luacraft.library.server;
 
-import net.minecraft.command.CommandHandler;
-import net.minecraft.server.MinecraftServer;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaCommand;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
+
+import net.minecraft.command.CommandHandler;
+import net.minecraft.server.MinecraftServer;
 
 public class LuaLibCommand {
 	private static CommandHandler commandHandler = null;

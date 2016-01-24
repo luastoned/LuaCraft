@@ -2,16 +2,15 @@ package com.luacraft.library.client;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+
+import com.luacraft.LuaCraftState;
+import com.naef.jnlua.JavaFunction;
+import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
-
-import com.luacraft.LuaCraftState;
-import com.naef.jnlua.JavaFunction;
-import com.naef.jnlua.LuaState;
 
 public class LuaLibGame {
 	private static Minecraft client = null;

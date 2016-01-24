@@ -2,15 +2,15 @@ package com.luacraft.library.server;
 
 import java.io.File;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.PropertyManager;
-import net.minecraft.world.World;
-
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.PropertyManager;
+import net.minecraft.world.World;
 
 public class LuaGlobals {
 	private static MinecraftServer server = null;

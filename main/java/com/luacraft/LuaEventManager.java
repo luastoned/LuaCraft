@@ -1,5 +1,10 @@
 package com.luacraft;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import com.luacraft.classes.LuaJavaBlock;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.profiler.Profiler;
 import net.minecraftforge.event.CommandEvent;
@@ -17,12 +22,6 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import com.luacraft.classes.LuaJavaBlock;
-
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -497,7 +496,7 @@ public class LuaEventManager {
 
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
-				
+
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
@@ -519,7 +518,7 @@ public class LuaEventManager {
 
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
-				
+
 				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);

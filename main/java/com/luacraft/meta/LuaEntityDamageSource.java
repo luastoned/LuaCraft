@@ -1,11 +1,11 @@
 package com.luacraft.meta;
 
-import net.minecraft.util.EntityDamageSource;
-
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
+import net.minecraft.util.EntityDamageSource;
 
 public class LuaEntityDamageSource {
 
