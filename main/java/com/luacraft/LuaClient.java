@@ -20,13 +20,13 @@ public class LuaClient extends LuaShared {
 
 	public void initialize() {
 		super.initialize();
+		loadLibraries();
 
 		luaClientEvent = new LuaEventManagerClient(this);
 
 		print("Registering client event manager");
 		MinecraftForge.EVENT_BUS.register(luaClientEvent);
 
-		loadLibraries();
 		runScripts();
 	}
 

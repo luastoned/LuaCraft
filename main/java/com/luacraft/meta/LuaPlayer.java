@@ -560,6 +560,8 @@ public class LuaPlayer {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+			l.pushJavaFunction(LuaEntity.__eq);
+			l.setField(-2, "__eq");
 
 			LuaUserdataManager.SetupMetaMethods(l);
 

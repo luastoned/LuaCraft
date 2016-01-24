@@ -82,7 +82,7 @@ public class LuaUserdataManager {
 		if (obj instanceof EntityPlayer)
 			return ((EntityPlayer) obj).getGameProfile().getId().toString();
 		if (obj instanceof Entity)
-			return Integer.toString(((Entity) obj).getEntityId());
+			return ((Entity) obj).getPersistentID().toString();
 
 		return Integer.toString(obj.hashCode());
 	}

@@ -38,6 +38,8 @@ public class LuaShared extends LuaCraftState {
 	private LuaPacketManager packet;
 
 	public void initialize() {
+		loadLibraries();
+
 		packet = new LuaPacketManager(this);
 		luaEvent = new LuaEventManager(this);
 
@@ -46,7 +48,6 @@ public class LuaShared extends LuaCraftState {
 		print("Registering shared event manager");
 		MinecraftForge.EVENT_BUS.register(luaEvent);
 
-		loadLibraries();
 		runScripts();
 	}
 

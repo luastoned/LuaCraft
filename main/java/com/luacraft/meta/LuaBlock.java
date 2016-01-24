@@ -211,8 +211,7 @@ public class LuaBlock {
 	public static JavaFunction GetBiome = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(
-					self.blockWorld.getWorldChunkManager().getBiomeGenAt(null, self.x, self.z, 0, 0, false).toString());
+			l.pushString(self.blockWorld.getWorldChunkManager().getBiomeGenerator(self.getPos()).biomeName);
 			return 1;
 		}
 	};

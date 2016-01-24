@@ -127,8 +127,8 @@ public class LuaLibRender {
 			GL11.glPushMatrix();
 			GL11.glTranslated(vecX, vecY, vecZ);
 
-			GL11.glRotated(90-ang1.p, 1, 0, 0);
-			GL11.glRotated(180-ang1.y, 0, 1, 0);
+			GL11.glRotated(90 - ang1.p, 1, 0, 0);
+			GL11.glRotated(180 - ang1.y, 0, 1, 0);
 			GL11.glRotated(ang1.r, 0, 0, 1);
 
 			GL11.glPushMatrix();
@@ -328,8 +328,8 @@ public class LuaLibRender {
 			GL11.glPushMatrix();
 			GL11.glTranslated(vecX, vecY, vecZ);
 
-			GL11.glRotated(90-ang1.p, 1, 0, 0);
-			GL11.glRotated(180-ang1.y, 0, 1, 0);
+			GL11.glRotated(90 - ang1.p, 1, 0, 0);
+			GL11.glRotated(180 - ang1.y, 0, 1, 0);
 			GL11.glRotated(ang1.r, 0, 0, 1);
 
 			renderDisk.draw(flRadius2, flRadius1, iSlices, 1);
@@ -390,8 +390,8 @@ public class LuaLibRender {
 			GL11.glPushMatrix();
 			GL11.glTranslated(vecX, vecY, vecZ);
 
-			GL11.glRotated(90-ang1.p, 1, 0, 0);
-			GL11.glRotated(180-ang1.y, 0, 1, 0);
+			GL11.glRotated(90 - ang1.p, 1, 0, 0);
+			GL11.glRotated(180 - ang1.y, 0, 1, 0);
 			GL11.glRotated(ang1.r, 0, 0, 1);
 
 			renderCylinder.draw(flRadius1, flRadius2, flLength, iSlices, iSlices);
