@@ -37,7 +37,7 @@ public class LuaShared extends LuaCraftState {
 	private LuaEventManager luaEvent;
 	private LuaPacketManager packet;
 
-	public void initialize() {
+	public void initializeShared() {
 		loadLibraries();
 
 		packet = new LuaPacketManager(this);
@@ -47,16 +47,13 @@ public class LuaShared extends LuaCraftState {
 		LuaCraft.channel.register(packet);
 		print("Registering shared event manager");
 		MinecraftForge.EVENT_BUS.register(luaEvent);
-
-		runScripts();
 	}
 
-	public void runScripts() {
+	public void runSharedScripts() {
 		loadExtensions();
-
 		print("Loading autorun");
-		super.autorun(); // Load all files within autorun
-		super.autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
+		autorun(); // Load all files within autorun
+		autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
 	}
 
 	public void close() {
@@ -70,15 +67,17 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	private void loadExtensions() {
+		print("Loading extensions");
+
 		// Load all packed modules from our Jar
-		includePackedFile("/lua/modules/hook.lua");
-		includePackedFile("/lua/modules/net.lua");
+		includePackedFile("lua/modules/hook.lua");
+		includePackedFile("lua/modules/net.lua");
 
 		// Load all packed extensions from our Jar
-		includePackedFile("/lua/extensions/math.lua");
-		includePackedFile("/lua/extensions/player.lua");
-		includePackedFile("/lua/extensions/string.lua");
-		includePackedFile("/lua/extensions/table.lua");
+		includePackedFile("lua/extensions/math.lua");
+		includePackedFile("lua/extensions/player.lua");
+		includePackedFile("lua/extensions/string.lua");
+		includePackedFile("lua/extensions/table.lua");
 
 		includeDirectory("extensions"); // Load any extensions a user made
 	}

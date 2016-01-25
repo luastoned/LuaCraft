@@ -24,6 +24,21 @@ public class LuaLibSurface {
 	/**
 	 * @author Jake
 	 * @library surface
+	 * @function GetDefaultGalacticFont
+	 * @info Gets the default font object that minecraft uses to draw text
+	 * @arguments nil
+	 * @return [[Font]]:font
+	 */
+
+	public static JavaFunction GetDefaultGalacticFont = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushUserdataWithMeta(client.standardGalacticFontRenderer, "Font");
+			return 1;
+		}
+	};
+	/**
+	 * @author Jake
+	 * @library surface
 	 * @function GetDefaultFont
 	 * @info Gets the default font object that minecraft uses to draw text
 	 * @arguments nil

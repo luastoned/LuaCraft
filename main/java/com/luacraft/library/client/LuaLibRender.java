@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Vec3;
 
 public class LuaLibRender {
 	private static Minecraft client;
@@ -500,7 +501,14 @@ public class LuaLibRender {
 	public static JavaFunction EyePos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity view = client.getRenderViewEntity();
-			Vector pos = new Vector(ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks));
+			Vec3 camPos = ActiveRenderInfo.getPosition();
+			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
+
+			double x = camPos.xCoord + eyePos.xCoord;
+			double y = camPos.yCoord + eyePos.yCoord;
+			double z = camPos.zCoord + eyePos.zCoord;
+
+			Vector pos = new Vector(x, z, y);
 			pos.push(l);
 			return 1;
 		}

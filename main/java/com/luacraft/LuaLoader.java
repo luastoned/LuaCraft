@@ -47,7 +47,7 @@ public class LuaLoader implements Loader {
 		if (isEclipse) {
 			System.load(rootDir + libraryDir + archType + lib + fileExt);
 		} else {
-			LuaCraft.extractFile("/bins/" + archType + lib + fileExt, libraryDir + lib + fileExt);
+			LuaCraft.extractFile("bins/" + archType + lib + fileExt, libraryDir + lib + fileExt);
 			System.load(rootDir + libraryDir + lib + fileExt);
 		}
 	}

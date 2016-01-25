@@ -145,10 +145,7 @@ public class LuaCraftState extends LuaState {
 	}
 
 	public void autorun() {
-		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun");
-
-		for (File file : files)
-			includeFile(file);
+		autorun("");
 	}
 
 	public void autorun(String side) {

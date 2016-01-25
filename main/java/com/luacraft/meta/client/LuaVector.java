@@ -49,7 +49,7 @@ public class LuaVector {
 	 * @author Gregor
 	 * @function ToScreen Get x, y for a 3D Vector
 	 * @arguments [[Vector]]:vec
-	 * @return [[Number]]:x, [[Number]]:y, [[Boolean]]:visible
+	 * @return [[Boolean]]:visible, [[Number]]:x, [[Number]]:y
 	 */
 
 	public static JavaFunction ToScreen = new JavaFunction() {
@@ -59,33 +59,36 @@ public class LuaVector {
 			Entity view = client.getRenderViewEntity();
 
 			Vec3 viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
+
+			Vec3 camPos = ActiveRenderInfo.getPosition();
 			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
-			float vecX = (float) (eyePos.xCoord - self.x);
-			float vecY = (float) (eyePos.zCoord - self.y);
-			float vecZ = (float) (eyePos.yCoord - self.z);
+			float vecX = (float) ((camPos.xCoord + eyePos.xCoord) - self.x);
+			float vecY = (float) ((camPos.yCoord + eyePos.yCoord) - self.z);
+			float vecZ = (float) ((camPos.zCoord + eyePos.zCoord) - self.y);
 
-			Vector3f viewVec = new Vector3f(vecX, vecZ, vecY);
+			Vector3f pos = new Vector3f(vecX, vecY, vecZ);
 
 			viewMatrix.load(ActiveRenderInfo.field_178812_b.asReadOnlyBuffer());
 			projectionMatrix.load(ActiveRenderInfo.field_178813_c.asReadOnlyBuffer());
 
-			viewVec = Vec3TransformCoordinate(viewVec, viewMatrix);
-			viewVec = Vec3TransformCoordinate(viewVec, projectionMatrix);
+			pos = Vec3TransformCoordinate(pos, viewMatrix);
+			pos = Vec3TransformCoordinate(pos, projectionMatrix);
 
 			ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
-			viewVec.x = (float) ((scaledRes.getScaledWidth() * (viewVec.x + 1.0)) / 2.0);
-			viewVec.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((viewVec.y + 1.0) / 2.0)));
+			pos.x = (float) ((scaledRes.getScaledWidth() * (pos.x + 1.0)) / 2.0);
+			pos.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((pos.y + 1.0) / 2.0)));
 
 			boolean bVisible = false;
-			double w = viewNormal.dotProduct(new Vec3(vecX, vecZ, vecY));
 
-			if (w < 0) // We only want vectors that are in front of the player
+			double dot = viewNormal.xCoord * vecX + viewNormal.yCoord * vecY + viewNormal.zCoord * vecZ;
+
+			if (dot < 0) // We only want vectors that are in front of the player
 				bVisible = true;
 
-			l.pushNumber(viewVec.x);
-			l.pushNumber(viewVec.y);
 			l.pushBoolean(bVisible);
+			l.pushNumber(pos.x);
+			l.pushNumber(pos.y);
 			return 3;
 		}
 	};

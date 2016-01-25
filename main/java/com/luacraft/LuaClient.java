@@ -19,7 +19,7 @@ public class LuaClient extends LuaShared {
 	private LuaEventManagerClient luaClientEvent;
 
 	public void initialize() {
-		super.initialize();
+		initializeShared();
 		loadLibraries();
 
 		luaClientEvent = new LuaEventManagerClient(this);
@@ -31,11 +31,9 @@ public class LuaClient extends LuaShared {
 	}
 
 	public void runScripts() {
-		super.runScripts();
-
-		super.autorun();
+		runSharedScripts();
 		print("Loading autorun/client");
-		super.autorun("client"); // Load all files within autorun/client
+		autorun("client"); // Load all files within autorun/client
 	}
 
 	public void close() {

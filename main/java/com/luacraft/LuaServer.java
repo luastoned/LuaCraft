@@ -10,17 +10,15 @@ import com.luacraft.meta.server.LuaPropertyManager;
 public class LuaServer extends LuaShared {
 
 	public void initialize() {
-		super.initialize();
+		initializeShared();
 		loadLibraries();
 		runScripts();
 	}
 
 	public void runScripts() {
-		super.runScripts();
-
-		super.autorun();
+		runSharedScripts();
 		print("Loading autorun/server");
-		super.autorun("server"); // Load all files within autorun/server
+		autorun("server"); // Load all files within autorun/server
 	}
 
 	private void loadLibraries() {
