@@ -64,8 +64,8 @@ function grabdoc(fileName)
 			table.insert(fmt, string.format(fmt_header, func, arg))
 		end
 		if (alias) then table.insert(fmt, string.format(fmt_alias, alias)) end
-		table.insert(fmt, string.format(fmt_return, ret))
 		if (info) then table.insert(fmt, string.format(fmt_info, info)) end
+		table.insert(fmt, string.format(fmt_return, ret))
 		--if (... == true) then table.insert(fmt, string.format(fmt_derive, name)) end
 		table.insert(tbl, {alias = alias, func = func, fmt = table.concat(fmt, "\n")})
 	end
@@ -94,6 +94,11 @@ function java2wiki(out, space, str, append)
 		fileWrite(fileDir .. "wiki/" .. out .. ".txt", docStr)
 	end
 end
+
+-- Hooks
+
+java2wiki("Hooks", "Shared", "LuaEventManager")
+java2wiki("Hooks", "Client", "LuaEventManagerClient", true)
 
 -- Library
 

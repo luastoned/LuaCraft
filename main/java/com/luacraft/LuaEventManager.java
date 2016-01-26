@@ -6,7 +6,6 @@ import org.lwjgl.input.Mouse;
 import com.luacraft.classes.LuaJavaBlock;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.profiler.Profiler;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -22,6 +21,8 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
+import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -51,7 +52,8 @@ public class LuaEventManager {
 
 	/**
 	 * @author Jake
-	 * @function command.run Calls whenever a command is ran
+	 * @function command.run
+	 * @info Calls whenever a command is ran
 	 * @arguments [[Player]]:player, [[String]]:command, [[Table]]:arguments
 	 * @return nil
 	 */
@@ -72,8 +74,15 @@ public class LuaEventManager {
 					l.pushNil();
 
 				l.pushString(event.command.getName());
-				// TODO: add paramaters
-				l.call(3, 0);
+				l.newTable();
+
+				for (int i = 0; i < event.parameters.length; i++) {
+					l.pushNumber(i + 1);
+					l.pushString(event.parameters[i]);
+					l.setTable(-3);
+				}
+
+				l.call(4, 0);
 			} catch (Exception e) {
 				l.handleException(e);
 			}
@@ -84,7 +93,8 @@ public class LuaEventManager {
 
 	/**
 	 * @author Jake
-	 * @function input.keypress Calls whenever a key is pressed
+	 * @function input.keypress
+	 * @info Calls whenever a key is pressed
 	 * @arguments [[Number]]:key, [[Boolean]]:repeat
 	 * @return nil
 	 */
@@ -109,7 +119,8 @@ public class LuaEventManager {
 
 	/**
 	 * @author Jake
-	 * @function input.mousepress Calls whenever a mouse button is pressed
+	 * @function input.mousepress
+	 * @info Calls whenever a mouse button is pressed
 	 * @arguments [[Number]]:key
 	 * @return nil
 	 */
@@ -135,6 +146,14 @@ public class LuaEventManager {
 	// PlayerChangedDimensionEvent, PlayerLoggedInEvent, PlayerLoggedOutEvent,
 	// PlayerRespawnEvent)
 
+	/**
+	 * @author Jake
+	 * @function player.craftitem
+	 * @info Called whenever a player crafts a new item
+	 * @arguments [[Player]]:player, [[ItemStack]]:stack
+	 * @return [[Boolean]]:cancel
+	 */
+
 	@SubscribeEvent
 	public void onItemCrafted(ItemCraftedEvent event) {
 		synchronized (l) {
@@ -158,6 +177,14 @@ public class LuaEventManager {
 		}
 	}
 
+	/**
+	 * @author Jake
+	 * @function player.pickupitem
+	 * @info Called whenever a player picks up an item
+	 * @arguments [[Player]]:player, [[EntityItem]]:item
+	 * @return nil
+	 */
+
 	@SubscribeEvent
 	public void onItemPickup(ItemPickupEvent event) {
 		synchronized (l) {
@@ -175,6 +202,14 @@ public class LuaEventManager {
 			}
 		}
 	}
+
+	/**
+	 * @author Jake
+	 * @function player.smeltitem
+	 * @info Called whenever a player smelts an item in a furnace
+	 * @arguments [[Player]]:player, [[ItemStack]]:stack
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onItemSmelted(ItemSmeltedEvent event) {
@@ -199,6 +234,14 @@ public class LuaEventManager {
 		}
 	}
 
+	/**
+	 * @author Jake
+	 * @function player.changedimension
+	 * @info Called whenever a player attempts to go to a new dimension
+	 * @arguments [[Player]]:player, [[Number]]:fromID, [[Number]]:toID
+	 * @return [[Boolean]]:cancel
+	 */
+
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event) {
 		synchronized (l) {
@@ -216,12 +259,21 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
+
+	/**
+	 * @author Jake
+	 * @function player.connect
+	 * @info Called when a player connects to the server
+	 * @arguments [[Player]]:player
+	 * @return nil
+	 */
 
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
@@ -240,6 +292,14 @@ public class LuaEventManager {
 		}
 	}
 
+	/**
+	 * @author Jake
+	 * @function player.disconnect
+	 * @info Called when a player disconnects from the server
+	 * @arguments [[Player]]:player
+	 * @return nil
+	 */
+
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
 		synchronized (l) {
@@ -256,6 +316,14 @@ public class LuaEventManager {
 			}
 		}
 	}
+
+	/**
+	 * @author Jake
+	 * @function player.spawned
+	 * @info Called when a player spawns for the first time
+	 * @arguments [[Player]]:player
+	 * @return nil
+	 */
 
 	@SubscribeEvent
 	public void onPlayerRespawn(PlayerRespawnEvent event) {
@@ -327,36 +395,27 @@ public class LuaEventManager {
 			if (l.getMinecraft().thePlayer == null)
 				return;
 
-			Profiler luaProfiler = l.getMinecraft().mcProfiler;
-
-			// root.render
-			if (event.phase == Phase.START)
-				luaProfiler.endSection();
-
-			luaProfiler.startSection("luacraft");
-			luaProfiler.startSection("tick");
-
 			try {
 				l.pushHookCall();
 				l.pushString("render.tick");
 				l.pushNumber(event.renderTickTime);
 				l.pushNumber(event.phase.ordinal());
 				l.call(3, 0);
-
 			} catch (Exception e) {
 				l.handleException(e);
 			}
-
-			luaProfiler.endSection();
-			luaProfiler.endSection();
-
-			// root.render
-			if (event.phase == Phase.START)
-				luaProfiler.startSection("render");
 		}
 	}
 
 	// Minecraft Bus
+
+	/**
+	 * @author Jake
+	 * @function player.say
+	 * @info Called when a player types something in chat
+	 * @arguments [[Player]]:player, [[String]]:message
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onServerChat(ServerChatEvent event) {
@@ -374,9 +433,10 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
@@ -386,6 +446,14 @@ public class LuaEventManager {
 	// TODO: PotionBrewedEvent
 
 	// Item Events
+
+	/**
+	 * @author Jake
+	 * @function item.expired
+	 * @info Called when an item gets cleaned up from the world, after being on the ground for too long
+	 * @arguments [[EntityItem]]:item
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onItemExpire(ItemExpireEvent event) {
@@ -402,12 +470,21 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
+
+	/**
+	 * @author Jake
+	 * @function player.dropitem
+	 * @info Called when a player drops an item on the ground
+	 * @arguments [[Player]]:player, [[EntityItem]]:item
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onItemToss(ItemTossEvent event) {
@@ -425,14 +502,23 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
 	// Entity Events
+
+	/**
+	 * @author Jake
+	 * @function entity.lightning
+	 * @info Called when an entity is struck by lightning
+	 * @arguments [[Entity]]:target, [[Entity]]:lightning
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onEntityStruckByLightning(EntityStruckByLightningEvent event) {
@@ -450,9 +536,10 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
@@ -473,14 +560,23 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
 	// Living Events
+
+	/**
+	 * @author Jake
+	 * @function entity.spawned
+	 * @info Called when an entity attempts to spawn into the world
+	 * @arguments [[Entity]]:entity
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onLivingSpawned(LivingSpawnEvent.CheckSpawn event) {
@@ -497,14 +593,23 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
-	// @SubscribeEvent
+	/**
+	 * @author Jake
+	 * @function entity.removed
+	 * @info Called when an entity gets removed from the world
+	 * @arguments [[Entity]]:entity
+	 * @return [[Boolean]]:cancel
+	 */
+
+	@SubscribeEvent
 	public void onLivingRemoved(LivingSpawnEvent.AllowDespawn event) {
 		synchronized (l) {
 			if (!l.isOpen())
@@ -519,12 +624,21 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
+
+	/**
+	 * @author Jake
+	 * @function entity.attacked
+	 * @info Called when an entity attacks another entity
+	 * @arguments [[Entity]]:target, [[DamageSource]]:source, [[Number]]:damage
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event) {
@@ -536,19 +650,30 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("entity.attacked");
 				LuaUserdataManager.PushUserdata(l, event.entity);
-				l.pushNumber(event.ammount);
 				l.pushUserdataWithMeta(event.source, "DamageSource");
+				l.pushNumber(event.ammount);
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
+
+	// TODO: LivingHurtEvent (same as LivingAttackEvent)
+
+	/**
+	 * @author Jake
+	 * @function entity.death
+	 * @info Called when an entity is killed
+	 * @arguments [[Entity]]:target, [[DamageSource]]:source, [[Number]]:damage
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onLivingDeath(LivingDeathEvent event) {
@@ -566,14 +691,23 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
 	// TODO: LivingDropsEvent
+
+	/**
+	 * @author Jake
+	 * @function entity.fall
+	 * @info Called when an entity falls to the ground
+	 * @arguments [[Entity]]:entity, [[Number]]:distance
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onLivingFall(LivingFallEvent event) {
@@ -591,14 +725,21 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
-	// TODO: LivingHurtEvent (same as LivingAttackEvent)
+	/**
+	 * @author Jake
+	 * @function entity.jump
+	 * @info Called when an entity falls to the ground
+	 * @arguments [[Entity]]:entity, [[Number]]:distance
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onLivingJump(LivingJumpEvent event) {
@@ -617,18 +758,19 @@ public class LuaEventManager {
 		}
 	}
 
-	// @SubscribeEvent
+	/**
+	 * @author Jake
+	 * @function entity.update
+	 * @info Called when an entity is updated
+	 * @arguments [[Entity]]:entity
+	 * @return nil
+	 */
+
+	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
-
-			// Profiler luaProfiler = l.getMinecraft().mcProfiler;
-
-			// if (luaProfiler.profilingEnabled)
-			// System.out.println(luaProfiler.getNameOfLastSection());
-
-			// l.GetMinecraft().mcProfiler.startSection("luacraft_update");
 
 			try {
 				l.pushHookCall();
@@ -638,8 +780,6 @@ public class LuaEventManager {
 			} catch (Exception e) {
 				l.handleException(e);
 			}
-
-			// l.GetMinecraft().mcProfiler.endSection();
 		}
 	}
 
@@ -654,6 +794,14 @@ public class LuaEventManager {
 	// TODO: BonemealEvent
 
 	// TODO: BreakSpeed
+
+	/**
+	 * @author Jake
+	 * @function player.interact
+	 * @info Called when a player attempts to interact with another entity
+	 * @arguments [[Player]]:player, [[Entity]]:entity
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onEntityInteract(EntityInteractEvent event) {
@@ -671,9 +819,10 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
@@ -687,6 +836,14 @@ public class LuaEventManager {
 	// TODO: ItemTooltipEvent
 
 	// TODO: PlayerDestroyItemEvent
+
+	/**
+	 * @author Jake
+	 * @function player.dropall
+	 * @info Called when a player dies and drops all their loot
+	 * @arguments [[Player]]:player
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onPlayerDrops(PlayerDropsEvent event) {
@@ -706,14 +863,25 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
 	// TODO: PlayerFlyableFallEvent
+
+	/**
+	 * @author Jake
+	 * @function player.mineblock
+	 * @info Called when a player attempts to mine a block
+	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
+	 * @return [[Boolean]]:cancel
+	 */
+
+	// TODO: player.placeblock
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -721,7 +889,7 @@ public class LuaEventManager {
 			if (!l.isOpen())
 				return;
 
-			if (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR)
+			if (event.action != PlayerInteractEvent.Action.LEFT_CLICK_BLOCK)
 				return;
 
 			try {
@@ -731,31 +899,88 @@ public class LuaEventManager {
 
 				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
 				LuaUserdataManager.PushUserdata(l, thisBlock);
-
-				l.pushNumber(event.action.ordinal());
 				l.pushFace(event.face);
-				l.call(5, 1);
+				l.call(4, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-				l.setTop(0);
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
 
-	// TODO: PlayerOpenContainerEvent
-	// This event is fired when a player attempts to view a container during
-	// player tick.
-	// setResult ALLOW to allow the container to stay open setResult DENY to
-	// force close the container (denying access)
+	/**
+	 * @author Jake
+	 * @function player.opencontainer
+	 * @info Called when a player attempts to open a container such as a chest
+	 * @arguments [[Player]]:player, [[Boolean]]:interact
+	 * @return [[RESULT]]:result
+	 */
+
+	@SubscribeEvent
+	public void onPlayerOpenContainer(PlayerOpenContainerEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.opencontainer");
+				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				l.pushBoolean(event.canInteractWith);
+				l.call(3, 1);
+
+				if (!l.isNil(-1))
+					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+
+			} catch (Exception e) {
+				l.handleException(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 
 	// TODO: PlayerPickupXpEvent
 	// This event is called when a player collides with a EntityXPOrb on the
 	// ground. The event can be canceled, and no further processing will be
 	// done.
+
+	/**
+	 * @author Jake
+	 * @function player.pickupxp
+	 * @info Called when a player attempts to pickup XP orbs
+	 * @arguments [[Player]]:player, [[Entity]]:orb
+	 * @return [[Boolean]]:cancel
+	 */
+
+	@SubscribeEvent
+	public void onPlayerPickupXP(PlayerPickupXpEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.pickupxp");
+				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdataManager.PushUserdata(l, event.orb);
+				l.call(3, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (Exception e) {
+				l.handleException(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 
 	// TODO: PlayerSleepInBedEvent
 

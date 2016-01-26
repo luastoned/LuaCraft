@@ -20,16 +20,6 @@ public class LuaVector {
 	static Matrix4f viewMatrix = new Matrix4f();
 	static Matrix4f projectionMatrix = new Matrix4f();
 
-	public static Vector3f Vec3Transform(Vector3f vec, Matrix4f matrix) {
-		Vector3f vOutput = new Vector3f(0, 0, 0);
-
-		vOutput.x = (vec.x * matrix.m00) + (vec.y * matrix.m10) + (vec.z * matrix.m20) + matrix.m30;
-		vOutput.y = (vec.x * matrix.m01) + (vec.y * matrix.m11) + (vec.z * matrix.m21) + matrix.m31;
-		vOutput.z = (vec.x * matrix.m02) + (vec.y * matrix.m12) + (vec.z * matrix.m22) + matrix.m32;
-
-		return vOutput;
-	}
-
 	public static Vector3f Vec3TransformCoordinate(Vector3f vec, Matrix4f matrix) {
 		Vector3f vOutput = new Vector3f(0, 0, 0);
 

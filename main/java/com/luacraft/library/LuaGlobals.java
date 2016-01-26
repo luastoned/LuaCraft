@@ -31,6 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings.GameType;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class LuaGlobals {
 	/**
@@ -493,6 +494,13 @@ public class LuaGlobals {
 		l.setGlobal("WORLD_OVERWORLD");
 		l.pushNumber(1);
 		l.setGlobal("WORLD_END");
+
+		l.pushNumber(Result.ALLOW.ordinal());
+		l.setGlobal("RESULT_ALLOW");
+		l.pushNumber(Result.DENY.ordinal());
+		l.setGlobal("RESULT_DENY");
+		l.pushNumber(Result.DEFAULT.ordinal());
+		l.setGlobal("RESULT_DEFAULT");
 
 		l.pushNumber(GameType.NOT_SET.ordinal());
 		l.setGlobal("MODE_NONE");

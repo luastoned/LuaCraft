@@ -18,7 +18,7 @@ public class LuaVector {
 			else if (key.equals("z"))
 				l.pushNumber(self.z);
 			else {
-				l.newMetatable("Vector");
+				l.getMetatable(1);
 				l.pushString(key);
 				l.rawGet(-2);
 			}
