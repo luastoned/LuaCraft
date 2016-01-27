@@ -14,11 +14,14 @@ import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
@@ -182,7 +185,7 @@ public class LuaEventManager {
 	 * @function player.pickupitem
 	 * @info Called whenever a player picks up an item
 	 * @arguments [[Player]]:player, [[EntityItem]]:item
-	 * @return nil
+	 * @return [[RESULT]]:result
 	 */
 
 	@SubscribeEvent
@@ -196,9 +199,15 @@ public class LuaEventManager {
 				l.pushString("player.pickupitem");
 				LuaUserdataManager.PushUserdata(l, event.player);
 				LuaUserdataManager.PushUserdata(l, event.pickedUp);
-				l.call(3, 0);
+				l.call(3, 1);
+
+				if (!l.isNil(-1))
+					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+
 			} catch (Exception e) {
 				l.handleException(e);
+			} finally {
+				l.setTop(0);
 			}
 		}
 	}
@@ -699,7 +708,45 @@ public class LuaEventManager {
 		}
 	}
 
-	// TODO: LivingDropsEvent
+	/**
+	 * @author Jake
+	 * @function entity.dropall
+	 * @info Called when a entity dies and drops all their loot
+	 * @arguments [[Entity]]:entity, [[Table]]:drops, [[Number]]:lootLevel, [[Boolean]]:hitRecent
+	 * @return [[Boolean]]:cancel
+	 */
+
+	@SubscribeEvent
+	public void onEntityDrops(LivingDropsEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.dropall");
+				LuaUserdataManager.PushUserdata(l, event.entity);
+				l.pushUserdataWithMeta(event.source, "DamageSource");
+				l.newTable();
+				for (int i = 0; i < event.drops.size(); i++) {
+					l.pushNumber(i + 1);
+					LuaUserdataManager.PushUserdata(l, event.drops.get(i));
+					l.setTable(-3);
+				}
+				l.pushNumber(event.lootingLevel);
+				l.pushBoolean(event.recentlyHit);
+				l.call(6, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (Exception e) {
+				l.handleException(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 
 	/**
 	 * @author Jake
@@ -791,7 +838,32 @@ public class LuaEventManager {
 
 	// TODO: AttackEntityEvent (covered by living?)
 
-	// TODO: BonemealEvent
+	@SubscribeEvent
+	public void onPlayerBonemeal(BonemealEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.bonemeal");
+				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdataManager.PushUserdata(l, event.world);
+
+				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
+				LuaUserdataManager.PushUserdata(l, thisBlock);
+				l.call(4, 1);
+
+				if (!l.isNil(-1))
+					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
+
+			} catch (Exception e) {
+				l.handleException(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 
 	// TODO: BreakSpeed
 
@@ -835,21 +907,41 @@ public class LuaEventManager {
 
 	// TODO: ItemTooltipEvent
 
-	// TODO: PlayerDestroyItemEvent
+	/**
+	 * @author Jake
+	 * @function player.destroyitem
+	 * @info Called when a player destroys an item in their inventory, normally when completing an action
+	 * @arguments [[Player]]:player, [[ItemStack]]:original
+	 * @return [[Boolean]]:cancel
+	 */
+
+	public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.destroyitem");
+				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				l.pushUserdataWithMeta(event.original, "ItemStack");
+				l.call(3, 1);
+			} catch (Exception e) {
+				l.handleException(e);
+			}
+		}
+	}
 
 	/**
 	 * @author Jake
 	 * @function player.dropall
 	 * @info Called when a player dies and drops all their loot
-	 * @arguments [[Player]]:player
+	 * @arguments [[Player]]:player, [[Table]]:drops, [[Number]]:lootLevel, [[Boolean]]:hitRecent
 	 * @return [[Boolean]]:cancel
 	 */
 
 	@SubscribeEvent
 	public void onPlayerDrops(PlayerDropsEvent event) {
-		// Child class of LivingDropsEvent that is fired specifically when a
-		// player dies. Canceling the event will prevent ALL drops from entering
-		// the world.
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
@@ -858,7 +950,16 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.dropall");
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				l.call(2, 1);
+				l.pushUserdataWithMeta(event.source, "DamageSource");
+				l.newTable();
+				for (int i = 0; i < event.drops.size(); i++) {
+					l.pushNumber(i + 1);
+					LuaUserdataManager.PushUserdata(l, event.drops.get(i));
+					l.setTable(-3);
+				}
+				l.pushNumber(event.lootingLevel);
+				l.pushBoolean(event.recentlyHit);
+				l.call(6, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
@@ -881,7 +982,21 @@ public class LuaEventManager {
 	 * @return [[Boolean]]:cancel
 	 */
 
-	// TODO: player.placeblock
+	/**
+	 * @author Jake
+	 * @function player.rightclick
+	 * @info Called when a player presses right mouse on nothing
+	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
+	 * @return [[Boolean]]:cancel
+	 */
+
+	/**
+	 * @author Jake
+	 * @function player.placeblock
+	 * @info Called when a player attempts to place a block
+	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
+	 * @return [[Boolean]]:cancel
+	 */
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event) {
@@ -889,14 +1004,22 @@ public class LuaEventManager {
 			if (!l.isOpen())
 				return;
 
-			if (event.action != PlayerInteractEvent.Action.LEFT_CLICK_BLOCK)
-				return;
-
 			try {
 				l.pushHookCall();
-				l.pushString("player.mineblock");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 
+				switch (event.action) {
+				case LEFT_CLICK_BLOCK:
+					l.pushString("player.mineblock");
+					break;
+				case RIGHT_CLICK_AIR:
+					l.pushString("player.rightclick");
+					break;
+				case RIGHT_CLICK_BLOCK:
+					l.pushString("player.placeblock");
+					break;
+				}
+
+				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
 				LuaUserdataManager.PushUserdata(l, thisBlock);
 				l.pushFace(event.face);
@@ -944,11 +1067,6 @@ public class LuaEventManager {
 			}
 		}
 	}
-
-	// TODO: PlayerPickupXpEvent
-	// This event is called when a player collides with a EntityXPOrb on the
-	// ground. The event can be canceled, and no further processing will be
-	// done.
 
 	/**
 	 * @author Jake
