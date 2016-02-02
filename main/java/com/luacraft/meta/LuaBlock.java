@@ -125,10 +125,9 @@ public class LuaBlock {
 	public static JavaFunction SetID = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-
 			int id = l.checkInteger(2, 0);
-			IBlockState meta = Block.getStateById(id);
-			self.blockWorld.setBlockState(self.getPos(), meta, 3);
+			IBlockState state = Block.getStateById(id);
+			self.blockWorld.setBlockState(self.getPos(), state);
 			return 0;
 		}
 	};
@@ -144,7 +143,7 @@ public class LuaBlock {
 	public static JavaFunction GetMeta = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushInteger(Block.getStateId(self.blockWorld.getBlockState(self.getPos())));
+			l.pushInteger(self.block.getMetaFromState((IBlockState) self.getState()));
 			return 1;
 		}
 	};
@@ -160,10 +159,9 @@ public class LuaBlock {
 	public static JavaFunction SetMeta = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-
 			int metaID = l.checkInteger(2, 0);
-			IBlockState meta = Block.getStateById(metaID);
-			self.blockWorld.setBlockState(self.getPos(), meta, 3);
+			IBlockState meta = self.block.getStateFromMeta(metaID);
+			self.blockWorld.setBlockState(self.getPos(), meta);
 			return 0;
 		}
 	};

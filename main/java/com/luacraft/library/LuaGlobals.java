@@ -488,6 +488,23 @@ public class LuaGlobals {
 		l.pushJavaFunction(loadfile);
 		l.setGlobal("loadfile");
 
+		/**
+		 * @enum WORLD_NETHER
+		 * @enum WORLD_OVERWORLD
+		 * @enum WORLD_END
+		 * @enum RESULT_ALLOW
+		 * @enum RESULT_DENY
+		 * @enum RESULT_DEFAULT
+		 * @enum MODE_NONE
+		 * @enum MODE_SURVIVAL
+		 * @enum MODE_CREATIVE
+		 * @enum MODE_ADVENTURE
+		 * @enum DIFFICULTY_PEACEFUL
+		 * @enum DIFFICULTY_EASY
+		 * @enum DIFFICULTY_NORMAL
+		 * @enum DIFFICULTY_HARD
+		 */
+
 		l.pushNumber(-1);
 		l.setGlobal("WORLD_NETHER");
 		l.pushNumber(0);
