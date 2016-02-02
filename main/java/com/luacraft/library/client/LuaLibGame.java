@@ -66,7 +66,7 @@ public class LuaLibGame {
 				return 0;
 
 			NetHandlerPlayClient net = client.thePlayer.sendQueue;
-			Collection playerInfo = net.func_175106_d();
+			Collection playerInfo = net.getPlayerInfoMap();
 			Iterator iterator = playerInfo.iterator();
 
 			int i = 1;

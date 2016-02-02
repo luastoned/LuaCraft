@@ -26,7 +26,7 @@ public class LuaJavaCommand extends CommandBase {
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return commandName;
 	}
 
@@ -39,7 +39,7 @@ public class LuaJavaCommand extends CommandBase {
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		synchronized (l) {
 			StringBuilder rawString = new StringBuilder();
 

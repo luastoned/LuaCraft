@@ -19,7 +19,7 @@ public class LuaJavaRunCommand extends CommandBase {
 	private static ChatComponentTranslation serverName = new ChatComponentTranslation("luacraft.state.server");
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "lua";
 	}
 
@@ -31,7 +31,7 @@ public class LuaJavaRunCommand extends CommandBase {
 		return true;
 	}
 
-	public void execute(ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		String strLua = "";
 		for (int i = 0; i < args.length; i++)
 			strLua += args[i] + " ";

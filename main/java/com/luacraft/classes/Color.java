@@ -20,8 +20,12 @@ public class Color implements LuaUserdata {
 		l.pushUserdataWithMeta(this, "Color");
 	}
 
-	public int getRGB() {
+	public int getRGBA() {
 		return (r << 16) + (g << 8) + (b << 0) + (a << 24);
+	}
+
+	public int getARGB() {
+		return (r << 24) + (g << 16) + (b << 8) + (a << 0);
 	}
 
 	public Color add(Color other) {
@@ -93,7 +97,7 @@ public class Color implements LuaUserdata {
 	}
 
 	public String toString() {
-		return String.format("Color [%d, %d, %d %d][#%08X]", r, g, b, a, getRGB());
+		return String.format("Color [%d, %d, %d %d][#%08X]", r, g, b, a, getRGBA());
 	}
 
 	public String getTypeName() {

@@ -59,13 +59,13 @@ public class LuaVector {
 
 			Vector3f pos = new Vector3f(vecX, vecY, vecZ);
 
-			viewMatrix.load(ActiveRenderInfo.field_178812_b.asReadOnlyBuffer());
-			projectionMatrix.load(ActiveRenderInfo.field_178813_c.asReadOnlyBuffer());
+			viewMatrix.load(ActiveRenderInfo.MODELVIEW.asReadOnlyBuffer());
+			projectionMatrix.load(ActiveRenderInfo.PROJECTION.asReadOnlyBuffer());
 
 			pos = Vec3TransformCoordinate(pos, viewMatrix);
 			pos = Vec3TransformCoordinate(pos, projectionMatrix);
 
-			ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+			ScaledResolution scaledRes = new ScaledResolution(client);
 			pos.x = (float) ((scaledRes.getScaledWidth() * (pos.x + 1.0)) / 2.0);
 			pos.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((pos.y + 1.0) / 2.0)));
 

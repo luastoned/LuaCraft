@@ -76,7 +76,7 @@ public class LuaEventManager {
 				else
 					l.pushNil();
 
-				l.pushString(event.command.getName());
+				l.pushString(event.command.getCommandName());
 				l.newTable();
 
 				for (int i = 0; i < event.parameters.length; i++) {

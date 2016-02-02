@@ -4,6 +4,7 @@ import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
+import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 
 public class LuaLibGame {
@@ -292,7 +293,10 @@ public class LuaLibGame {
 
 	public static JavaFunction ConCommand = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushString(server.handleRConCommand(l.checkString(1)));
+			RConConsoleSource.getInstance().resetLog();
+			server.getCommandManager().executeCommand(RConConsoleSource.getInstance(), l.checkString(1));
+			String result = RConConsoleSource.getInstance().getLogContents();
+			l.pushString(result);
 			return 1;
 		}
 	};

@@ -10,9 +10,11 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class LuaLibSurface {
@@ -130,25 +132,20 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			
+			GlStateManager.disableLighting();
+	        GlStateManager.disableFog();
+	        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.addVertex(x, y + h, 0);
-			renderer.addVertex(x + w, y + h, 0);
-			renderer.addVertex(x + w, y, 0);
-			renderer.addVertex(x, y, 0);
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+			renderer.pos(x, y + h, 0).endVertex();
+			renderer.pos(x + w, y + h, 0).endVertex();
+			renderer.pos(x + w, y, 0).endVertex();
+			renderer.pos(x, y, 0).endVertex();
 			tInstance.draw();
-
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
-
 			return 0;
 		}
 	};
@@ -170,29 +167,16 @@ public class LuaLibSurface {
 			int h = l.checkInteger(4);
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
-
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.setColorRGBA(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-			renderer.addVertex(x + w, y, 0);
-			renderer.addVertex(x, y, 0);
-			renderer.setColorRGBA(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
-			renderer.addVertex(x, y + h, 0);
-			renderer.addVertex(x + w, y + h, 0);
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+			renderer.pos(x + w, y, 0).endVertex();
+			renderer.pos(x, y, 0).endVertex();
+			renderer.color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
+			renderer.pos(x, y + h, 0).endVertex();
+			renderer.pos(x + w, y + h, 0).endVertex();
 			tInstance.draw();
-
-			GL11.glShadeModel(GL11.GL_FLAT);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-
 			return 0;
 		}
 	};
@@ -231,20 +215,20 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			
+			GlStateManager.disableLighting();
+	        GlStateManager.disableFog();
 			client.renderEngine.bindTexture(currentTexture);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.setColorOpaque_I(0xffffff);
-			renderer.addVertexWithUV(x, y + h, 0.D, 0.D, 1.D);
-			renderer.addVertexWithUV(x + w, y + h, 0.D, 1.D, 1.D);
-			renderer.addVertexWithUV(x + w, y, 0.D, 1.D, 0.D);
-			renderer.addVertexWithUV(x, y, 0.D, 0.D, 0.D);
+			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+			renderer.pos(x, y + h, 0.D).tex(0.D, 1.D).endVertex();
+			renderer.pos(x + w, y + h, 0.D).tex(1.D, 1.D).endVertex();
+			renderer.pos(x + w, y, 0.D).tex(1.D, 0.D).endVertex();
+			renderer.pos(x, y, 0.D).tex(0.D, 0.D).endVertex();
 			tInstance.draw();
 			return 0;
 		}

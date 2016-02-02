@@ -1,16 +1,16 @@
 [
-	{
-		"modid": "luacraft",
-		"name": "LuaCraft",
-		"description": "LuaCraft allows you to script Minecraft with Lua.",
-		"version": "1.2",
-		"mcversion": "1.8",
-		"url": "http://luacraft.com",
-		"updateUrl": "",
-		"authorList": ["LuaStoned", "BlackAwps", "iRzilla", "Skooch"],
-		"credits": "http://www.lua.org/",
-		"logoFile": "assets/luacraft/logo.png",
-		"screenshots": [],
-		"dependencies": []
-	}
+{
+  "modid": "examplemod",
+  "name": "Example Mod",
+  "description": "Example placeholder mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ExampleDude"],
+  "credits": "The Forge and FML guys, for making this example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
 ]
