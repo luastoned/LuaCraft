@@ -14,6 +14,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class LuaLibSurface {
@@ -131,7 +132,6 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-			
 			Gui.drawRect(x, y, x + w, y + h, drawColor.getRGBA());
 			return 0;
 		}
@@ -152,10 +152,12 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
+
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
 			GlStateManager.disableTexture2D();
 			GlStateManager.enableBlend();
+			GlStateManager.disableAlpha();
 			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -172,8 +174,8 @@ public class LuaLibSurface {
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
 			GlStateManager.enableTexture2D();
-
 			return 0;
 		}
 	};

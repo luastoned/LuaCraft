@@ -3,6 +3,7 @@ package com.luacraft.classes;
 import com.luacraft.LuaClient;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaServer;
+import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaUserdata;
 
 public class LuaJavaThread extends Thread implements LuaUserdata {
@@ -24,8 +25,8 @@ public class LuaJavaThread extends Thread implements LuaUserdata {
 		if (l.isOpen() && file != null) {
 			try {
 				l.includeFile(file);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.close();
 			}

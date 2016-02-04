@@ -1,5 +1,7 @@
 package com.luacraft;
 
+import com.naef.jnlua.LuaRuntimeException;
+
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -36,8 +38,8 @@ public class LuaEventManagerClient {
 				l.pushNumber(event.x);
 				l.pushNumber(event.y);
 				l.call(4, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -66,8 +68,8 @@ public class LuaEventManagerClient {
 				l.pushString("render.gameoverlay");
 				l.pushNumber(event.partialTicks);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -93,8 +95,8 @@ public class LuaEventManagerClient {
 				l.pushString("render.world");
 				l.pushNumber(event.partialTicks);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -118,8 +120,8 @@ public class LuaEventManagerClient {
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 				l.pushNumber(event.partialRenderTick);
 				l.call(3, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -143,8 +145,8 @@ public class LuaEventManagerClient {
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 				l.pushNumber(event.partialRenderTick);
 				l.call(3, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
