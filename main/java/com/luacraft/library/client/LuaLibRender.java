@@ -293,11 +293,6 @@ public class LuaLibRender {
 			GlStateManager.enableAlpha();
 			GlStateManager.enableTexture2D();
 
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
-
 			if (ignoreZ) {
 				GlStateManager.enableDepth();
 				GlStateManager.enableCull();
