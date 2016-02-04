@@ -189,25 +189,12 @@ public class LuaLibRender {
 			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-			GL11.glLineWidth(lineWidth);
-
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
 			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 			renderer.pos(minX, minY, minZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			renderer.pos(maxX, maxY, maxZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			tInstance.draw();
-
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
