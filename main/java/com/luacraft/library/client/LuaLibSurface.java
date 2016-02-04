@@ -132,7 +132,6 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-
 			Gui.drawRect(x, y, x + w, y + h, drawColor.getRGBA());
 			return 0;
 		}
