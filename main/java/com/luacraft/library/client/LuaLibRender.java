@@ -97,7 +97,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function DrawText
 	 * @info Draws text to the current screen
-	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang, [ [[Number]]:scale, [[Number]]:textXpos, [[Number]]:textYpos, [[Boolean]]:shadow }
+	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang, [ [[Number]]:scale, [[Number]]:textXpos, [[Number]]:textYpos, [[Boolean]]:shadow ]
 	 * @return nil
 	 */
 
@@ -128,18 +128,17 @@ public class LuaLibRender {
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(vecX, vecY, vecZ);
-
+			
 			GlStateManager.rotate((float) (90 - ang1.p), 1, 0, 0);
 			GlStateManager.rotate((float) (180 - ang1.y), 0, 1, 0);
 			GlStateManager.rotate((float) (ang1.r), 0, 0, 1);
-
+			
 			GlStateManager.scale(flScale, flScale, flScale);
 
 			currentFont.drawString(text, l.checkInteger(5, 0), l.checkInteger(6, 0), drawColor.getRGBA(),
 					l.checkBoolean(7, false));
 
 			GlStateManager.popMatrix();
-
 			GlStateManager.depthMask(true);
 			GlStateManager.disableBlend();
 
@@ -190,12 +189,25 @@ public class LuaLibRender {
 			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
+			GL11.glLineWidth(lineWidth);
+
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
 			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 			renderer.pos(minX, minY, minZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			renderer.pos(maxX, maxY, maxZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			tInstance.draw();
+
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.enableTexture2D();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
@@ -281,11 +293,15 @@ public class LuaLibRender {
 			GlStateManager.enableAlpha();
 			GlStateManager.enableTexture2D();
 
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.enableTexture2D();
+
 			if (ignoreZ) {
 				GlStateManager.enableDepth();
 				GlStateManager.enableCull();
 			}
-
 			return 0;
 		}
 	};
