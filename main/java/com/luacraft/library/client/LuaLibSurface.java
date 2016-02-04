@@ -10,7 +10,8 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -130,25 +131,8 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.addVertex(x, y + h, 0);
-			renderer.addVertex(x + w, y + h, 0);
-			renderer.addVertex(x + w, y, 0);
-			renderer.addVertex(x, y, 0);
-			tInstance.draw();
-
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
-
+			
+			Gui.drawRect(x, y, x + w, y + h, drawColor.getRGBA());
 			return 0;
 		}
 	};
@@ -170,12 +154,10 @@ public class LuaLibSurface {
 			int h = l.checkInteger(4);
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glDisable(GL11.GL_ALPHA_TEST);
-
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
@@ -188,10 +170,9 @@ public class LuaLibSurface {
 			renderer.addVertex(x + w, y + h, 0);
 			tInstance.draw();
 
-			GL11.glShadeModel(GL11.GL_FLAT);
-			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_ALPHA_TEST);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableTexture2D();
 
 			return 0;
 		}
@@ -232,9 +213,9 @@ public class LuaLibSurface {
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
 
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GlStateManager.enableTexture2D();
+			GlStateManager.color(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
+
 			client.renderEngine.bindTexture(currentTexture);
 
 			Tessellator tInstance = Tessellator.getInstance();

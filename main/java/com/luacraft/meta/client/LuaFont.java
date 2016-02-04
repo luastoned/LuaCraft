@@ -87,9 +87,9 @@ public class LuaFont {
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			if (l.checkBoolean(5, false))
-				self.drawStringWithShadow(text, x, y, LuaLibSurface.drawColor.getRGB());
+				self.drawStringWithShadow(text, x, y, LuaLibSurface.drawColor.getRGBA());
 			else
-				self.drawString(text, x, y, LuaLibSurface.drawColor.getRGB());
+				self.drawString(text, x, y, LuaLibSurface.drawColor.getRGBA());
 
 			GlStateManager.disableBlend();
 			return 0;
@@ -115,7 +115,7 @@ public class LuaFont {
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			self.drawSplitString(text, x, y, width, LuaLibSurface.drawColor.getRGB());
+			self.drawSplitString(text, x, y, width, LuaLibSurface.drawColor.getRGBA());
 
 			GlStateManager.disableBlend();
 			return 0;

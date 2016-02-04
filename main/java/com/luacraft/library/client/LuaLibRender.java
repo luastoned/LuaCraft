@@ -17,7 +17,7 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
@@ -116,40 +116,38 @@ public class LuaLibRender {
 
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glDepthMask(false);
-
 			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableDepth();
+				GlStateManager.disableCull();
 			}
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(vecX, vecY, vecZ);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.depthMask(false);
 
-			GL11.glRotated(90 - ang1.p, 1, 0, 0);
-			GL11.glRotated(180 - ang1.y, 0, 1, 0);
-			GL11.glRotated(ang1.r, 0, 0, 1);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(vecX, vecY, vecZ);
 
-			GL11.glPushMatrix();
+			GlStateManager.rotate((float) (90 - ang1.p), 1, 0, 0);
+			GlStateManager.rotate((float) (180 - ang1.y), 0, 1, 0);
+			GlStateManager.rotate((float) (ang1.r), 0, 0, 1);
 
-			GL11.glScalef(0.125F * flScale, 0.125F * flScale, 0.125F * flScale);
+			GlStateManager.scale(0.125F * flScale, 0.125F * flScale, 0.125F * flScale);
+
 			if (l.checkBoolean(5, false))
-				currentFont.drawStringWithShadow(text, 0, 0, drawColor.getRGB());
+				currentFont.drawStringWithShadow(text, 0, 0, drawColor.getRGBA());
 			else
-				currentFont.drawString(text, 0, 0, drawColor.getRGB());
+				currentFont.drawString(text, 0, 0, drawColor.getRGBA());
 
-			GL11.glPopMatrix();
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
+
+			GlStateManager.depthMask(true);
+			GlStateManager.disableBlend();
 
 			if (ignoreZ) {
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				GL11.glEnable(GL11.GL_CULL_FACE);
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
 			}
-
-			GL11.glDepthMask(true);
-			GL11.glDisable(GL11.GL_BLEND);
 
 			return 0;
 		}
@@ -180,17 +178,13 @@ public class LuaLibRender {
 			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y - posZ;
 			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 			GL11.glLineWidth(lineWidth);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDepthMask(false);
 
-			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
-			}
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
@@ -199,14 +193,15 @@ public class LuaLibRender {
 			renderer.addVertex(maxX, maxY, maxZ);
 			tInstance.draw();
 
-			if (ignoreZ) {
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				GL11.glEnable(GL11.GL_CULL_FACE);
-			}
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.enableTexture2D();
 
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
+			if (ignoreZ) {
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
+			}
 
 			return 0;
 		}
@@ -237,17 +232,18 @@ public class LuaLibRender {
 			double minX = vec1.x - posX, minY = vec1.z - posY, minZ = vec1.y - posZ;
 			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glLineWidth(lineWidth);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDepthMask(false);
-
 			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableDepth();
+				GlStateManager.disableCull();
 			}
+
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
 			Tessellator tInstance = Tessellator.getInstance();
 			WorldRenderer renderer = tInstance.getWorldRenderer();
@@ -281,9 +277,15 @@ public class LuaLibRender {
 				GL11.glEnable(GL11.GL_DEPTH_TEST);
 			}
 
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.enableTexture2D();
+
+			if (ignoreZ) {
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
+			}
 
 			return 0;
 		}
@@ -315,19 +317,20 @@ public class LuaLibRender {
 
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDepthMask(false);
-
 			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableDepth();
+				GlStateManager.disableCull();
 			}
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(vecX, vecY, vecZ);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			GlStateManager.depthMask(false);
+
+			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(vecX, vecY, vecZ);
 
 			GL11.glRotated(90 - ang1.p, 1, 0, 0);
 			GL11.glRotated(180 - ang1.y, 0, 1, 0);
@@ -335,16 +338,16 @@ public class LuaLibRender {
 
 			renderDisk.draw(flRadius2, flRadius1, iSlices, 1);
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
+
+			GlStateManager.depthMask(true);
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableBlend();
 
 			if (ignoreZ) {
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				GL11.glEnable(GL11.GL_CULL_FACE);
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
 			}
-
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
 
 			return 0;
 		}
@@ -377,19 +380,20 @@ public class LuaLibRender {
 
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDepthMask(false);
-
 			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableDepth();
+				GlStateManager.disableCull();
 			}
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(vecX, vecY, vecZ);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			GlStateManager.depthMask(false);
+
+			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(vecX, vecY, vecZ);
 
 			GL11.glRotated(90 - ang1.p, 1, 0, 0);
 			GL11.glRotated(180 - ang1.y, 0, 1, 0);
@@ -397,16 +401,16 @@ public class LuaLibRender {
 
 			renderCylinder.draw(flRadius1, flRadius2, flLength, iSlices, iSlices);
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
+
+			GlStateManager.depthMask(true);
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableBlend();
 
 			if (ignoreZ) {
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				GL11.glEnable(GL11.GL_CULL_FACE);
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
 			}
-
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
 
 			return 0;
 		}
@@ -436,32 +440,33 @@ public class LuaLibRender {
 
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glDepthMask(false);
-
 			if (ignoreZ) {
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
-				GL11.glDisable(GL11.GL_CULL_FACE);
+				GlStateManager.disableDepth();
+				GlStateManager.disableCull();
 			}
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(vecX, vecY, vecZ);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.disableTexture2D();
+			GlStateManager.depthMask(false);
+
+			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(vecX, vecY, vecZ);
 
 			renderSphere.draw(flRadius1, iSlices, iSlices);
 
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
+
+			GlStateManager.depthMask(true);
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableBlend();
 
 			if (ignoreZ) {
-				GL11.glEnable(GL11.GL_DEPTH_TEST);
-				GL11.glEnable(GL11.GL_CULL_FACE);
+				GlStateManager.enableDepth();
+				GlStateManager.enableCull();
 			}
-
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glDisable(GL11.GL_BLEND);
 
 			return 0;
 		}
