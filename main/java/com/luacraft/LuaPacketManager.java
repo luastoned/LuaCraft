@@ -1,6 +1,6 @@
 package com.luacraft;
 
-import com.naef.jnlua.LuaException;
+import com.naef.jnlua.LuaRuntimeException;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -41,8 +41,8 @@ public class LuaPacketManager {
 				l.pushIncomingNet();
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.call(1, 0);
-			} catch (LuaException e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -60,8 +60,8 @@ public class LuaPacketManager {
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.pushUserdataWithMeta(player, "Player");
 				l.call(2, 0);
-			} catch (LuaException e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}

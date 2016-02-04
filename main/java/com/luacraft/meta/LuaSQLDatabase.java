@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.luacraft.LuaCraftState;
+import com.luacraft.LuaCraft;
 import com.luacraft.classes.LuaJavaQuery;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -24,7 +24,7 @@ public class LuaSQLDatabase {
 			try {
 				self.close();
 			} catch (SQLException e) {
-				((LuaCraftState) l).handleException(e);
+				LuaCraft.getLogger().error(e.getMessage());
 			}
 			return 0;
 		}

@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.luacraft.classes.LuaJavaBlock;
+import com.naef.jnlua.LuaRuntimeException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.CommandEvent;
@@ -86,8 +87,8 @@ public class LuaEventManager {
 				}
 
 				l.call(4, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -114,8 +115,8 @@ public class LuaEventManager {
 				l.pushNumber(Keyboard.getEventKey());
 				l.pushBoolean(Keyboard.isRepeatEvent());
 				l.call(3, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -139,8 +140,8 @@ public class LuaEventManager {
 				l.pushString("input.mousepress");
 				l.pushNumber(Mouse.getEventButton());
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -174,8 +175,8 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 				l.setTop(0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -204,8 +205,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -237,8 +238,8 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 				l.setTop(0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -268,8 +269,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -295,8 +296,8 @@ public class LuaEventManager {
 				l.pushString("player.connect");
 				LuaUserdataManager.PushUserdata(l, event.player);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -320,8 +321,8 @@ public class LuaEventManager {
 				l.pushString("player.disconnect");
 				LuaUserdataManager.PushUserdata(l, event.player);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -345,8 +346,8 @@ public class LuaEventManager {
 				l.pushString("player.spawned");
 				LuaUserdataManager.PushUserdata(l, event.player);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -367,8 +368,8 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("game.tick");
 				l.call(1, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -386,8 +387,8 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("game.tick");
 				l.call(1, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -410,8 +411,8 @@ public class LuaEventManager {
 				l.pushNumber(event.renderTickTime);
 				l.pushNumber(event.phase.ordinal());
 				l.call(3, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -442,8 +443,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -479,8 +480,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -511,8 +512,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -545,8 +546,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -569,8 +570,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -602,8 +603,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -633,8 +634,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -666,8 +667,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -700,8 +701,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -740,8 +741,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -772,8 +773,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -799,8 +800,8 @@ public class LuaEventManager {
 				l.pushString("entity.jump");
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -824,8 +825,8 @@ public class LuaEventManager {
 				l.pushString("entity.update");
 				LuaUserdataManager.PushUserdata(l, event.entity);
 				l.call(2, 0);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -849,23 +850,19 @@ public class LuaEventManager {
 				l.pushString("player.bonemeal");
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 				LuaUserdataManager.PushUserdata(l, event.world);
-
-				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
-				LuaUserdataManager.PushUserdata(l, thisBlock);
+				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
 		}
 	}
-
-	// TODO: BreakSpeed
 
 	/**
 	 * @author Jake
@@ -891,8 +888,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -926,8 +923,8 @@ public class LuaEventManager {
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
 				l.pushUserdataWithMeta(event.original, "ItemStack");
 				l.call(3, 1);
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			}
 		}
 	}
@@ -964,8 +961,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1004,6 +1001,9 @@ public class LuaEventManager {
 			if (!l.isOpen())
 				return;
 
+			if (event.pos == null || event.face == null)
+				return;
+
 			try {
 				l.pushHookCall();
 
@@ -1020,16 +1020,15 @@ public class LuaEventManager {
 				}
 
 				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				LuaJavaBlock thisBlock = new LuaJavaBlock(event.entityPlayer.worldObj, event.pos);
-				LuaUserdataManager.PushUserdata(l, thisBlock);
+				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
 				l.pushFace(event.face);
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1060,8 +1059,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1092,8 +1091,8 @@ public class LuaEventManager {
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
 
-			} catch (Exception e) {
-				l.handleException(e);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
 			}

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import com.luacraft.classes.FileMount;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.LuaRuntimeException;
+import com.naef.jnlua.LuaStackTraceElement;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
@@ -86,24 +87,44 @@ public class LuaCraftState extends LuaState {
 		LuaCraft.getLogger().warn(str);
 	}
 
-	public String traceback(String message) {
-		getGlobal("debug");
-		getField(-1, "traceback");
-		remove(-2);
+	public void handleLuaError(LuaRuntimeException e) {
+		StringBuilder msg = new StringBuilder();
 
-		pushString(message);
-		pushInteger(1);
-		call(2, 1);
+		msg.append(e.getMessage());
+		msg.append(System.lineSeparator());
 
-		String trace = toString(1);
-		pop(1);
-		return trace;
-	}
+		LuaStackTraceElement[] trace = e.getLuaStackTrace();
 
-	public void handleException(Exception e) {
-		String error = e.getMessage();
-		error(traceback(error));
-		// e.printStackTrace();
+		for (int i = 0; i < trace.length; i++) {
+			msg.append("\tat ");
+			msg.append(trace[i]);
+			msg.append(System.lineSeparator());
+		}
+
+		boolean printError = true;
+
+		try {
+			pushHookCall();
+			pushString("lua.error");
+			pushString(e.getMessage());
+			newTable();
+			for (int i = 0; i < trace.length; i++) {
+				pushNumber(i + 1);
+				pushString(trace[i].toString());
+				setTable(-3);
+			}
+			call(3, 1);
+
+			if (!isNil(1))
+				printError = toBoolean(1);
+		} catch (LuaRuntimeException e2) {
+		} // Ignore all errors within the error hook
+		finally {
+			setTop(0);
+		}
+
+		if (printError)
+			error(msg.toString());
 	}
 
 	public void pushHookCall() {
@@ -202,10 +223,10 @@ public class LuaCraftState extends LuaState {
 		try {
 			in = new FileInputStream(file);
 			includeFileStream(in, FileMount.CleanPath(file));
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			throw new LuaRuntimeException("Cannot open " + FileMount.CleanPath(file) + ": No such file or directory");
-		} catch (Exception e) {
-			handleException(e);
+		} catch (LuaRuntimeException e) {
+			handleLuaError(e);
 		} finally {
 			try {
 				in.close();

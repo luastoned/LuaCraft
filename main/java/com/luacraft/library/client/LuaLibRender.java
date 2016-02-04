@@ -97,7 +97,7 @@ public class LuaLibRender {
 	 * @library render
 	 * @function DrawText
 	 * @info Draws text to the current screen
-	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang, [[Number]]:scale, [[Boolean]]:shadow
+	 * @arguments [[String]]:text, [[Vector]]:pos, [[Angle]]:ang, [ [[Number]]:scale, [[Number]]:textXpos, [[Number]]:textYpos, [[Boolean]]:shadow }
 	 * @return nil
 	 */
 
@@ -106,7 +106,7 @@ public class LuaLibRender {
 			String text = l.checkString(1);
 			Vector vec1 = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			Angle ang1 = (Angle) l.checkUserdata(3, Angle.class, "Angle");
-			float flScale = (float) l.checkNumber(4, 1);
+			float flScale = (float) l.checkNumber(4, 1) * 0.125F;
 
 			double posX = client.thePlayer.lastTickPosX
 					+ (client.thePlayer.posX - client.thePlayer.lastTickPosX) * client.timer.renderPartialTicks;
@@ -133,12 +133,10 @@ public class LuaLibRender {
 			GlStateManager.rotate((float) (180 - ang1.y), 0, 1, 0);
 			GlStateManager.rotate((float) (ang1.r), 0, 0, 1);
 
-			GlStateManager.scale(0.125F * flScale, 0.125F * flScale, 0.125F * flScale);
+			GlStateManager.scale(flScale, flScale, flScale);
 
-			if (l.checkBoolean(5, false))
-				currentFont.drawStringWithShadow(text, 0, 0, drawColor.getRGBA());
-			else
-				currentFont.drawString(text, 0, 0, drawColor.getRGBA());
+			currentFont.drawString(text, l.checkInteger(5, 0), l.checkInteger(6, 0), drawColor.getRGBA(),
+					l.checkBoolean(7, false));
 
 			GlStateManager.popMatrix();
 
