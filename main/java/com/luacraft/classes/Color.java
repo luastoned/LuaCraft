@@ -24,10 +24,6 @@ public class Color implements LuaUserdata {
 		return (r << 16) + (g << 8) + (b << 0) + (a << 24);
 	}
 
-	public int getARGB() {
-		return (r << 24) + (g << 16) + (b << 8) + (a << 0);
-	}
-
 	public Color add(Color other) {
 		r += other.r;
 		g += other.g;

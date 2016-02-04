@@ -10,8 +10,8 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -132,20 +132,8 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-			
-			GlStateManager.disableLighting();
-	        GlStateManager.disableFog();
-	        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-			renderer.pos(x, y + h, 0).endVertex();
-			renderer.pos(x + w, y + h, 0).endVertex();
-			renderer.pos(x + w, y, 0).endVertex();
-			renderer.pos(x, y, 0).endVertex();
-			tInstance.draw();
+			Gui.drawRect(x, y, x + w, y + h, drawColor.getRGBA());
 			return 0;
 		}
 	};
@@ -165,18 +153,28 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
+
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-			renderer.pos(x + w, y, 0).endVertex();
-			renderer.pos(x, y, 0).endVertex();
-			renderer.color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
-			renderer.pos(x, y + h, 0).endVertex();
-			renderer.pos(x + w, y + h, 0).endVertex();
-			tInstance.draw();
+			GlStateManager.disableTexture2D();
+			GlStateManager.enableBlend();
+			GlStateManager.disableAlpha();
+			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+			worldrenderer.pos(x + w, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			worldrenderer.pos(x, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			worldrenderer.pos(x, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
+			worldrenderer.pos(x + w, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
+			tessellator.draw();
+
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableBlend();
+			GlStateManager.enableAlpha();
+			GlStateManager.enableTexture2D();
 			return 0;
 		}
 	};
@@ -215,21 +213,20 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
-			
-			GlStateManager.disableLighting();
-	        GlStateManager.disableFog();
-			client.renderEngine.bindTexture(currentTexture);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-			renderer.color(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-			renderer.pos(x, y + h, 0.D).tex(0.D, 1.D).endVertex();
-			renderer.pos(x + w, y + h, 0.D).tex(1.D, 1.D).endVertex();
-			renderer.pos(x + w, y, 0.D).tex(1.D, 0.D).endVertex();
-			renderer.pos(x, y, 0.D).tex(0.D, 0.D).endVertex();
-			tInstance.draw();
+			GlStateManager.enableTexture2D();
+			GlStateManager.color(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
+
+			client.renderEngine.bindTexture(currentTexture);
+
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			worldrenderer.pos(x + w, y, 0.0D).tex(1.D, 0.D).endVertex();
+			worldrenderer.pos(x, y, 0.0D).tex(0.D, 0.D).endVertex();
+			worldrenderer.pos(x, y + h, 0.0D).tex(0.D, 1.D).endVertex();
+			worldrenderer.pos(x + w, y + h, 0.0D).tex(1.D, 1.D).endVertex();
+			tessellator.draw();
 			return 0;
 		}
 	};
