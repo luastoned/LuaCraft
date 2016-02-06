@@ -178,10 +178,10 @@ public class LuaLivingBase {
 		{
 			l.pushJavaFunction(LuaEntity.__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaEntity.__eq);
+			l.pushJavaFunction(LuaObject.__eq);
 			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdataManager.SetupMetaMethods(l, true);
 
 			l.newMetatable("Entity");
 			l.setField(-2, "__basemeta");

@@ -1,10 +1,19 @@
 package com.luacraft.meta;
 
+import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.Angle;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 public class LuaAngle {
+
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
+			l.pushString(self.toString());
+			return 1;
+		}
+	};
 
 	public static JavaFunction __index = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -17,11 +26,8 @@ public class LuaAngle {
 				l.pushNumber(self.y);
 			else if (key.equals("r"))
 				l.pushNumber(self.r);
-			else {
-				l.newMetatable("Angle");
-				l.pushString(key);
-				l.rawGet(-2);
-			}
+			else
+				LuaUserdataManager.PushBaseMeta(l);
 
 			return 1;
 		}
@@ -41,14 +47,6 @@ public class LuaAngle {
 				self.r = val;
 
 			return 0;
-		}
-	};
-
-	public static JavaFunction __tostring = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Angle self = (Angle) l.checkUserdata(1, Angle.class, "Angle");
-			l.pushString(self.toString());
-			return 1;
 		}
 	};
 
@@ -162,14 +160,15 @@ public class LuaAngle {
 	public static void Init(final LuaState l) {
 		l.newMetatable("Angle");
 		{
+			l.pushJavaFunction(__tostring);
+			l.setField(-2, "__tostring");
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
 
-			l.pushJavaFunction(__tostring);
-			l.setField(-2, "__tostring");
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");

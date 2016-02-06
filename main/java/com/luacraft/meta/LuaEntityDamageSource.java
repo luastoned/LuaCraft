@@ -109,7 +109,7 @@ public class LuaEntityDamageSource {
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdataManager.SetupMetaMethods(l, false);
 
 			l.newMetatable("DamageSource");
 			l.setField(-2, "__basemeta");

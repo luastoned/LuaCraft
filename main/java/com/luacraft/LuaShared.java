@@ -22,6 +22,7 @@ import com.luacraft.meta.LuaItemStack;
 import com.luacraft.meta.LuaLiving;
 import com.luacraft.meta.LuaLivingBase;
 import com.luacraft.meta.LuaNBTTag;
+import com.luacraft.meta.LuaObject;
 import com.luacraft.meta.LuaPlayer;
 import com.luacraft.meta.LuaResource;
 import com.luacraft.meta.LuaSQLDatabase;
@@ -145,6 +146,7 @@ public class LuaShared extends LuaCraftState {
 		LuaItemStack.Init(this);
 		LuaLiving.Init(this);
 		LuaLivingBase.Init(this);
+		LuaObject.Init(this);
 		LuaNBTTag.Init(this);
 		LuaPlayer.Init(this);
 		LuaResource.Init(this);

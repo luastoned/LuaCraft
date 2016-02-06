@@ -358,7 +358,10 @@ public class LuaBlock {
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdataManager.SetupMetaMethods(l, true);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(GetPos);
 			l.setField(-2, "GetPos");

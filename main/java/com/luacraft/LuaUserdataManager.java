@@ -12,36 +12,53 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class LuaUserdataManager {
-	private static boolean RecursiveBaseMetaCheck(LuaState l) {
-		// Check self
+	public static void PushBaseMeta(LuaState l) {
+		l.getMetatable(1); // Push our metatable
 		l.pushValue(2); // Push the key for lookup in the meta
-		l.getTable(-2);
+		if (LuaUserdataManager.RecursiveBaseMetaCheck(l, -2))
+			return;
+	}
+
+	private static boolean RecursiveBaseMetaCheck(LuaState l, int index) {
+		// 1 - metatable
+		// 2 - key
+		l.pushValue(-1); // Push a copy of our key
+		l.getTable(index - 1); // Pop off copy and push value
 
 		if (!l.isNil(-1)) // What is being requested exists, so use it
 			return true;
 
-		l.pop(1);
+		l.pop(1); // Pop off the nil
 
-		l.getField(-1, "__basemeta");
-		if (!l.isNil(-1))
-			return RecursiveBaseMetaCheck(l); // <3 recursion
+		l.getField(index, "__basemeta");
+		l.replace(index - 1); // replace original table with base
 
-		return false;
+		if (!l.isNil(index)) // Base meta exists, go again
+			return RecursiveBaseMetaCheck(l, index);
+
+		return false; // Done
 	}
 
-	public static JavaFunction __index = new JavaFunction() {
+	private static JavaFunction __index = new JavaFunction() {
+		public int invoke(LuaState l) {
+			PushBaseMeta(l);
+			return 1;
+		}
+	};
+
+	private static JavaFunction __index_persistant = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Object self = l.checkUserdata(1);
 
 			l.getMetatable(1); // Push our metatable
-			if (RecursiveBaseMetaCheck(l))
+			l.pushValue(2); // Push the key for lookup in the meta
+			if (RecursiveBaseMetaCheck(l, -2))
 				return 1;
-
-			String index = getUniqueID(self);
 
 			// Check registry
 			l.newMetatable("PersistantData");
-			l.getField(-1, index);
+			l.pushNumber(self.hashCode());
+			l.getTable(-2);
 
 			if (l.isNil(-1) || !l.isTable(-1))
 				return 0; // Nothing
@@ -52,12 +69,23 @@ public class LuaUserdataManager {
 		}
 	};
 
-	public static JavaFunction __newindex = new JavaFunction() {
+	private static JavaFunction __newindex = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Object self = l.checkUserdata(1);
-			String index = getUniqueID(self);
 
-			newUserdataCache(l, index);
+			int index = self.hashCode();
+
+			l.newMetatable("PersistantData");
+			l.pushNumber(index);
+			l.getTable(-2);
+
+			if (l.isNil(-1)) {
+				l.pop(1);
+				l.pushNumber(index);
+				l.newTable();
+				l.setTable(-3);
+			}
+
 			l.pushValue(2); // Push the given key
 			l.pushValue(3); // Push the given value
 			l.setTable(-3);
@@ -65,34 +93,11 @@ public class LuaUserdataManager {
 		}
 	};
 
-	private static void newUserdataCache(LuaState l, String index) {
-		l.newMetatable("PersistantData");
-		l.getField(-1, index);
-
-		if (l.isNil(-1)) {
-			l.pop(1);
-			l.newTable();
-			l.setField(-2, index);
-			l.getField(-1, index);
-		}
-		l.remove(-2);
-	}
-
-	private static String getUniqueID(Object obj) {
-		if (obj instanceof EntityPlayer)
-			return ((EntityPlayer) obj).getGameProfile().getId().toString();
-		if (obj instanceof Entity)
-			return ((Entity) obj).getPersistentID().toString();
-
-		return Integer.toString(obj.hashCode());
-	}
-
 	public static void PushUserdata(LuaState l, Object obj) {
 		if (obj == null) {
 			l.pushNil();
 			return;
 		}
-
 		String meta = GetMetatableForObject(obj);
 		l.pushUserdataWithMeta(obj, meta);
 	}
@@ -110,18 +115,21 @@ public class LuaUserdataManager {
 			return "LivingBase";
 		else if (ent instanceof EntityItem)
 			return "EntityItem";
+		else if (ent instanceof Entity)
+			return "Entity";
 
-		/*
-		 * else if (ent instanceof EntityWolf) return "Wolf"; else if (ent instanceof LuaHuman) return "NPC";
-		 */
-
-		return "Entity"; // Default
+		return "Object";
 	}
 
-	public static void SetupMetaMethods(LuaState l) {
-		l.pushJavaFunction(__index);
-		l.setField(-2, "__index");
-		l.pushJavaFunction(__newindex);
-		l.setField(-2, "__newindex");
+	public static void SetupMetaMethods(LuaState l, boolean persitantData) {
+		if (persitantData) {
+			l.pushJavaFunction(__index_persistant);
+			l.setField(-2, "__index");
+			l.pushJavaFunction(__newindex);
+			l.setField(-2, "__newindex");
+		} else {
+			l.pushJavaFunction(__index);
+			l.setField(-2, "__index");
+		}
 	}
 }

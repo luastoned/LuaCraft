@@ -1,5 +1,6 @@
 package com.luacraft.library.client;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.LuaJavaBlock;
@@ -11,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 
 public class LuaGlobals {
-	private static Minecraft client = null;
+	private static Minecraft client = LuaCraft.getClient();
 
 	/**
 	 * @author Gregor
@@ -91,8 +92,6 @@ public class LuaGlobals {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.pushJavaFunction(Block);
 		l.setGlobal("Block");
 		l.pushJavaFunction(World);

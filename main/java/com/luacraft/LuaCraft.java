@@ -19,7 +19,9 @@ import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -53,6 +55,14 @@ public class LuaCraft {
 	public static Configuration config;
 
 	public static boolean scriptEnforcer = true;
+
+	public static FMLClientHandler getForgeClient() {
+		return FMLClientHandler.instance();
+	}
+
+	public static Minecraft getClient() {
+		return getForgeClient().getClient();
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

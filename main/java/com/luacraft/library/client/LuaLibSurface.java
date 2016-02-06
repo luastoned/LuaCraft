@@ -2,6 +2,7 @@ package com.luacraft.library.client;
 
 import org.lwjgl.opengl.GL11;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Color;
 import com.naef.jnlua.JavaFunction;
@@ -18,7 +19,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class LuaLibSurface {
-	private static Minecraft client;
+	private static Minecraft client = LuaCraft.getClient();
 
 	public static ResourceLocation currentTexture = null;
 	public static Color drawColor = new Color(255, 255, 255, 255);
@@ -230,9 +231,14 @@ public class LuaLibSurface {
 		}
 	};
 
-	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
+	public static JavaFunction StartPoly = new JavaFunction() {
+		public int invoke(LuaState l) {
 
+			return 0;
+		}
+	};
+
+	public static void Init(final LuaCraftState l) {
 		l.newTable();
 		{
 			l.pushJavaFunction(GetDefaultFont);

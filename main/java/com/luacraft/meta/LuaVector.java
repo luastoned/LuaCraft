@@ -1,5 +1,6 @@
 package com.luacraft.meta;
 
+import com.luacraft.LuaUserdataManager;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -17,11 +18,8 @@ public class LuaVector {
 				l.pushNumber(self.y);
 			else if (key.equals("z"))
 				l.pushNumber(self.z);
-			else {
-				l.getMetatable(1);
-				l.pushString(key);
-				l.rawGet(-2);
-			}
+			else
+				LuaUserdataManager.PushBaseMeta(l);
 
 			return 1;
 		}
@@ -281,7 +279,6 @@ public class LuaVector {
 		{
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
 

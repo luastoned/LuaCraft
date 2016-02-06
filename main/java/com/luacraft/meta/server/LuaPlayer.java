@@ -21,6 +21,28 @@ public class LuaPlayer {
 	public static MinecraftServer server = null;
 
 	/**
+	 * @author Gregor
+	 * @function SetTeam
+	 * @info Sets a players team
+	 * @arguments [[String]]:team
+	 * @return [[Boolean]]:status, [ [[String]]:error ]
+	 */
+
+	public static JavaFunction SetTeam = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			try {
+				l.pushBoolean(self.worldObj.getScoreboard().addPlayerToTeam(self.getName(), l.checkString(2)));
+				return 1;
+			} catch (IllegalArgumentException e) {
+				l.pushBoolean(false);
+				l.pushString(e.getMessage());
+				return 2;
+			}
+		}
+	};
+
+	/**
 	 * @author Jake
 	 * @function GetPing
 	 * @info Return the players ping
@@ -219,7 +241,7 @@ public class LuaPlayer {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		server = l.getMinecraftServer();
+		server = l.getServer();
 
 		l.newMetatable("Player");
 		{

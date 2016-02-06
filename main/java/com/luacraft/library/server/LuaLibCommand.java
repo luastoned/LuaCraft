@@ -55,7 +55,7 @@ public class LuaLibCommand {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		MinecraftServer server = l.getMinecraftServer();
+		MinecraftServer server = l.getServer();
 		commandHandler = (CommandHandler) server.getCommandManager();
 
 		l.newTable();

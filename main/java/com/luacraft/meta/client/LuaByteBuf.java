@@ -1,5 +1,6 @@
 package com.luacraft.meta.client;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -10,7 +11,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 public class LuaByteBuf {
 
-	public static Minecraft client = null;
+	public static Minecraft client = LuaCraft.getClient();
 
 	/**
 	 * @author Jake
@@ -33,8 +34,6 @@ public class LuaByteBuf {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.newMetatable("ByteBuf");
 		{
 			l.pushJavaFunction(SendToServer);

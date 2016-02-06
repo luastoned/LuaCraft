@@ -1,14 +1,42 @@
 package com.luacraft.library.server;
 
+import java.util.List;
+
 import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdataManager;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
 
 public class LuaLibGame {
 	private static MinecraftServer server = null;
+
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function GetPlayers
+	 * @info Get a table of all the currently connected players on the server
+	 * @arguments nil
+	 * @return [[Table]]:players
+	 */
+
+	public static JavaFunction GetPlayers = new JavaFunction() {
+		public int invoke(LuaState l) {
+			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+
+			l.newTable();
+			int i = 1;
+			for (EntityPlayerMP player : playerList) {
+				l.pushInteger(i++);
+				LuaUserdataManager.PushUserdata(l, player);
+				l.setTable(-3);
+			}
+			return 1;
+		}
+	};
 
 	/**
 	 * @author Matt
@@ -318,7 +346,7 @@ public class LuaLibGame {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		server = l.getMinecraftServer();
+		server = l.getServer();
 
 		l.newTable();
 		{

@@ -3,6 +3,7 @@ package com.luacraft.meta.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
@@ -14,8 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 public class LuaLivingBase {
-
-	private static Minecraft client = null;
+	private static Minecraft client = LuaCraft.getClient();
 
 	public static JavaFunction GetAimVector = new JavaFunction() {
 		public int invoke(LuaState l) {
@@ -48,8 +48,6 @@ public class LuaLivingBase {
 	};
 
 	public static void Init(LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.newMetatable("LivingBase");
 		{
 			l.pushJavaFunction(GetAimVector);

@@ -33,15 +33,6 @@ public class LuaWorld {
 		}
 	};
 
-	public static JavaFunction __eq = new JavaFunction() {
-		public int invoke(LuaState l) {
-			World self = (World) l.checkUserdata(1, World.class, "World");
-			World other = (World) l.checkUserdata(2, World.class, "World");
-			l.pushBoolean(self == other);
-			return 1;
-		}
-	};
-
 	/**
 	 * @author Jake
 	 * @function GetBlock
@@ -700,14 +691,15 @@ public class LuaWorld {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("World");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-
-			l.pushJavaFunction(__eq);
+			l.pushJavaFunction(LuaObject.__eq);
 			l.setField(-2, "__eq");
+
+			LuaUserdataManager.SetupMetaMethods(l, true);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(GetBlock);
 			l.setField(-2, "GetBlock");

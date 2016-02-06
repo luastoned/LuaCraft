@@ -49,7 +49,7 @@ public class LuaGlobals {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		server = l.getMinecraftServer();
+		server = l.getServer();
 
 		l.pushJavaFunction(PropertyManager);
 		l.setGlobal("PropertyManager");

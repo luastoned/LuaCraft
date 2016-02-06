@@ -3,6 +3,7 @@ package com.luacraft.library.client;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -13,8 +14,8 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
 
 public class LuaLibGame {
-	private static Minecraft client = null;
-	private static NetworkManager net = null;
+	private static Minecraft client = LuaCraft.getClient();
+	private static NetworkManager net = LuaCraft.getForgeClient().getClientToServerNetworkManager();
 
 	/**
 	 * @author Matt
@@ -123,9 +124,6 @@ public class LuaLibGame {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-		net = l.getForgeClient().getClientToServerNetworkManager();
-
 		l.newTable();
 		{
 			l.pushJavaFunction(MaxPlayers);

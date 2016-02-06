@@ -56,7 +56,7 @@ public class LuaCraftState extends LuaState {
 		return getForgeClient().getClient();
 	}
 
-	public MinecraftServer getMinecraftServer() {
+	public MinecraftServer getServer() {
 		if (getSide().isClient())
 			return getForgeClient().getServer();
 		else
@@ -125,6 +125,8 @@ public class LuaCraftState extends LuaState {
 
 		if (printError)
 			error(msg.toString());
+
+		e.printStackTrace();
 	}
 
 	public void pushHookCall() {
