@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -355,10 +355,11 @@ public class LuaBlock {
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
 
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
+			
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");
-
-			LuaUserdataManager.SetupMetaMethods(l, true);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

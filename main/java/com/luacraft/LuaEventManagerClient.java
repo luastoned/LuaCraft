@@ -117,7 +117,7 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("player.prerender");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				l.pushNumber(event.partialRenderTick);
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
@@ -142,7 +142,7 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("player.postrender");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				l.pushNumber(event.partialRenderTick);
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {

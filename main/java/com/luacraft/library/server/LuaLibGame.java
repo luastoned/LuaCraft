@@ -3,7 +3,7 @@ package com.luacraft.library.server;
 import java.util.List;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -31,7 +31,7 @@ public class LuaLibGame {
 			int i = 1;
 			for (EntityPlayerMP player : playerList) {
 				l.pushInteger(i++);
-				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, player);
 				l.setTable(-3);
 			}
 			return 1;

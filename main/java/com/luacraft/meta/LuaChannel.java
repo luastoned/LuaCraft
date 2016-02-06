@@ -1,5 +1,6 @@
 package com.luacraft.meta;
 
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaChannel;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -96,11 +97,13 @@ public class LuaChannel {
 	public static void Init(LuaState l) {
 		l.newMetatable("Channel");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+
+			LuaUserdata.SetupBasicMeta(l);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(Empty);
 			l.setField(-2, "Empty");

@@ -11,11 +11,21 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class LuaUserdataManager {
+public class LuaUserdata {
+
+	public static JavaFunction __eq = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Object self = l.checkUserdata(1);
+			Object other = l.checkUserdata(2);
+			l.pushBoolean(self == other);
+			return 1;
+		}
+	};
+
 	public static void PushBaseMeta(LuaState l) {
 		l.getMetatable(1); // Push our metatable
 		l.pushValue(2); // Push the key for lookup in the meta
-		if (LuaUserdataManager.RecursiveBaseMetaCheck(l, -2))
+		if (RecursiveBaseMetaCheck(l, -2))
 			return;
 	}
 
@@ -121,7 +131,17 @@ public class LuaUserdataManager {
 		return "Object";
 	}
 
-	public static void SetupMetaMethods(LuaState l, boolean persitantData) {
+	public static void SetupBasicMeta(LuaState l) {
+		l.newMetatable("jnlua.Object");
+		l.getField(-1, "__gc");
+		l.remove(-2);
+		l.setField(-2, "__gc");
+
+		l.pushJavaFunction(__eq);
+		l.setField(-2, "__eq");
+	}
+
+	public static void SetupMeta(LuaState l, boolean persitantData) {
 		if (persitantData) {
 			l.pushJavaFunction(__index_persistant);
 			l.setField(-2, "__index");

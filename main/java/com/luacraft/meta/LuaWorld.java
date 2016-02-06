@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
@@ -59,7 +59,7 @@ public class LuaWorld {
 			}
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, z, y);
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
 	};
@@ -93,7 +93,7 @@ public class LuaWorld {
 				k++;
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, k, y);
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
 	};
@@ -115,7 +115,7 @@ public class LuaWorld {
 			int i = 1;
 			for (EntityPlayer player : playerList) {
 				l.pushInteger(i++);
-				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, player);
 				l.setTable(-3);
 			}
 			return 1;
@@ -139,7 +139,7 @@ public class LuaWorld {
 			for (EntityPlayer player : playerList) {
 				String playerName = player.getGameProfile().getName().toLowerCase();
 				if (playerName.contains(search)) {
-					LuaUserdataManager.PushUserdata(l, player);
+					LuaUserdata.PushUserdata(l, player);
 					return 1;
 				}
 			}
@@ -164,7 +164,7 @@ public class LuaWorld {
 
 			for (Entity ent : entityList)
 				if (ent.getEntityId() == searchId) {
-					LuaUserdataManager.PushUserdata(l, ent);
+					LuaUserdata.PushUserdata(l, ent);
 					return 1;
 				}
 			return 0;
@@ -188,7 +188,7 @@ public class LuaWorld {
 			int i = 1;
 			for (Entity ent : entityList) {
 				l.pushInteger(i++);
-				LuaUserdataManager.PushUserdata(l, ent);
+				LuaUserdata.PushUserdata(l, ent);
 				l.setTable(-3);
 			}
 			return 1;
@@ -216,7 +216,7 @@ public class LuaWorld {
 
 				if (className.contains(search)) {
 					l.pushInteger(i++);
-					LuaUserdataManager.PushUserdata(l, ent);
+					LuaUserdata.PushUserdata(l, ent);
 					l.setTable(-3);
 				}
 			}
@@ -236,7 +236,7 @@ public class LuaWorld {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Entity ent = EntityList.createEntityByName(l.checkString(2), self);
-			LuaUserdataManager.PushUserdata(l, ent);
+			LuaUserdata.PushUserdata(l, ent);
 			return 1;
 		}
 	};
@@ -693,10 +693,9 @@ public class LuaWorld {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaObject.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l, true);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

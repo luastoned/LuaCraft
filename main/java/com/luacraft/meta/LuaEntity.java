@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -658,7 +658,7 @@ public class LuaEntity {
 	public static JavaFunction GetWorld = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			LuaUserdataManager.PushUserdata(l, self.worldObj);
+			LuaUserdata.PushUserdata(l, self.worldObj);
 			return 1;
 		}
 	};
@@ -1017,10 +1017,9 @@ public class LuaEntity {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaObject.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l, true);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

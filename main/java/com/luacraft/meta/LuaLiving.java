@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -70,7 +70,7 @@ public class LuaLiving {
 	public static JavaFunction GetAttackTarget = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			LuaUserdataManager.PushUserdata(l, self.getAttackTarget());
+			LuaUserdata.PushUserdata(l, self.getAttackTarget());
 			return 1;
 		}
 	};
@@ -332,10 +332,9 @@ public class LuaLiving {
 		{
 			l.pushJavaFunction(LuaEntity.__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaObject.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l, true);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
 
 			l.newMetatable("LivingBase");
 			l.setField(-2, "__basemeta");

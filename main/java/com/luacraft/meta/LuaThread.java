@@ -1,6 +1,6 @@
 package com.luacraft.meta;
 
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaThread;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -199,10 +199,9 @@ public class LuaThread {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaObject.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l, false);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

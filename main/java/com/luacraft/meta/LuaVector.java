@@ -1,12 +1,21 @@
 package com.luacraft.meta;
 
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 public class LuaVector {
+
+	public static JavaFunction __tostring = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
+			l.pushString(self.toString());
+			return 1;
+		}
+	};
+	
 	public static JavaFunction __index = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
@@ -19,7 +28,7 @@ public class LuaVector {
 			else if (key.equals("z"))
 				l.pushNumber(self.z);
 			else
-				LuaUserdataManager.PushBaseMeta(l);
+				LuaUserdata.PushBaseMeta(l);
 
 			return 1;
 		}
@@ -39,14 +48,6 @@ public class LuaVector {
 				self.z = val;
 
 			return 0;
-		}
-	};
-
-	public static JavaFunction __tostring = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
-			l.pushString(self.toString());
-			return 1;
 		}
 	};
 
@@ -277,13 +278,15 @@ public class LuaVector {
 	public static void Init(final LuaState l) {
 		l.newMetatable("Vector");
 		{
+			l.pushJavaFunction(__tostring);
+			l.setField(-2, "__tostring");
+			
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
-
-			l.pushJavaFunction(__tostring);
-			l.setField(-2, "__tostring");
+			
+			LuaUserdata.SetupBasicMeta(l);
 
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");

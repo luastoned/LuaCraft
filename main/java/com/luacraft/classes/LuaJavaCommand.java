@@ -1,6 +1,6 @@
 package com.luacraft.classes;
 
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.command.CommandBase;
@@ -46,7 +46,7 @@ public class LuaJavaCommand extends CommandBase {
 			pushCommandFunc(commandName);
 
 			if (sender instanceof EntityPlayer)
-				LuaUserdataManager.PushUserdata(l, (EntityPlayer) sender);
+				LuaUserdata.PushUserdata(l, (EntityPlayer) sender);
 			else
 				l.pushNil();
 

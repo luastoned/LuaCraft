@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.LuaJavaBlock;
@@ -22,15 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class LuaObject {
-
-	public static JavaFunction __eq = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Object self = l.checkUserdata(1);
-			Object other = l.checkUserdata(2);
-			l.pushBoolean(self == other);
-			return 1;
-		}
-	};
 
 	/**
 	 * @author Gregor
@@ -291,12 +282,10 @@ public class LuaObject {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		l.newMetatable("Entity");
+		l.newMetatable("Object");
 		{
-			l.pushJavaFunction(__eq);
-			l.setField(-2, "__eq");
-
-			LuaUserdataManager.SetupMetaMethods(l, false);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
 
 			l.pushJavaFunction(IsAngle);
 			l.setField(-2, "IsAngle");

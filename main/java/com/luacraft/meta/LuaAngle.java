@@ -1,6 +1,6 @@
 package com.luacraft.meta;
 
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -27,7 +27,7 @@ public class LuaAngle {
 			else if (key.equals("r"))
 				l.pushNumber(self.r);
 			else
-				LuaUserdataManager.PushBaseMeta(l);
+				LuaUserdata.PushBaseMeta(l);
 
 			return 1;
 		}
@@ -162,10 +162,13 @@ public class LuaAngle {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+			
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
+			
+			LuaUserdata.SetupBasicMeta(l);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

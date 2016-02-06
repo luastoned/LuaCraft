@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -31,7 +31,7 @@ public class LuaColor {
 			else if (key.equals("a"))
 				l.pushNumber(self.a);
 			else
-				LuaUserdataManager.PushBaseMeta(l);
+				LuaUserdata.PushBaseMeta(l);
 
 			return 1;
 		}
@@ -120,10 +120,13 @@ public class LuaColor {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+			
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
+			
+			LuaUserdata.SetupBasicMeta(l);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

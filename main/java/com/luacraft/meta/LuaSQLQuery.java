@@ -2,6 +2,7 @@ package com.luacraft.meta;
 
 import java.sql.SQLException;
 
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaQuery;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
@@ -76,11 +77,13 @@ public class LuaSQLQuery {
 	public static void Init(LuaState l) {
 		l.newMetatable("SQLQuery");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+			
+			LuaUserdata.SetupBasicMeta(l);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(Start);
 			l.setField(-2, "Start");

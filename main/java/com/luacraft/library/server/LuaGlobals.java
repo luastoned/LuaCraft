@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -43,7 +43,7 @@ public class LuaGlobals {
 	public static JavaFunction World = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World world = server.worldServers[l.checkInteger(1, 0)];
-			LuaUserdataManager.PushUserdata(l, world);
+			LuaUserdata.PushUserdata(l, world);
 			return 1;
 		}
 	};

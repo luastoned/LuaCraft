@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.luacraft.LuaCraft;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaQuery;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -15,18 +16,6 @@ public class LuaSQLDatabase {
 			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
 			l.pushString(String.format("SQLDatabase: 0x%08x", l.toPointer(1)));
 			return 1;
-		}
-	};
-
-	public static JavaFunction __gc = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Connection self = (Connection) l.checkUserdata(1, Connection.class, "SQLDatabase");
-			try {
-				self.close();
-			} catch (SQLException e) {
-				LuaCraft.getLogger().error(e.getMessage());
-			}
-			return 0;
 		}
 	};
 
@@ -80,11 +69,13 @@ public class LuaSQLDatabase {
 	public static void Init(LuaState l) {
 		l.newMetatable("SQLDatabase");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+			
+			LuaUserdata.SetupBasicMeta(l);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(Disconnect);
 			l.setField(-2, "Disconnect");

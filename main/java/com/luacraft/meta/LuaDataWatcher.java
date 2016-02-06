@@ -1,6 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -309,11 +310,13 @@ public class LuaDataWatcher {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("DataWatcher");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+
+			LuaUserdata.SetupBasicMeta(l);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(AddByte);
 			l.setField(-2, "AddByte");

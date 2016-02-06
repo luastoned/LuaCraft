@@ -7,7 +7,7 @@ import org.lwjgl.util.glu.Sphere;
 
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
@@ -528,7 +528,7 @@ public class LuaLibRender {
 	public static JavaFunction GetViewEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity view = client.getRenderViewEntity();
-			LuaUserdataManager.PushUserdata(l, view);
+			LuaUserdata.PushUserdata(l, view);
 			return 1;
 		}
 	};

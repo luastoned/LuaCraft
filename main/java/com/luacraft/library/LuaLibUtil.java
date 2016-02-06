@@ -18,7 +18,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.codec.binary.Hex;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -116,7 +116,7 @@ public class LuaLibUtil {
 			l.pushBoolean(true);
 			l.setField(-2, "Hit");
 
-			LuaUserdataManager.PushUserdata(l, entTrace.entityHit);
+			LuaUserdata.PushUserdata(l, entTrace.entityHit);
 			l.setField(-2, "HitEntity");
 
 			Vector hitpos = new Vector(entTrace.hitVec);
@@ -130,7 +130,7 @@ public class LuaLibUtil {
 			l.setField(-2, "Hit");
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			l.setField(-2, "HitBlock");
 
 			Vector hitpos = new Vector(trace.hitVec);
