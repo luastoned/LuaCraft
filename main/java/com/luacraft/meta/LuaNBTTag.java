@@ -325,7 +325,7 @@ public class LuaNBTTag {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			LuaUserdata.SetupBasicMeta(l);
 
 			l.newMetatable("Object");

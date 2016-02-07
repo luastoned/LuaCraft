@@ -1,4 +1,4 @@
-package com.luacraft.library.server;
+package com.luacraft.library;
 
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaCommand;
@@ -32,8 +32,47 @@ public class LuaLibCommand {
 			l.pushValue(2);
 			l.setTable(-3);
 
-			LuaJavaCommand command = new LuaJavaCommand(l, commandStr, usageStr);
+			LuaJavaCommand command = new LuaJavaCommand((LuaCraftState) l, commandStr, usageStr);
 			commandHandler.registerCommand(command);
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library command
+	 * @function Remove
+	 * @info Remove a chat command
+	 * @arguments [[String]]:command
+	 * @return nil
+	 */
+
+	public static JavaFunction Remove = new JavaFunction() {
+		public int invoke(LuaState l) {
+			String commandStr = l.checkString(1);
+			commandHandler.getCommands().remove(commandStr);
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library command
+	 * @function AutoComplete
+	 * @info Adds a callback for command auto completion
+	 * @arguments [[String]]:command, [[Function]]:callback
+	 * @return nil
+	 */
+
+	public static JavaFunction AutoComplete = new JavaFunction() {
+		public int invoke(LuaState l) {
+			String commandStr = l.checkString(1);
+			l.checkType(2, LuaType.FUNCTION);
+
+			l.newMetatable("CommandAutoComplete");
+			l.pushString(commandStr);
+			l.pushValue(2);
+			l.setTable(-3);
 			return 0;
 		}
 	};
@@ -62,6 +101,8 @@ public class LuaLibCommand {
 		{
 			l.pushJavaFunction(Add);
 			l.setField(-2, "Add");
+			l.pushJavaFunction(AutoComplete);
+			l.setField(-2, "AutoComplete");
 			l.pushJavaFunction(GetAll);
 			l.setField(-2, "GetAll");
 		}

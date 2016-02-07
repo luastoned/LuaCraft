@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import com.luacraft.LuaCraft;
 import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaQuery;
 import com.naef.jnlua.JavaFunction;
@@ -71,7 +70,7 @@ public class LuaSQLDatabase {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			LuaUserdata.SetupBasicMeta(l);
 
 			l.newMetatable("Object");

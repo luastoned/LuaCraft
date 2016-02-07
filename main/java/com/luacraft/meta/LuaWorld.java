@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -228,14 +229,23 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function CreateEntity
 	 * @info Creates a new entity
-	 * @arguments [[String]]:classname
+	 * @arguments [[String]]:classname OR [[NBTTag]]:tag OR [[Number]]:id
 	 * @return [[Entity]]:entity
 	 */
 
 	public static JavaFunction CreateEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			Entity ent = EntityList.createEntityByName(l.checkString(2), self);
+
+			Entity ent = null;
+
+			if (l.isUserdata(2, NBTTagCompound.class))
+				ent = EntityList.createEntityFromNBT((NBTTagCompound) l.toUserdata(2), self);
+			else if (l.isNumber(2))
+				ent = EntityList.createEntityByID(l.toInteger(2), self);
+			else
+				ent = EntityList.createEntityByName(l.checkString(2), self);
+
 			LuaUserdata.PushUserdata(l, ent);
 			return 1;
 		}

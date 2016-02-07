@@ -15,7 +15,7 @@ public class LuaVector {
 			return 1;
 		}
 	};
-	
+
 	public static JavaFunction __index = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
@@ -280,12 +280,12 @@ public class LuaVector {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
-			
+
 			LuaUserdata.SetupBasicMeta(l);
 
 			l.pushJavaFunction(__eq);

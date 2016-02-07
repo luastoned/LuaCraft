@@ -357,7 +357,7 @@ public class LuaBlock {
 
 			LuaUserdata.SetupBasicMeta(l);
 			LuaUserdata.SetupMeta(l, true);
-			
+
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");
 

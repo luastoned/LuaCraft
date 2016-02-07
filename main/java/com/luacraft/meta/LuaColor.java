@@ -120,12 +120,12 @@ public class LuaColor {
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			
+
 			l.pushJavaFunction(__index);
 			l.setField(-2, "__index");
 			l.pushJavaFunction(__newindex);
 			l.setField(-2, "__newindex");
-			
+
 			LuaUserdata.SetupBasicMeta(l);
 
 			l.newMetatable("Object");

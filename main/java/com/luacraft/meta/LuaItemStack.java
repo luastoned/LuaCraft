@@ -315,7 +315,7 @@ public class LuaItemStack {
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");
-			
+
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");
 
