@@ -1,6 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -306,11 +307,14 @@ public class LuaItemStack {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("ItemStack");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(__eq);
 			l.setField(-2, "__eq");

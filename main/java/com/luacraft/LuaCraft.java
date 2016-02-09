@@ -19,7 +19,9 @@ import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -54,6 +56,14 @@ public class LuaCraft {
 
 	public static boolean scriptEnforcer = true;
 
+	public static FMLClientHandler getForgeClient() {
+		return FMLClientHandler.instance();
+	}
+
+	public static Minecraft getClient() {
+		return getForgeClient().getClient();
+	}
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		ModContainer modContainer = FMLCommonHandler.instance().findContainerFor(this);
@@ -75,7 +85,8 @@ public class LuaCraft {
 		if (event.getSide() == Side.CLIENT) {
 			LuaClient luaState = new LuaClient();
 			synchronized (luaState) {
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.CLIENT, luaState);
@@ -83,7 +94,8 @@ public class LuaCraft {
 		} else {
 			LuaServer luaState = new LuaServer();
 			synchronized (luaState) {
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.SERVER, luaState);
@@ -104,7 +116,8 @@ public class LuaCraft {
 			LuaServer luaState = new LuaServer();
 			synchronized (luaState) {
 				luaState.setSideOverride(Side.CLIENT); // Singleplayer fix..
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.SERVER, luaState);

@@ -18,15 +18,17 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.codec.binary.Hex;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
+import com.naef.jnlua.LuaType;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -68,6 +70,28 @@ public class LuaLibUtil {
 		reader.close();
 
 		return out.toString();
+	}
+
+	public static String toChat(LuaState l, int stackPos) {
+		StringBuilder message = new StringBuilder();
+
+		for (int i = stackPos; i <= l.getTop(); i++) {
+			if (l.isNoneOrNil(i))
+				continue;
+
+			if (l.type(i) == LuaType.NUMBER) {
+				EnumChatFormatting format = EnumChatFormatting.values()[l.toInteger(i)];
+				message.append(format);
+			} else {
+				l.getGlobal("tostring");
+				l.pushValue(i);
+				l.call(1, 1);
+				message.append(l.toString(-1));
+				l.pop(1);
+			}
+		}
+
+		return message.toString();
 	}
 
 	private static MovingObjectPosition traceEntity(World world, Vec3 start, Vec3 end, List<Entity> filter) {
@@ -116,7 +140,7 @@ public class LuaLibUtil {
 			l.pushBoolean(true);
 			l.setField(-2, "Hit");
 
-			LuaUserdataManager.PushUserdata(l, entTrace.entityHit);
+			LuaUserdata.PushUserdata(l, entTrace.entityHit);
 			l.setField(-2, "HitEntity");
 
 			Vector hitpos = new Vector(entTrace.hitVec);
@@ -130,7 +154,7 @@ public class LuaLibUtil {
 			l.setField(-2, "Hit");
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			l.setField(-2, "HitBlock");
 
 			Vector hitpos = new Vector(trace.hitVec);

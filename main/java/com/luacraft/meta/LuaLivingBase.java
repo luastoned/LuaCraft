@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
@@ -178,10 +178,9 @@ public class LuaLivingBase {
 		{
 			l.pushJavaFunction(LuaEntity.__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaEntity.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
 
 			l.newMetatable("Entity");
 			l.setField(-2, "__basemeta");

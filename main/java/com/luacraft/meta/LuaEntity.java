@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -9,11 +9,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -25,15 +21,6 @@ public class LuaEntity {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			GetClass.invoke(l);
 			l.pushString(String.format("Entity [%d][%s]", self.getEntityId(), l.toString(-1)));
-			return 1;
-		}
-	};
-
-	public static JavaFunction __eq = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			Entity other = (Entity) l.checkUserdata(2, Entity.class, "Entity");
-			l.pushBoolean(self.getEntityId() == other.getEntityId());
 			return 1;
 		}
 	};
@@ -99,144 +86,6 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			l.pushBoolean(self.onGround);
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsEntity
-	 * @info Returns if the argument is an entity
-	 * @arguments arg
-	 * @return [[Boolean]]:entity
-	 */
-
-	public static JavaFunction IsEntity = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, Entity.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsPlayer
-	 * @info Returns if the entity is a player entity
-	 * @arguments nil
-	 * @return [[Boolean]]:player
-	 */
-
-	public static JavaFunction IsPlayer = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityPlayer.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsMob
-	 * @info Returns if the entity is a mob entity
-	 * @arguments nil
-	 * @return [[Boolean]]:mob
-	 */
-
-	public static JavaFunction IsMob = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityMob.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsAnimal
-	 * @info Returns if the entity is an animal entity
-	 * @arguments nil
-	 * @return [[Boolean]]:animal
-	 */
-
-	public static JavaFunction IsAnimal = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityAnimal.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsTameable
-	 * @info Returns if the entity is a tameable entity
-	 * @arguments nil
-	 * @return [[Boolean]]:tameable
-	 */
-
-	public static JavaFunction IsTameable = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityTameable.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsLiving
-	 * @info Returns if the entity is a living entity
-	 * @arguments nil
-	 * @return [[Boolean]]:living
-	 */
-
-	public static JavaFunction IsLiving = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityLiving.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsItem
-	 * @info Returns if the entity is an item entity
-	 * @arguments nil
-	 * @return [[Boolean]]:item
-	 */
-
-	public static JavaFunction IsItem = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityItem.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsInstanceOf
-	 * @info Returns if the entity is an instance of the given
-	 * @arguments [[Entity]]:entity
-	 * @return [[Boolean]]:instance
-	 */
-
-	public static JavaFunction IsInstanceOf = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			Entity other = (Entity) l.checkUserdata(2, Entity.class, "Entity");
-			l.pushBoolean(self.getClass().isAssignableFrom(other.getClass()));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsValid
-	 * @info Returns if the entity is not null
-	 * @arguments nil
-	 * @return [[Boolean]]:valid
-	 */
-
-	public static JavaFunction IsValid = new JavaFunction() {
-		public int invoke(LuaState l) {
-			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushBoolean(self != null);
 			return 1;
 		}
 	};
@@ -466,6 +315,22 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			l.pushBoolean(self.isInWater());
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function IsWet
+	 * @info Check if the entity is wet
+	 * @arguments nil
+	 * @return [[Boolean]]:wet
+	 */
+
+	public static JavaFunction IsWet = new JavaFunction() {
+		public int invoke(LuaState l) {
+			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
+			l.pushBoolean(self.isWet());
 			return 1;
 		}
 	};
@@ -793,7 +658,7 @@ public class LuaEntity {
 	public static JavaFunction GetWorld = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushUserdataWithMeta(self.worldObj, "World");
+			LuaUserdata.PushUserdata(l, self.worldObj);
 			return 1;
 		}
 	};
@@ -1115,30 +980,49 @@ public class LuaEntity {
 		}
 	};
 
-	public static void Init(final LuaCraftState l) {
-		l.pushJavaFunction(IsEntity);
-		l.setGlobal("IsEntity");
-		l.pushJavaFunction(IsPlayer);
-		l.setGlobal("IsPlayer");
-		l.pushJavaFunction(IsMob);
-		l.setGlobal("IsMob");
-		l.pushJavaFunction(IsAnimal);
-		l.setGlobal("IsAnimal");
-		l.pushJavaFunction(IsTameable);
-		l.setGlobal("IsTameable");
-		l.pushJavaFunction(IsLiving);
-		l.setGlobal("IsLiving");
-		l.pushJavaFunction(IsItem);
-		l.setGlobal("IsItem");
+	/**
+	 * @author Jake
+	 * @function IsSilent
+	 * @info Returns if the player is silent or not
+	 * @arguments nil
+	 * @return [[Boolean]]:silent
+	 */
 
+	public static JavaFunction IsSilent = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			l.pushBoolean(self.isSilent());
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function SetSilent
+	 * @info Sets if the player is silent or not
+	 * @arguments [[Boolean]]:silent
+	 * @return nil
+	 */
+
+	public static JavaFunction SetSilent = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			self.setSilent(l.checkBoolean(2));
+			return 0;
+		}
+	};
+
+	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Entity");
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(AttackFrom);
 			l.setField(-2, "AttackFrom");
@@ -1148,22 +1032,6 @@ public class LuaEntity {
 			l.setField(-2, "IsAlive");
 			l.pushJavaFunction(IsOnGround);
 			l.setField(-2, "IsOnGround");
-			l.pushJavaFunction(IsPlayer);
-			l.setField(-2, "IsPlayer");
-			l.pushJavaFunction(IsMob);
-			l.setField(-2, "IsMob");
-			l.pushJavaFunction(IsAnimal);
-			l.setField(-2, "IsAnimal");
-			l.pushJavaFunction(IsTameable);
-			l.setField(-2, "IsTameable");
-			l.pushJavaFunction(IsLiving);
-			l.setField(-2, "IsLiving");
-			l.pushJavaFunction(IsItem);
-			l.setField(-2, "IsItem");
-			l.pushJavaFunction(IsInstanceOf);
-			l.setField(-2, "IsInstanceOf");
-			l.pushJavaFunction(IsValid);
-			l.setField(-2, "IsValid");
 			l.pushJavaFunction(GetAngles);
 			l.setField(-2, "GetAngles");
 			l.pushJavaFunction(SetAngles);
@@ -1192,6 +1060,8 @@ public class LuaEntity {
 			l.setField(-2, "IsSneaking");
 			l.pushJavaFunction(IsInWater);
 			l.setField(-2, "IsInWater");
+			l.pushJavaFunction(IsWet);
+			l.setField(-2, "IsWet");
 			l.pushJavaFunction(GetAir);
 			l.setField(-2, "GetAir");
 			l.pushJavaFunction(SetAir);
@@ -1268,6 +1138,10 @@ public class LuaEntity {
 			l.setField(-2, "GetNBTTag");
 			l.pushJavaFunction(GetDataWatcher);
 			l.setField(-2, "GetDataWatcher");
+			l.pushJavaFunction(IsSilent);
+			l.setField(-2, "IsSilent");
+			l.pushJavaFunction(SetSilent);
+			l.setField(-2, "SetSilent");
 		}
 		l.pop(1);
 

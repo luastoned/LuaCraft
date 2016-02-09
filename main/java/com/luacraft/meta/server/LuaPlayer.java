@@ -8,17 +8,36 @@ import com.luacraft.classes.Vector;
 import com.mojang.authlib.GameProfile;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
-import com.naef.jnlua.LuaType;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.server.management.UserListBansEntry;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 
 public class LuaPlayer {
 	public static MinecraftServer server = null;
+
+	/**
+	 * @author Gregor
+	 * @function SetTeam
+	 * @info Sets a players team
+	 * @arguments [[String]]:team
+	 * @return [[Boolean]]:status, [ [[String]]:error ]
+	 */
+
+	public static JavaFunction SetTeam = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			try {
+				l.pushBoolean(self.worldObj.getScoreboard().addPlayerToTeam(self.getName(), l.checkString(2)));
+				return 1;
+			} catch (IllegalArgumentException e) {
+				l.pushBoolean(false);
+				l.pushString(e.getMessage());
+				return 2;
+			}
+		}
+	};
 
 	/**
 	 * @author Jake
@@ -69,41 +88,6 @@ public class LuaPlayer {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			self.playerNetServerHandler.setPlayerLocation(pos.x, pos.z, pos.y, self.rotationYaw, self.rotationPitch);
-			return 0;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function Msg
-	 * @info Print something to a players chat
-	 * @arguments [[String]]:msg / [[Number]]:color See [[color]] for further information
-	 * @return nil
-	 */
-
-	public static JavaFunction Msg = new JavaFunction() {
-		public int invoke(LuaState l) {
-			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
-
-			StringBuilder message = new StringBuilder();
-
-			for (int i = 2; i <= l.getTop(); i++) {
-				if (l.isNoneOrNil(i))
-					continue;
-
-				if (l.type(i) == LuaType.NUMBER) {
-					EnumChatFormatting format = EnumChatFormatting.values()[l.toInteger(i)];
-					message.append(format);
-				} else {
-					l.getGlobal("tostring");
-					l.pushValue(i);
-					l.call(1, 1);
-					message.append(l.toString(-1));
-					l.pop(1);
-				}
-			}
-
-			self.addChatMessage(new ChatComponentText(message.toString()));
 			return 0;
 		}
 	};
@@ -219,7 +203,7 @@ public class LuaPlayer {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		server = l.getMinecraftServer();
+		server = l.getServer();
 
 		l.newMetatable("Player");
 		{
@@ -229,8 +213,6 @@ public class LuaPlayer {
 			l.setField(-2, "GetIP");
 			l.pushJavaFunction(SetPos);
 			l.setField(-2, "SetPos");
-			l.pushJavaFunction(Msg);
-			l.setField(-2, "Msg");
 			l.pushJavaFunction(Remove);
 			l.setField(-2, "Remove");
 			l.pushJavaFunction(IsOP);

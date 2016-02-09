@@ -3,7 +3,9 @@ package com.luacraft.library.client;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
+import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -11,10 +13,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.ChatComponentText;
 
 public class LuaLibGame {
-	private static Minecraft client = null;
-	private static NetworkManager net = null;
+	private static Minecraft client = LuaCraft.getClient();
+	private static NetworkManager net = LuaCraft.getForgeClient().getClientToServerNetworkManager();
 
 	/**
 	 * @author Matt
@@ -66,7 +69,7 @@ public class LuaLibGame {
 				return 0;
 
 			NetHandlerPlayClient net = client.thePlayer.sendQueue;
-			Collection playerInfo = net.func_175106_d();
+			Collection playerInfo = net.getPlayerInfoMap();
 			Iterator iterator = playerInfo.iterator();
 
 			int i = 1;
@@ -122,10 +125,27 @@ public class LuaLibGame {
 		}
 	};
 
-	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-		net = l.getForgeClient().getClientToServerNetworkManager();
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function ChatPrint
+	 * @info Print a string of text to the chatbox
+	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @return nil
+	 */
 
+	public static JavaFunction ChatPrint = new JavaFunction() {
+		public int invoke(LuaState l) {
+			if (client.thePlayer == null)
+				return 0;
+
+			String chatMsg = LuaLibUtil.toChat(l, 1);
+			client.thePlayer.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
+		}
+	};
+
+	public static void Init(final LuaCraftState l) {
 		l.newTable();
 		{
 			l.pushJavaFunction(MaxPlayers);
@@ -138,6 +158,8 @@ public class LuaLibGame {
 			l.setField(-2, "HasFocus");
 			l.pushJavaFunction(Say);
 			l.setField(-2, "Say");
+			l.pushJavaFunction(ChatPrint);
+			l.setField(-2, "ChatPrint");
 		}
 		l.setGlobal("game");
 	}

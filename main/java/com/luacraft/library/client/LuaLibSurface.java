@@ -2,6 +2,7 @@ package com.luacraft.library.client;
 
 import org.lwjgl.opengl.GL11;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Color;
 import com.naef.jnlua.JavaFunction;
@@ -18,7 +19,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class LuaLibSurface {
-	private static Minecraft client;
+	private static Minecraft client = LuaCraft.getClient();
 
 	public static ResourceLocation currentTexture = null;
 	public static Color drawColor = new Color(255, 255, 255, 255);
@@ -161,16 +162,14 @@ public class LuaLibSurface {
 			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.setColorRGBA(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-			renderer.addVertex(x + w, y, 0);
-			renderer.addVertex(x, y, 0);
-			renderer.setColorRGBA(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
-			renderer.addVertex(x, y + h, 0);
-			renderer.addVertex(x + w, y + h, 0);
-			tInstance.draw();
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+			worldrenderer.pos(x + w, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			worldrenderer.pos(x, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			worldrenderer.pos(x, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
+			worldrenderer.pos(x + w, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
+			tessellator.draw();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
@@ -220,22 +219,26 @@ public class LuaLibSurface {
 
 			client.renderEngine.bindTexture(currentTexture);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawingQuads();
-			renderer.setColorOpaque_I(0xffffff);
-			renderer.addVertexWithUV(x, y + h, 0.D, 0.D, 1.D);
-			renderer.addVertexWithUV(x + w, y + h, 0.D, 1.D, 1.D);
-			renderer.addVertexWithUV(x + w, y, 0.D, 1.D, 0.D);
-			renderer.addVertexWithUV(x, y, 0.D, 0.D, 0.D);
-			tInstance.draw();
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			worldrenderer.pos(x + w, y, 0.0D).tex(1.D, 0.D).endVertex();
+			worldrenderer.pos(x, y, 0.0D).tex(0.D, 0.D).endVertex();
+			worldrenderer.pos(x, y + h, 0.0D).tex(0.D, 1.D).endVertex();
+			worldrenderer.pos(x + w, y + h, 0.0D).tex(1.D, 1.D).endVertex();
+			tessellator.draw();
+			return 0;
+		}
+	};
+
+	public static JavaFunction StartPoly = new JavaFunction() {
+		public int invoke(LuaState l) {
+
 			return 0;
 		}
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.newTable();
 		{
 			l.pushJavaFunction(GetDefaultFont);

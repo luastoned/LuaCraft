@@ -9,9 +9,8 @@ import java.io.InputStream;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.FileMount;
-import com.luacraft.classes.LuaJavaBlock;
-import com.luacraft.classes.LuaJavaThread;
 import com.luacraft.classes.Vector;
+import com.luacraft.meta.LuaObject;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaRuntimeException;
@@ -19,7 +18,6 @@ import com.naef.jnlua.LuaState;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +27,6 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
@@ -249,126 +246,6 @@ public class LuaGlobals {
 	};
 
 	/**
-	 * @author Gregor
-	 * @function IsBlock
-	 * @info Returns if the argument is a block
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:block
-	 */
-
-	public static JavaFunction IsBlock = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, LuaJavaBlock.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsWorld
-	 * @info Returns if the argument is a world
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:world
-	 */
-
-	public static JavaFunction IsWorld = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, World.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsThread
-	 * @info Returns if the argument is a thread
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:thread
-	 */
-
-	public static JavaFunction IsThread = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, LuaJavaThread.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsVector
-	 * @info Check if the argument is an vector
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:vec
-	 */
-
-	public static JavaFunction IsVector = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, Vector.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Gregor
-	 * @function IsAngle
-	 * @info Check if the argument is an angle
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:angle
-	 */
-
-	public static JavaFunction IsAngle = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, Angle.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsColor
-	 * @info Check if the argument is an angle
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:color
-	 */
-
-	public static JavaFunction IsColor = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, Color.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsEntity
-	 * @info Check if the argument is an entity
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:entity
-	 */
-
-	public static JavaFunction IsEntity = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, Entity.class));
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function IsPlayer
-	 * @info Check if the argument is a player
-	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:player
-	 */
-
-	public static JavaFunction IsPlayer = new JavaFunction() {
-		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, EntityPlayer.class));
-			return 1;
-		}
-	};
-
-	/**
 	 * @author Jake
 	 * @function FindMetaTable
 	 * @info Returns the meta table for the given type
@@ -461,22 +338,52 @@ public class LuaGlobals {
 		l.setGlobal("IsBool");
 		l.pushJavaFunction(IsTable);
 		l.setGlobal("IsTable");
-		l.pushJavaFunction(IsBlock);
+
+		l.pushJavaFunction(LuaObject.IsBlock);
 		l.setGlobal("IsBlock");
-		l.pushJavaFunction(IsWorld);
+		l.pushJavaFunction(LuaObject.IsWorld);
 		l.setGlobal("IsWorld");
-		l.pushJavaFunction(IsThread);
+		l.pushJavaFunction(LuaObject.IsThread);
 		l.setGlobal("IsThread");
-		l.pushJavaFunction(IsAngle);
+		l.pushJavaFunction(LuaObject.IsAngle);
 		l.setGlobal("IsAngle");
-		l.pushJavaFunction(IsVector);
+		l.pushJavaFunction(LuaObject.IsVector);
 		l.setGlobal("IsVector");
-		l.pushJavaFunction(IsColor);
+		l.pushJavaFunction(LuaObject.IsColor);
 		l.setGlobal("IsColor");
-		l.pushJavaFunction(IsEntity);
+
+		/**
+		 * @author Jake
+		 * @function IsEntity
+		 * @info Check if the argument is an entity
+		 * @arguments [[Object]]:object
+		 * @return [[Boolean]]:entity
+		 */
+
+		l.pushJavaFunction(LuaObject.IsEntity);
 		l.setGlobal("IsEntity");
-		l.pushJavaFunction(IsPlayer);
+
+		/**
+		 * @author Jake
+		 * @function IsPlayer
+		 * @info Check if the argument is a player
+		 * @arguments [[Object]]:object
+		 * @return [[Boolean]]:player
+		 */
+
+		l.pushJavaFunction(LuaObject.IsPlayer);
 		l.setGlobal("IsPlayer");
+
+		l.pushJavaFunction(LuaObject.IsMob);
+		l.setGlobal("IsMob");
+		l.pushJavaFunction(LuaObject.IsAnimal);
+		l.setGlobal("IsAnimal");
+		l.pushJavaFunction(LuaObject.IsTameable);
+		l.setGlobal("IsTameable");
+		l.pushJavaFunction(LuaObject.IsLiving);
+		l.setGlobal("IsLiving");
+		l.pushJavaFunction(LuaObject.IsItem);
+		l.setGlobal("IsItem");
 
 		l.pushJavaFunction(FindMetaTable);
 		l.setGlobal("FindMetaTable");
@@ -499,6 +406,7 @@ public class LuaGlobals {
 		 * @enum MODE_SURVIVAL
 		 * @enum MODE_CREATIVE
 		 * @enum MODE_ADVENTURE
+		 * @enum MODE_SPECTATOR
 		 * @enum DIFFICULTY_PEACEFUL
 		 * @enum DIFFICULTY_EASY
 		 * @enum DIFFICULTY_NORMAL
@@ -527,6 +435,8 @@ public class LuaGlobals {
 		l.setGlobal("MODE_CREATIVE");
 		l.pushNumber(GameType.ADVENTURE.ordinal());
 		l.setGlobal("MODE_ADVENTURE");
+		l.pushNumber(GameType.SPECTATOR.ordinal());
+		l.setGlobal("MODE_SPECTATOR");
 
 		l.pushNumber(EnumDifficulty.PEACEFUL.ordinal());
 		l.setGlobal("DIFFICULTY_PEACEFUL");

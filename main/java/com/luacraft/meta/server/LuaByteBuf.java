@@ -69,7 +69,7 @@ public class LuaByteBuf {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		server = l.getMinecraftServer();
+		server = l.getServer();
 
 		l.newMetatable("ByteBuf");
 		{

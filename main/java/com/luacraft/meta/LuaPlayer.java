@@ -1,15 +1,18 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
+import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -33,7 +36,23 @@ public class LuaPlayer {
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString(self.getGameProfile().getName());
+			l.pushString(self.getName());
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function GetDisplayName
+	 * @info Get a players display name
+	 * @arguments nil
+	 * @return [[String]]:name
+	 */
+
+	public static JavaFunction GetDisplayName = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			l.pushString(self.getDisplayNameString());
 			return 1;
 		}
 	};
@@ -51,6 +70,38 @@ public class LuaPlayer {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
 			l.pushInteger(self.getScore());
 			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function AddScore
+	 * @info Add to the players score
+	 * @arguments [ [[Number]]:add ]
+	 * @return nil
+	 */
+
+	public static JavaFunction AddScore = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			self.addScore(l.checkInteger(2, 1));
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function SetScore
+	 * @info Set the players score
+	 * @arguments [[Number]]:score
+	 * @return nil
+	 */
+
+	public static JavaFunction SetScore = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			self.setScore(l.checkInteger(2));
+			return 0;
 		}
 	};
 
@@ -555,23 +606,61 @@ public class LuaPlayer {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @function GetTeam
+	 * @info Returns the players current team
+	 * @arguments nil
+	 * @return [[Team]]:team
+	 */
+
+	public static JavaFunction GetTeam = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
+			l.pushUserdataWithMeta(self.getTeam(), "Team");
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Gregor
+	 * @function Msg
+	 * @info Print something to a players chat
+	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @return nil
+	 */
+
+	public static JavaFunction Msg = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			String chatMsg = LuaLibUtil.toChat(l, 2);
+			self.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Player");
 		{
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
-			l.pushJavaFunction(LuaEntity.__eq);
-			l.setField(-2, "__eq");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
 
 			l.newMetatable("LivingBase");
 			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(GetName);
 			l.setField(-2, "GetName");
+			l.pushJavaFunction(GetDisplayName);
+			l.setField(-2, "GetDisplayName");
 			l.pushJavaFunction(GetScore);
 			l.setField(-2, "GetScore");
+			l.pushJavaFunction(AddScore);
+			l.setField(-2, "AddScore");
+			l.pushJavaFunction(SetScore);
+			l.setField(-2, "SetScore");
 			l.pushJavaFunction(SetHunger);
 			l.setField(-2, "SetHunger");
 			l.pushJavaFunction(GetHunger);
@@ -630,6 +719,10 @@ public class LuaPlayer {
 			l.setField(-2, "SetFlightAllowed");
 			l.pushJavaFunction(IsFlightAllowed);
 			l.setField(-2, "IsFlightAllowed");
+			l.pushJavaFunction(GetTeam);
+			l.setField(-2, "GetTeam");
+			l.pushJavaFunction(Msg);
+			l.setField(-2, "Msg");
 		}
 		l.pop(1);
 	}

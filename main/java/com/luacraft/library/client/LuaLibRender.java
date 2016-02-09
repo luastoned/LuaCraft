@@ -5,8 +5,9 @@ import org.lwjgl.util.glu.Cylinder;
 import org.lwjgl.util.glu.Disk;
 import org.lwjgl.util.glu.Sphere;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
@@ -25,14 +26,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 
 public class LuaLibRender {
-	private static Minecraft client;
+	private static Minecraft client = LuaCraft.getClient();
+
+	static Tessellator tessellator = Tessellator.getInstance();
+	static WorldRenderer renderer = tessellator.getWorldRenderer();
 
 	public static Disk renderDisk = new Disk();
 	public static Cylinder renderCylinder = new Cylinder();
 	public static Sphere renderSphere = new Sphere();
 	public static boolean ignoreZ = false;
 	public static int currentTexture = -1;
-	public static FontRenderer currentFont;
+	public static FontRenderer currentFont = client.fontRendererObj;
 	public static Color drawColor = new Color(255, 255, 255, 255);
 
 	/**
@@ -139,7 +143,6 @@ public class LuaLibRender {
 					l.checkBoolean(7, false));
 
 			GlStateManager.popMatrix();
-
 			GlStateManager.depthMask(true);
 			GlStateManager.disableBlend();
 
@@ -190,12 +193,10 @@ public class LuaLibRender {
 			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawing(GL11.GL_LINES);
-			renderer.addVertex(minX, minY, minZ);
-			renderer.addVertex(maxX, maxY, maxZ);
-			tInstance.draw();
+			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+			renderer.pos(minX, minY, minZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			renderer.pos(maxX, maxY, maxZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			tessellator.draw();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
@@ -249,32 +250,30 @@ public class LuaLibRender {
 
 			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
-			Tessellator tInstance = Tessellator.getInstance();
-			WorldRenderer renderer = tInstance.getWorldRenderer();
-			renderer.startDrawing(GL11.GL_LINE_STRIP);
-			renderer.addVertex(minX, minY, minZ);
-			renderer.addVertex(maxX, minY, minZ);
-			renderer.addVertex(maxX, minY, maxZ);
-			renderer.addVertex(minX, minY, maxZ);
-			renderer.addVertex(minX, minY, minZ);
-			tInstance.draw();
-			renderer.startDrawing(GL11.GL_LINE_STRIP);
-			renderer.addVertex(minX, maxY, minZ);
-			renderer.addVertex(maxX, maxY, minZ);
-			renderer.addVertex(maxX, maxY, maxZ);
-			renderer.addVertex(minX, maxY, maxZ);
-			renderer.addVertex(minX, maxY, minZ);
-			tInstance.draw();
-			renderer.startDrawing(GL11.GL_LINES);
-			renderer.addVertex(minX, minY, minZ);
-			renderer.addVertex(minX, maxY, minZ);
-			renderer.addVertex(maxX, minY, minZ);
-			renderer.addVertex(maxX, maxY, minZ);
-			renderer.addVertex(maxX, minY, maxZ);
-			renderer.addVertex(maxX, maxY, maxZ);
-			renderer.addVertex(minX, minY, maxZ);
-			renderer.addVertex(minX, maxY, maxZ);
-			tInstance.draw();
+			renderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+			renderer.pos(minX, minY, minZ).endVertex();
+			renderer.pos(maxX, minY, minZ).endVertex();
+			renderer.pos(maxX, minY, maxZ).endVertex();
+			renderer.pos(minX, minY, maxZ).endVertex();
+			renderer.pos(minX, minY, minZ).endVertex();
+			tessellator.draw();
+			renderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+			renderer.pos(minX, maxY, minZ).endVertex();
+			renderer.pos(maxX, maxY, minZ).endVertex();
+			renderer.pos(maxX, maxY, maxZ).endVertex();
+			renderer.pos(minX, maxY, maxZ).endVertex();
+			renderer.pos(minX, maxY, minZ).endVertex();
+			tessellator.draw();
+			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+			renderer.pos(minX, minY, minZ).endVertex();
+			renderer.pos(minX, maxY, minZ).endVertex();
+			renderer.pos(maxX, minY, minZ).endVertex();
+			renderer.pos(maxX, maxY, minZ).endVertex();
+			renderer.pos(maxX, minY, maxZ).endVertex();
+			renderer.pos(maxX, maxY, maxZ).endVertex();
+			renderer.pos(minX, minY, maxZ).endVertex();
+			renderer.pos(minX, maxY, maxZ).endVertex();
+			tessellator.draw();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.disableBlend();
@@ -529,7 +528,7 @@ public class LuaLibRender {
 	public static JavaFunction GetViewEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity view = client.getRenderViewEntity();
-			LuaUserdataManager.PushUserdata(l, view);
+			LuaUserdata.PushUserdata(l, view);
 			return 1;
 		}
 	};
@@ -567,9 +566,6 @@ public class LuaLibRender {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-		currentFont = client.fontRendererObj;
-
 		l.newTable();
 		{
 			l.pushJavaFunction(IgnoreZ);

@@ -3,6 +3,7 @@ package com.luacraft.meta.client;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -15,7 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 
 public class LuaVector {
-	private static Minecraft client = null;
+	private static Minecraft client = LuaCraft.getClient();
 
 	static Matrix4f viewMatrix = new Matrix4f();
 	static Matrix4f projectionMatrix = new Matrix4f();
@@ -59,13 +60,13 @@ public class LuaVector {
 
 			Vector3f pos = new Vector3f(vecX, vecY, vecZ);
 
-			viewMatrix.load(ActiveRenderInfo.field_178812_b.asReadOnlyBuffer());
-			projectionMatrix.load(ActiveRenderInfo.field_178813_c.asReadOnlyBuffer());
+			viewMatrix.load(ActiveRenderInfo.MODELVIEW.asReadOnlyBuffer());
+			projectionMatrix.load(ActiveRenderInfo.PROJECTION.asReadOnlyBuffer());
 
 			pos = Vec3TransformCoordinate(pos, viewMatrix);
 			pos = Vec3TransformCoordinate(pos, projectionMatrix);
 
-			ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
+			ScaledResolution scaledRes = new ScaledResolution(client);
 			pos.x = (float) ((scaledRes.getScaledWidth() * (pos.x + 1.0)) / 2.0);
 			pos.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((pos.y + 1.0) / 2.0)));
 
@@ -84,8 +85,6 @@ public class LuaVector {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.newMetatable("Vector");
 		{
 			l.pushJavaFunction(ToScreen);

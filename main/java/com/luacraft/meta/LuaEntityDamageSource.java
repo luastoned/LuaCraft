@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -30,7 +30,7 @@ public class LuaEntityDamageSource {
 		public int invoke(LuaState l) {
 			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
 					"EntityDamageSource");
-			LuaUserdataManager.PushUserdata(l, self.getEntity());
+			LuaUserdata.PushUserdata(l, self.getEntity());
 			return 1;
 		}
 	};
@@ -47,7 +47,7 @@ public class LuaEntityDamageSource {
 		public int invoke(LuaState l) {
 			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
 					"EntityDamageSource");
-			LuaUserdataManager.PushUserdata(l, self.getSourceOfDamage());
+			LuaUserdata.PushUserdata(l, self.getSourceOfDamage());
 			return 1;
 		}
 	};
@@ -64,7 +64,7 @@ public class LuaEntityDamageSource {
 		public int invoke(LuaState l) {
 			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
 					"EntityDamageSource");
-			LuaUserdataManager.PushUserdata(l, self.isDifficultyScaled());
+			LuaUserdata.PushUserdata(l, self.isDifficultyScaled());
 			return 1;
 		}
 	};
@@ -81,7 +81,7 @@ public class LuaEntityDamageSource {
 		public int invoke(LuaState l) {
 			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
 					"EntityDamageSource");
-			LuaUserdataManager.PushUserdata(l, self.getIsThornsDamage());
+			LuaUserdata.PushUserdata(l, self.getIsThornsDamage());
 			return 1;
 		}
 	};
@@ -98,7 +98,7 @@ public class LuaEntityDamageSource {
 		public int invoke(LuaState l) {
 			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
 					"EntityDamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setIsThornsDamage());
+			LuaUserdata.PushUserdata(l, self.setIsThornsDamage());
 			return 1;
 		}
 	};
@@ -109,7 +109,8 @@ public class LuaEntityDamageSource {
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
 
-			LuaUserdataManager.SetupMetaMethods(l);
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
 
 			l.newMetatable("DamageSource");
 			l.setField(-2, "__basemeta");

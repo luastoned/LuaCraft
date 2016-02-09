@@ -1,7 +1,8 @@
 package com.luacraft.library.client;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -11,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 
 public class LuaGlobals {
-	private static Minecraft client = null;
+	private static Minecraft client = LuaCraft.getClient();
 
 	/**
 	 * @author Gregor
@@ -37,7 +38,7 @@ public class LuaGlobals {
 			}
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(client.theWorld, x, z, y);
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
 	};
@@ -52,7 +53,7 @@ public class LuaGlobals {
 
 	public static JavaFunction World = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaUserdataManager.PushUserdata(l, client.theWorld);
+			LuaUserdata.PushUserdata(l, client.theWorld);
 			return 1;
 		}
 	};
@@ -67,7 +68,7 @@ public class LuaGlobals {
 
 	public static JavaFunction LocalPlayer = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaUserdataManager.PushUserdata(l, client.thePlayer);
+			LuaUserdata.PushUserdata(l, client.thePlayer);
 			return 1;
 		}
 	};
@@ -91,8 +92,6 @@ public class LuaGlobals {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.pushJavaFunction(Block);
 		l.setGlobal("Block");
 		l.pushJavaFunction(World);

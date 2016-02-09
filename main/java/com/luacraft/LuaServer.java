@@ -1,7 +1,7 @@
 package com.luacraft;
 
+import com.luacraft.library.LuaLibCommand;
 import com.luacraft.library.server.LuaGlobals;
-import com.luacraft.library.server.LuaLibCommand;
 import com.luacraft.library.server.LuaLibGame;
 import com.luacraft.meta.server.LuaByteBuf;
 import com.luacraft.meta.server.LuaPlayer;
@@ -9,10 +9,9 @@ import com.luacraft.meta.server.LuaPropertyManager;
 
 public class LuaServer extends LuaShared {
 
-	public void initialize() {
-		initializeShared();
+	public void initialize(boolean hooks) {
+		initializeShared(hooks);
 		loadLibraries();
-		runScripts();
 	}
 
 	public void runScripts() {

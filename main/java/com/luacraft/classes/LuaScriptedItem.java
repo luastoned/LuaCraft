@@ -1,10 +1,9 @@
 package com.luacraft.classes;
 
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
-import com.naef.jnlua.LuaUserdata;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LuaScriptedItem extends Item implements LuaUserdata {
+public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata {
 	public LuaState l;
 
 	public LuaScriptedItem(LuaState l) {
@@ -225,7 +224,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, player);
 				l.pushInteger(useRemaining);
 			}
 			l.call(4, 1);
@@ -251,9 +250,9 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, playerIn);
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
+				LuaUserdata.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
 				l.pushInteger(side.ordinal());
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
@@ -274,8 +273,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
 
@@ -299,8 +298,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(itemStackIn, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, playerIn);
 			}
 			l.call(4, 1);
 
@@ -324,8 +323,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, player);
-				LuaUserdataManager.PushUserdata(l, entity);
+				LuaUserdata.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, entity);
 			}
 			l.call(4, 1);
 			boolean ret = l.toBoolean(1);
@@ -344,8 +343,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, target);
-				LuaUserdataManager.PushUserdata(l, attacker);
+				LuaUserdata.PushUserdata(l, target);
+				LuaUserdata.PushUserdata(l, attacker);
 			}
 			l.call(4, 1);
 			boolean ret = l.toBoolean(1);
@@ -365,9 +364,9 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, blockIn);
-				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, blockIn);
+				LuaUserdata.PushUserdata(l, playerIn);
 			}
 			l.call(5, 1);
 			boolean ret = l.toBoolean(1);
@@ -386,8 +385,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, playerIn);
-				LuaUserdataManager.PushUserdata(l, target);
+				LuaUserdata.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, target);
 			}
 			l.call(4, 1);
 			boolean ret = l.toBoolean(1);
@@ -420,8 +419,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, entityIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, entityIn);
 				l.pushInteger(itemSlot);
 				l.pushBoolean(isSelected);
 			}
@@ -439,8 +438,8 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, worldIn);
-				LuaUserdataManager.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, worldIn);
+				LuaUserdata.PushUserdata(l, playerIn);
 			}
 			l.call(4, 0);
 		}
@@ -520,7 +519,7 @@ public class LuaScriptedItem extends Item implements LuaUserdata {
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(item, "ItemStack");
-				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, player);
 			}
 			l.call(3, 1);
 			boolean ret = l.toBoolean(1);

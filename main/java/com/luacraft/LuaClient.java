@@ -18,16 +18,15 @@ import net.minecraftforge.common.MinecraftForge;
 public class LuaClient extends LuaShared {
 	private LuaEventManagerClient luaClientEvent;
 
-	public void initialize() {
-		initializeShared();
+	public void initialize(boolean hooks) {
+		initializeShared(hooks);
 		loadLibraries();
 
-		luaClientEvent = new LuaEventManagerClient(this);
-
-		print("Registering client event manager");
-		MinecraftForge.EVENT_BUS.register(luaClientEvent);
-
-		runScripts();
+		if (hooks) {
+			luaClientEvent = new LuaEventManagerClient(this);
+			print("Registering client event manager");
+			MinecraftForge.EVENT_BUS.register(luaClientEvent);
+		}
 	}
 
 	public void runScripts() {
@@ -38,9 +37,11 @@ public class LuaClient extends LuaShared {
 
 	public void close() {
 		super.close();
-		print("Unregistering client event manager");
-		MinecraftForge.EVENT_BUS.unregister(luaClientEvent);
-		luaClientEvent = null;
+		if (luaClientEvent != null) {
+			print("Unregistering client event manager");
+			MinecraftForge.EVENT_BUS.unregister(luaClientEvent);
+			luaClientEvent = null;
+		}
 	}
 
 	private void loadLibraries() {

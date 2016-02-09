@@ -3,6 +3,7 @@ package com.luacraft.meta;
 import java.io.IOException;
 
 import com.luacraft.LuaCraftState;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
@@ -677,11 +678,14 @@ public class LuaByteBuf {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("ByteBuf");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(WriteVector);
 			l.setField(-2, "WriteVector");

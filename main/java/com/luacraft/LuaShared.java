@@ -22,6 +22,7 @@ import com.luacraft.meta.LuaItemStack;
 import com.luacraft.meta.LuaLiving;
 import com.luacraft.meta.LuaLivingBase;
 import com.luacraft.meta.LuaNBTTag;
+import com.luacraft.meta.LuaObject;
 import com.luacraft.meta.LuaPlayer;
 import com.luacraft.meta.LuaResource;
 import com.luacraft.meta.LuaSQLDatabase;
@@ -37,32 +38,38 @@ public class LuaShared extends LuaCraftState {
 	private LuaEventManager luaEvent;
 	private LuaPacketManager packet;
 
-	public void initializeShared() {
+	public void initializeShared(boolean hooks) {
 		loadLibraries();
+		loadExtensions();
 
-		packet = new LuaPacketManager(this);
-		luaEvent = new LuaEventManager(this);
+		if (hooks) {
+			packet = new LuaPacketManager(this);
+			luaEvent = new LuaEventManager(this);
 
-		print("Registering packet manager");
-		LuaCraft.channel.register(packet);
-		print("Registering shared event manager");
-		MinecraftForge.EVENT_BUS.register(luaEvent);
+			print("Registering packet manager");
+			LuaCraft.channel.register(packet);
+			print("Registering shared event manager");
+			MinecraftForge.EVENT_BUS.register(luaEvent);
+		}
 	}
 
 	public void runSharedScripts() {
-		loadExtensions();
 		print("Loading autorun");
 		autorun(); // Load all files within autorun
 		autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
 	}
 
 	public void close() {
-		print("Unregistering packet manager");
-		LuaCraft.channel.unregister(packet);
-		packet = null;
-		print("Unregistering shared event manager");
-		MinecraftForge.EVENT_BUS.unregister(luaEvent);
-		luaEvent = null;
+		if (packet != null) {
+			print("Unregistering packet manager");
+			LuaCraft.channel.unregister(packet);
+			packet = null;
+		}
+		if (luaEvent != null) {
+			print("Unregistering shared event manager");
+			MinecraftForge.EVENT_BUS.unregister(luaEvent);
+			luaEvent = null;
+		}
 		super.close();
 	}
 
@@ -145,6 +152,7 @@ public class LuaShared extends LuaCraftState {
 		LuaItemStack.Init(this);
 		LuaLiving.Init(this);
 		LuaLivingBase.Init(this);
+		LuaObject.Init(this);
 		LuaNBTTag.Init(this);
 		LuaPlayer.Init(this);
 		LuaResource.Init(this);

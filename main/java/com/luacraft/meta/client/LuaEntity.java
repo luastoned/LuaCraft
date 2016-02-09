@@ -1,5 +1,6 @@
 package com.luacraft.meta.client;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
@@ -9,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public class LuaEntity {
-	private static Minecraft client = null;
+	private static Minecraft client = LuaCraft.getClient();
 
 	/**
 	 * @author Gregor
@@ -54,8 +55,6 @@ public class LuaEntity {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-
 		l.newMetatable("Entity");
 		{
 			l.pushJavaFunction(GetPos);

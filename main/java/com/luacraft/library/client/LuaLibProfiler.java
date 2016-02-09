@@ -1,15 +1,14 @@
 package com.luacraft.library.client;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.profiler.Profiler;
 
 public class LuaLibProfiler {
-	private static Minecraft client = null;
-	public static Profiler profiler = null;
+	public static Profiler profiler = LuaCraft.getClient().mcProfiler;
 
 	/**
 	 * @author Jake
@@ -60,9 +59,6 @@ public class LuaLibProfiler {
 	};
 
 	public static void Init(final LuaCraftState l) {
-		client = l.getMinecraft();
-		profiler = client.mcProfiler;
-
 		l.newTable();
 		{
 			l.pushJavaFunction(Start);

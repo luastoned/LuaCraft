@@ -1,7 +1,7 @@
 package com.luacraft.meta;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -44,7 +44,7 @@ public class LuaDamageSource {
 	public static JavaFunction GetEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.getEntity());
+			LuaUserdata.PushUserdata(l, self.getEntity());
 			return 1;
 		}
 	};
@@ -76,7 +76,7 @@ public class LuaDamageSource {
 	public static JavaFunction GetSource = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.getSourceOfDamage());
+			LuaUserdata.PushUserdata(l, self.getSourceOfDamage());
 			return 1;
 		}
 	};
@@ -204,7 +204,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetAllowedInCreative = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setDamageAllowedInCreativeMode());
+			LuaUserdata.PushUserdata(l, self.setDamageAllowedInCreativeMode());
 			return 1;
 		}
 	};
@@ -220,7 +220,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetBypassesArmor = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setDamageBypassesArmor());
+			LuaUserdata.PushUserdata(l, self.setDamageBypassesArmor());
 			return 1;
 		}
 	};
@@ -236,7 +236,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetIsAbsolute = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setDamageIsAbsolute());
+			LuaUserdata.PushUserdata(l, self.setDamageIsAbsolute());
 			return 1;
 		}
 	};
@@ -252,7 +252,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetDifficultyScaled = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setDifficultyScaled());
+			LuaUserdata.PushUserdata(l, self.setDifficultyScaled());
 			return 1;
 		}
 	};
@@ -268,7 +268,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetExplosion = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setExplosion());
+			LuaUserdata.PushUserdata(l, self.setExplosion());
 			return 1;
 		}
 	};
@@ -284,7 +284,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetFireDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setFireDamage());
+			LuaUserdata.PushUserdata(l, self.setFireDamage());
 			return 1;
 		}
 	};
@@ -300,7 +300,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetMagicDamage = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setMagicDamage());
+			LuaUserdata.PushUserdata(l, self.setMagicDamage());
 			return 1;
 		}
 	};
@@ -316,7 +316,7 @@ public class LuaDamageSource {
 	public static JavaFunction SetProjectile = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdataManager.PushUserdata(l, self.setProjectile());
+			LuaUserdata.PushUserdata(l, self.setProjectile());
 			return 1;
 		}
 	};
@@ -324,11 +324,14 @@ public class LuaDamageSource {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("DamageSource");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
+
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(GetDamageType);
 			l.setField(-2, "GetDamageType");

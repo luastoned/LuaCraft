@@ -73,11 +73,11 @@ public class LuaEventManager {
 				l.pushString("command.run");
 
 				if (event.sender instanceof EntityPlayer)
-					LuaUserdataManager.PushUserdata(l, (EntityPlayer) event.sender);
+					LuaUserdata.PushUserdata(l, (EntityPlayer) event.sender);
 				else
 					l.pushNil();
 
-				l.pushString(event.command.getName());
+				l.pushString(event.command.getCommandName());
 				l.newTable();
 
 				for (int i = 0; i < event.parameters.length; i++) {
@@ -167,7 +167,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.craftitem");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.pushUserdataWithMeta(event.crafting, "ItemStack");
 				l.call(3, 1);
 
@@ -198,8 +198,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.pickupitem");
-				LuaUserdataManager.PushUserdata(l, event.player);
-				LuaUserdataManager.PushUserdata(l, event.pickedUp);
+				LuaUserdata.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.pickedUp);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -230,7 +230,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.smeltitem");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.pushUserdataWithMeta(event.smelting, "ItemStack");
 				l.call(3, 1);
 
@@ -261,7 +261,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.changedimension");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.pushNumber(event.fromDim);
 				l.pushNumber(event.toDim);
 				l.call(4, 1);
@@ -294,7 +294,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.connect");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -319,7 +319,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.disconnect");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -344,7 +344,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.spawned");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -436,7 +436,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.say");
-				LuaUserdataManager.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.player);
 				l.pushString(event.message);
 				l.call(3, 1);
 
@@ -474,7 +474,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("item.expired");
-				LuaUserdataManager.PushUserdata(l, event.entityItem);
+				LuaUserdata.PushUserdata(l, event.entityItem);
 				l.call(2, 1);
 
 				if (!l.isNil(-1))
@@ -505,8 +505,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.dropitem");
-				LuaUserdataManager.PushUserdata(l, event.player);
-				LuaUserdataManager.PushUserdata(l, event.entityItem);
+				LuaUserdata.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, event.entityItem);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -539,8 +539,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.lightning");
-				LuaUserdataManager.PushUserdata(l, event.entity);
-				LuaUserdataManager.PushUserdata(l, event.lightning);
+				LuaUserdata.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.lightning);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -563,8 +563,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.joinworld");
-				LuaUserdataManager.PushUserdata(l, event.entity);
-				LuaUserdataManager.PushUserdata(l, event.world);
+				LuaUserdata.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.world);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -597,7 +597,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.spawned");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
 				if (!l.isNil(-1))
@@ -628,7 +628,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.removed");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.call(2, 1);
 
 				if (!l.isNil(-1))
@@ -659,7 +659,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.attacked");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.pushUserdataWithMeta(event.source, "DamageSource");
 				l.pushNumber(event.ammount);
 				l.call(4, 1);
@@ -694,7 +694,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.death");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.pushUserdataWithMeta(event.source, "DamageSource");
 				l.call(3, 1);
 
@@ -726,12 +726,12 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.dropall");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.pushUserdataWithMeta(event.source, "DamageSource");
 				l.newTable();
 				for (int i = 0; i < event.drops.size(); i++) {
 					l.pushNumber(i + 1);
-					LuaUserdataManager.PushUserdata(l, event.drops.get(i));
+					LuaUserdata.PushUserdata(l, event.drops.get(i));
 					l.setTable(-3);
 				}
 				l.pushNumber(event.lootingLevel);
@@ -766,7 +766,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.fall");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.pushNumber(event.distance);
 				l.call(3, 1);
 
@@ -798,7 +798,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.jump");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -823,7 +823,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("entity.update");
-				LuaUserdataManager.PushUserdata(l, event.entity);
+				LuaUserdata.PushUserdata(l, event.entity);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -848,9 +848,9 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.bonemeal");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				LuaUserdataManager.PushUserdata(l, event.world);
-				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.world);
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
@@ -881,8 +881,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.interact");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				LuaUserdataManager.PushUserdata(l, event.target);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.target);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -920,7 +920,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.destroyitem");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				l.pushUserdataWithMeta(event.original, "ItemStack");
 				l.call(3, 1);
 			} catch (LuaRuntimeException e) {
@@ -946,12 +946,12 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.dropall");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				l.pushUserdataWithMeta(event.source, "DamageSource");
 				l.newTable();
 				for (int i = 0; i < event.drops.size(); i++) {
 					l.pushNumber(i + 1);
-					LuaUserdataManager.PushUserdata(l, event.drops.get(i));
+					LuaUserdata.PushUserdata(l, event.drops.get(i));
 					l.setTable(-3);
 				}
 				l.pushNumber(event.lootingLevel);
@@ -1019,8 +1019,8 @@ public class LuaEventManager {
 					break;
 				}
 
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				LuaUserdataManager.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
 				l.pushFace(event.face);
 				l.call(4, 1);
 
@@ -1052,7 +1052,7 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.opencontainer");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				l.pushBoolean(event.canInteractWith);
 				l.call(3, 1);
 
@@ -1084,8 +1084,8 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 				l.pushString("player.pickupxp");
-				LuaUserdataManager.PushUserdata(l, event.entityPlayer);
-				LuaUserdataManager.PushUserdata(l, event.orb);
+				LuaUserdata.PushUserdata(l, event.entityPlayer);
+				LuaUserdata.PushUserdata(l, event.orb);
 				l.call(3, 1);
 
 				if (!l.isNil(-1))

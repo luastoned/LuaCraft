@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.luacraft.LuaCraftState;
-import com.luacraft.LuaUserdataManager;
+import com.luacraft.LuaUserdata;
 import com.luacraft.classes.LuaJavaBlock;
 import com.luacraft.classes.Vector;
 import com.luacraft.library.LuaLibUtil;
@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -29,15 +30,6 @@ public class LuaWorld {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			l.pushString(String.format("World [%d][%s]", self.provider.getDimensionId(),
 					self.getWorldInfo().getWorldName()));
-			return 1;
-		}
-	};
-
-	public static JavaFunction __eq = new JavaFunction() {
-		public int invoke(LuaState l) {
-			World self = (World) l.checkUserdata(1, World.class, "World");
-			World other = (World) l.checkUserdata(2, World.class, "World");
-			l.pushBoolean(self == other);
 			return 1;
 		}
 	};
@@ -68,7 +60,7 @@ public class LuaWorld {
 			}
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, z, y);
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
 	};
@@ -102,7 +94,7 @@ public class LuaWorld {
 				k++;
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, k, y);
-			LuaUserdataManager.PushUserdata(l, thisBlock);
+			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
 	};
@@ -124,7 +116,7 @@ public class LuaWorld {
 			int i = 1;
 			for (EntityPlayer player : playerList) {
 				l.pushInteger(i++);
-				LuaUserdataManager.PushUserdata(l, player);
+				LuaUserdata.PushUserdata(l, player);
 				l.setTable(-3);
 			}
 			return 1;
@@ -148,7 +140,7 @@ public class LuaWorld {
 			for (EntityPlayer player : playerList) {
 				String playerName = player.getGameProfile().getName().toLowerCase();
 				if (playerName.contains(search)) {
-					LuaUserdataManager.PushUserdata(l, player);
+					LuaUserdata.PushUserdata(l, player);
 					return 1;
 				}
 			}
@@ -173,7 +165,7 @@ public class LuaWorld {
 
 			for (Entity ent : entityList)
 				if (ent.getEntityId() == searchId) {
-					LuaUserdataManager.PushUserdata(l, ent);
+					LuaUserdata.PushUserdata(l, ent);
 					return 1;
 				}
 			return 0;
@@ -197,7 +189,7 @@ public class LuaWorld {
 			int i = 1;
 			for (Entity ent : entityList) {
 				l.pushInteger(i++);
-				LuaUserdataManager.PushUserdata(l, ent);
+				LuaUserdata.PushUserdata(l, ent);
 				l.setTable(-3);
 			}
 			return 1;
@@ -225,7 +217,7 @@ public class LuaWorld {
 
 				if (className.contains(search)) {
 					l.pushInteger(i++);
-					LuaUserdataManager.PushUserdata(l, ent);
+					LuaUserdata.PushUserdata(l, ent);
 					l.setTable(-3);
 				}
 			}
@@ -237,15 +229,24 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function CreateEntity
 	 * @info Creates a new entity
-	 * @arguments [[String]]:classname
+	 * @arguments [[String]]:classname OR [[NBTTag]]:tag OR [[Number]]:id
 	 * @return [[Entity]]:entity
 	 */
 
 	public static JavaFunction CreateEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			Entity ent = EntityList.createEntityByName(l.checkString(2), self);
-			LuaUserdataManager.PushUserdata(l, ent);
+
+			Entity ent = null;
+
+			if (l.isUserdata(2, NBTTagCompound.class))
+				ent = EntityList.createEntityFromNBT((NBTTagCompound) l.toUserdata(2), self);
+			else if (l.isNumber(2))
+				ent = EntityList.createEntityByID(l.toInteger(2), self);
+			else
+				ent = EntityList.createEntityByName(l.checkString(2), self);
+
+			LuaUserdata.PushUserdata(l, ent);
 			return 1;
 		}
 	};
@@ -700,14 +701,14 @@ public class LuaWorld {
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("World");
 		{
-			l.pushValue(-1);
-			l.setField(-2, "__index");
-
 			l.pushJavaFunction(__tostring);
 			l.setField(-2, "__tostring");
 
-			l.pushJavaFunction(__eq);
-			l.setField(-2, "__eq");
+			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, true);
+
+			l.newMetatable("Object");
+			l.setField(-2, "__basemeta");
 
 			l.pushJavaFunction(GetBlock);
 			l.setField(-2, "GetBlock");
