@@ -3,7 +3,7 @@ package com.luacraft.classes;
 import com.naef.jnlua.LuaUserdata;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
@@ -13,7 +13,7 @@ public class LuaJavaBlock implements LuaUserdata {
 	public int z = 0;
 
 	public World blockWorld;
-	public Block block;
+	public IBlockState state;
 
 	public LuaJavaBlock(World world, int x, int y, int z) {
 		this(world, new BlockPos(x, y, z));
@@ -24,11 +24,15 @@ public class LuaJavaBlock implements LuaUserdata {
 		x = pos.getX();
 		y = pos.getY();
 		z = pos.getZ();
-		block = world.getBlockState(pos).getBlock();
+		state = world.getBlockState(pos);
 	}
 
-	public BlockState getState() {
-		return block.getBlockState();
+	public IBlockState getState() {
+		return state;
+	}
+
+	public Block getBlock() {
+		return state.getBlock();
 	}
 
 	public BlockPos getPos() {

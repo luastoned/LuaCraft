@@ -232,16 +232,25 @@ public class LuaThread {
 		}
 		l.pop(1);
 
-		/**
+		/*
 		 * @author Jake
+		 * 
 		 * @enum THREAD_PRIORITY_MAX
+		 * 
 		 * @enum THREAD_PRIORITY_MIN
+		 * 
 		 * @enum THREAD_PRIORITY_NORM
+		 * 
 		 * @enum THREAD_STATE_BLOCKED
+		 * 
 		 * @enum THREAD_STATE_NEW
+		 * 
 		 * @enum THREAD_STATE_RUNNABLE
+		 * 
 		 * @enum THREAD_STATE_TERMINATED
+		 * 
 		 * @enum THREAD_STATE_TIMED_WAITING
+		 * 
 		 * @enum THREAD_STATE_WAITING
 		 */
 

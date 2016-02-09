@@ -36,23 +36,23 @@ public class LuaPlayer {
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString(self.getName());
+			l.pushString(self.getDisplayNameString());
 			return 1;
 		}
 	};
 
 	/**
 	 * @author Jake
-	 * @function GetDisplayName
+	 * @function GetUserName
 	 * @info Get a players display name
 	 * @arguments nil
 	 * @return [[String]]:name
 	 */
 
-	public static JavaFunction GetDisplayName = new JavaFunction() {
+	public static JavaFunction GetUserName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString(self.getDisplayNameString());
+			l.pushString(self.getName());
 			return 1;
 		}
 	};
@@ -482,7 +482,7 @@ public class LuaPlayer {
 	public static JavaFunction GetSkinURL = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString("http://s3.amazonaws.com/MinecraftSkins/" + self.getGameProfile().getName() + ".png");
+			l.pushString("http://s3.amazonaws.com/MinecraftSkins/" + self.getName() + ".png");
 			return 1;
 		}
 	};
@@ -624,13 +624,14 @@ public class LuaPlayer {
 
 	/**
 	 * @author Gregor
-	 * @function Msg
+	 * @function ChatPrint
+	 * @alias Msg
 	 * @info Print something to a players chat
-	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @arguments [[String]]:msg OR [[Number]]:color, ...
 	 * @return nil
 	 */
 
-	public static JavaFunction Msg = new JavaFunction() {
+	public static JavaFunction ChatPrint = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			String chatMsg = LuaLibUtil.toChat(l, 2);
@@ -653,8 +654,8 @@ public class LuaPlayer {
 
 			l.pushJavaFunction(GetName);
 			l.setField(-2, "GetName");
-			l.pushJavaFunction(GetDisplayName);
-			l.setField(-2, "GetDisplayName");
+			l.pushJavaFunction(GetUserName);
+			l.setField(-2, "GetUserName");
 			l.pushJavaFunction(GetScore);
 			l.setField(-2, "GetScore");
 			l.pushJavaFunction(AddScore);
@@ -721,8 +722,10 @@ public class LuaPlayer {
 			l.setField(-2, "IsFlightAllowed");
 			l.pushJavaFunction(GetTeam);
 			l.setField(-2, "GetTeam");
-			l.pushJavaFunction(Msg);
+			l.pushJavaFunction(ChatPrint);
 			l.setField(-2, "Msg");
+			l.pushJavaFunction(ChatPrint);
+			l.setField(-2, "ChatPrint");
 		}
 		l.pop(1);
 	}

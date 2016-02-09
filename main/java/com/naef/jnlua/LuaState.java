@@ -1934,8 +1934,8 @@ public class LuaState {
 	 * Creates a Lua runtime exception to indicate an argument type error.
 	 */
 	private LuaRuntimeException getArgTypeException(int index, LuaType type) {
-		return getArgException(index, String.format("expected %s, got %s", type.toString().toLowerCase(),
-				type(index).toString().toLowerCase()));
+		return getArgException(index,
+				String.format("expected %s, got %s", type.toString().toLowerCase(), typeName(index)));
 	}
 
 	/**

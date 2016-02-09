@@ -4,12 +4,15 @@ import java.util.List;
 
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
+import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 
 public class LuaLibGame {
 	private static MinecraftServer server = null;
@@ -35,6 +38,51 @@ public class LuaLibGame {
 				l.setTable(-3);
 			}
 			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function GetPlayerByName
+	 * @info Attempts to find a player using the provided string
+	 * @arguments [[String]]:search
+	 * @return [[Player]]:player
+	 */
+
+	public static JavaFunction GetPlayerByName = new JavaFunction() {
+		public int invoke(LuaState l) {
+			String search = l.checkString(1);
+			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+
+			for (EntityPlayer player : playerList) {
+				String playerName = player.getDisplayNameString().toLowerCase();
+				if (playerName.contains(search.toLowerCase())) {
+					LuaUserdata.PushUserdata(l, player);
+					return 1;
+				}
+			}
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library client
+	 * @function ChatPrint
+	 * @info Send a chat message to all the players on the server
+	 * @arguments [[String]]:msg, [[Number]]:color, ...
+	 * @return nil
+	 */
+
+	public static JavaFunction ChatPrint = new JavaFunction() {
+		public int invoke(LuaState l) {
+			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+
+			String chatMsg = LuaLibUtil.toChat(l, 1);
+			for (EntityPlayerMP player : playerList)
+				player.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
 		}
 	};
 
@@ -350,6 +398,12 @@ public class LuaLibGame {
 
 		l.newTable();
 		{
+			l.pushJavaFunction(GetPlayers);
+			l.setField(-2, "GetPlayers");
+			l.pushJavaFunction(GetPlayerByName);
+			l.setField(-2, "GetPlayerByName");
+			l.pushJavaFunction(ChatPrint);
+			l.setField(-2, "ChatPrint");
 			l.pushJavaFunction(MaxPlayers);
 			l.setField(-2, "MaxPlayers");
 			l.pushJavaFunction(GetMOTD);

@@ -7,21 +7,25 @@ import com.naef.jnlua.LuaRuntimeException;
 
 public class LuaJavaScriptThread extends LuaJavaThread {
 	private LuaCraftState l;
+	private LuaCraftState state;
 	private String file;
 
-	public LuaJavaScriptThread(LuaCraftState state, String f) {
-		if (state.getActualSide().isClient()) {
-			l = new LuaClient();
-			((LuaClient) l).initialize(false);
-		} else {
-			l = new LuaServer();
-			((LuaServer) l).initialize(false);
-		}
-
+	public LuaJavaScriptThread(LuaCraftState s, String f) {
+		state = s;
 		file = f;
 	}
 
 	public void run() {
+		if (state.getActualSide().isClient()) {
+			l = new LuaClient();
+			l.setSideOverride(state.getSideOverride());
+			((LuaClient) l).initialize(false);
+		} else {
+			l = new LuaServer();
+			l.setSideOverride(state.getSideOverride());
+			((LuaServer) l).initialize(false);
+		}
+
 		if (l.isOpen() && file != null) {
 			try {
 				l.includeFile(file);
@@ -31,9 +35,5 @@ public class LuaJavaScriptThread extends LuaJavaThread {
 				l.close();
 			}
 		}
-	}
-
-	public String getTypeName() {
-		return "Thread";
 	}
 }

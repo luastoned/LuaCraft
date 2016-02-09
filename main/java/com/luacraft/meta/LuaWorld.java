@@ -18,6 +18,7 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
@@ -101,6 +102,27 @@ public class LuaWorld {
 
 	/**
 	 * @author Jake
+	 * @function ChatPrint
+	 * @info Send a chat message to all the players within the world
+	 * @arguments [[String]]:msg, [[Number]]:color, ...
+	 * @return nil
+	 */
+
+	public static JavaFunction ChatPrint = new JavaFunction() {
+		public int invoke(LuaState l) {
+			World self = (World) l.checkUserdata(1, World.class, "World");
+			List<EntityPlayer> playerList = self.playerEntities;
+
+			String chatMsg = LuaLibUtil.toChat(l, 1);
+
+			for (EntityPlayer player : playerList)
+				player.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
 	 * @function GetPlayers
 	 * @info Get all players within the world
 	 * @arguments nil
@@ -134,12 +156,12 @@ public class LuaWorld {
 	public static JavaFunction GetPlayerByName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			String search = l.checkString(2).toLowerCase();
+			String search = l.checkString(2);
 			List<EntityPlayer> playerList = self.playerEntities;
 
 			for (EntityPlayer player : playerList) {
-				String playerName = player.getGameProfile().getName().toLowerCase();
-				if (playerName.contains(search)) {
+				String playerName = player.getDisplayNameString().toLowerCase();
+				if (playerName.contains(search.toLowerCase())) {
 					LuaUserdata.PushUserdata(l, player);
 					return 1;
 				}

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata {
-	public LuaState l;
+	private LuaState l;
 
 	public LuaScriptedItem(LuaState l) {
 		this.l = l;

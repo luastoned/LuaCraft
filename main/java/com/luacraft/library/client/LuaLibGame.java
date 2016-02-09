@@ -130,7 +130,7 @@ public class LuaLibGame {
 	 * @library game
 	 * @function ChatPrint
 	 * @info Print a string of text to the chatbox
-	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @arguments [[String]]:msg, [[Number]]:color, ...
 	 * @return nil
 	 */
 

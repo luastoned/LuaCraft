@@ -32,7 +32,7 @@ public class LuaChannel {
 
 	/**
 	 * @author Jake
-	 * @function Empty
+	 * @function Peek
 	 * @info Looks at the object at the top of this stack without removing it from the stack.
 	 * @arguments nil
 	 * @return [[Object]]:obj

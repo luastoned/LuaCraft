@@ -39,10 +39,12 @@ public class LuaJavaQuery extends Thread implements LuaUserdata {
 	}
 
 	public void run() {
-		synchronized (l) {
-			ResultSet result = null;
-			try {
-				if (statement.execute()) {
+		ResultSet result = null;
+		try {
+			boolean success = statement.execute();
+
+			synchronized (l) {
+				if (success) {
 					l.newTable();
 
 					int row = 1;
@@ -70,19 +72,23 @@ public class LuaJavaQuery extends Thread implements LuaUserdata {
 					l.remove(-3); // Since we pushed a copy, remove the original
 					l.call(1, 0);
 				}
-			} catch (SQLException e) {
+			}
+		} catch (SQLException e) {
+			synchronized (l) {
 				pushCallbackFunc();
 				if (l.isFunction(-1)) {
 					l.pushNil();
 					l.pushString(e.getMessage());
 					l.call(2, 0);
 				}
-			} finally {
-				try {
-					if (result != null)
-						result.close();
-				} catch (SQLException e) {
-				}
+			}
+		} finally {
+			try {
+				if (result != null)
+					result.close();
+			} catch (SQLException e) {
+			}
+			synchronized (l) {
 				l.newMetatable("PendingQueries");
 				l.unref(-1, callbackRef);
 				l.setTop(0); // Clears the stack

@@ -239,7 +239,7 @@ public class LuaObject {
 	 * @author Jake
 	 * @function IsValid
 	 * @info Returns if the object is not null
-	 * @arguments nil
+	 * @arguments [[Object]]:object
 	 * @return [[Boolean]]:valid
 	 */
 

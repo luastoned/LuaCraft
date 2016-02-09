@@ -17,7 +17,8 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function input.mousemove Calls whenever the mouse is moved
+	 * @function input.mousemove
+	 * @info Calls whenever the mouse is moved
 	 * @arguments [[Number]]:button, [[Number]]:x, [[Number]]:y
 	 * @return nil
 	 */
@@ -46,7 +47,8 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function render.gameoverlay Calls whenever a frame is drawn Used for rendering 2D text, textures, etc.
+	 * @function render.gameoverlay
+	 * @info Calls whenever a frame is drawn Used for rendering 2D text, textures, etc.
 	 * @arguments [[Number]]:ticks, [[Number]]:x, [[Number]]:y
 	 * @return nil
 	 */
@@ -76,7 +78,8 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function render.world Calls whenever a frame within the world is drawn Used for rendering 3D objects
+	 * @function render.world
+	 * @info Calls whenever a frame within the world is drawn Used for rendering 3D objects
 	 * @arguments [[Number]]:ticks
 	 * @return nil
 	 */
@@ -103,7 +106,8 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function player.prerender Called before the player is drawn
+	 * @function player.prerender
+	 * @info Called before the player is drawn
 	 * @arguments [[Player]]:player
 	 * @return nil
 	 */
@@ -128,7 +132,8 @@ public class LuaEventManagerClient {
 
 	/**
 	 * @author Jake
-	 * @function player.postrender Called after the player is drawn
+	 * @function player.postrender
+	 * @info Called after the player is drawn
 	 * @arguments [[Player]]:player
 	 * @return nil
 	 */

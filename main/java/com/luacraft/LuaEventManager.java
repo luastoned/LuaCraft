@@ -27,6 +27,8 @@ import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -973,8 +975,8 @@ public class LuaEventManager {
 
 	/**
 	 * @author Jake
-	 * @function player.mineblock
-	 * @info Called when a player attempts to mine a block
+	 * @function player.leftclick
+	 * @info Called when a player hits a block
 	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
 	 * @return [[Boolean]]:cancel
 	 */
@@ -982,15 +984,7 @@ public class LuaEventManager {
 	/**
 	 * @author Jake
 	 * @function player.rightclick
-	 * @info Called when a player presses right mouse on nothing
-	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
-	 * @return [[Boolean]]:cancel
-	 */
-
-	/**
-	 * @author Jake
-	 * @function player.placeblock
-	 * @info Called when a player attempts to place a block
+	 * @info Called when a player attempts to interact with a block
 	 * @arguments [[Player]]:player, [[Block]]:block, [[Vector]]:normal
 	 * @return [[Boolean]]:cancel
 	 */
@@ -1009,13 +1003,13 @@ public class LuaEventManager {
 
 				switch (event.action) {
 				case LEFT_CLICK_BLOCK:
-					l.pushString("player.mineblock");
+					l.pushString("player.leftclick");
 					break;
 				case RIGHT_CLICK_AIR:
 					l.pushString("player.rightclick");
 					break;
 				case RIGHT_CLICK_BLOCK:
-					l.pushString("player.placeblock");
+					l.pushString("player.rightclick");
 					break;
 				}
 
@@ -1023,6 +1017,71 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
 				l.pushFace(event.face);
 				l.call(4, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author Jake
+	 * @function player.mineblock
+	 * @info Called when a player breaks a block
+	 * @arguments [[Player]]:player, [[Block]]:block, [[Number]]:exp
+	 * @return [[Boolean]]:cancel
+	 */
+
+	@SubscribeEvent
+	public void onBlockBreak(BreakEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.mineblock");
+				LuaUserdata.PushUserdata(l, event.getPlayer());
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getPlayer().worldObj, event.pos));
+				l.pushNumber(event.getExpToDrop());
+				l.call(4, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author Jake
+	 * @function player.placeblock
+	 * @info Called when a player places a block
+	 * @arguments [[Player]]:player, [[Block]]:block
+	 * @return [[Boolean]]:cancel
+	 */
+
+	@SubscribeEvent
+	public void onBlockPlace(PlaceEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.placeblock");
+				LuaUserdata.PushUserdata(l, event.player);
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.player.worldObj, event.pos));
+				l.call(3, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));

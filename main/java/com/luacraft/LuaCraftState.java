@@ -87,6 +87,14 @@ public class LuaCraftState extends LuaState {
 		LuaCraft.getLogger().warn(str);
 	}
 
+	/**
+	 * @author Jake
+	 * @function lua.error
+	 * @info Calls whenever a Lua error occurs
+	 * @arguments [[String]]:error, [[Table]]:trace
+	 * @return [[Boolean]]:print
+	 */
+
 	public void handleLuaError(LuaRuntimeException e) {
 		StringBuilder msg = new StringBuilder();
 

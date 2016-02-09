@@ -1,5 +1,8 @@
 package com.luacraft.classes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.LuaException;
@@ -7,6 +10,7 @@ import com.naef.jnlua.LuaException;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -14,9 +18,28 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaRunCommand extends CommandBase {
-	private boolean switchState = false;
+	private Side runState = Side.SERVER;
 	private static ChatComponentTranslation clientName = new ChatComponentTranslation("luacraft.state.client");
 	private static ChatComponentTranslation serverName = new ChatComponentTranslation("luacraft.state.server");
+
+	private ChatComponentTranslation getSideChatName() {
+		if (runState == Side.CLIENT)
+			return clientName;
+		else
+			return serverName;
+	}
+
+	private EnumChatFormatting getSideChatColor() {
+		if (runState == Side.CLIENT)
+			return EnumChatFormatting.GOLD;
+		else
+			return EnumChatFormatting.DARK_AQUA;
+	}
+
+	private boolean isStateOpen() {
+		LuaCraftState state = LuaCraft.getLuaState(runState);
+		return state != null;
+	}
 
 	@Override
 	public String getCommandName() {
@@ -31,11 +54,23 @@ public class LuaJavaRunCommand extends CommandBase {
 		return true;
 	}
 
-	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-		String strLua = "";
-		for (int i = 0; i < args.length; i++)
-			strLua += args[i] + " ";
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+		List<String> options = new ArrayList<String>();
 
+		if (args.length < 2) {
+			if (("switch").startsWith(args[0]))
+				options.add("switch");
+			if (("reload").startsWith(args[0]))
+				options.add("reload");
+		} else if (args.length == 2 && (args[0].equalsIgnoreCase("switch") || args[0].equalsIgnoreCase("reload"))) {
+			options.add("client");
+			options.add("server");
+		}
+
+		return options;
+	}
+
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		if (args.length <= 0) {
 			ChatComponentTranslation usage = new ChatComponentTranslation(getCommandUsage(sender));
 			usage.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -44,11 +79,15 @@ public class LuaJavaRunCommand extends CommandBase {
 		}
 
 		if (args[0].equalsIgnoreCase("switch")) {
-			switchState = !switchState;
+			if (args.length < 2)
+				runState = runState == Side.CLIENT ? Side.SERVER : Side.CLIENT;
+			else if (args[1].equalsIgnoreCase("client"))
+				runState = Side.CLIENT;
+			else if (args[1].equalsIgnoreCase("server"))
+				runState = Side.SERVER;
 
-			ChatComponentTranslation chatCT = new ChatComponentTranslation("luacraft.state.changed",
-					switchState ? clientName : serverName);
-			chatCT.getChatStyle().setColor(switchState ? EnumChatFormatting.GOLD : EnumChatFormatting.DARK_AQUA);
+			ChatComponentTranslation chatCT = new ChatComponentTranslation("luacraft.state.changed", getSideChatName());
+			chatCT.getChatStyle().setColor(getSideChatColor());
 			sender.addChatMessage(chatCT);
 			return;
 		} else if (args[0].equalsIgnoreCase("reload")) {
@@ -63,7 +102,7 @@ public class LuaJavaRunCommand extends CommandBase {
 			return;
 		}
 
-		LuaCraftState l = LuaCraft.getLuaState(switchState ? Side.CLIENT : Side.SERVER);
+		LuaCraftState l = LuaCraft.getLuaState(runState);
 
 		synchronized (l) {
 			if (l == null) {
@@ -72,6 +111,10 @@ public class LuaJavaRunCommand extends CommandBase {
 				sender.addChatMessage(noLua);
 				return;
 			}
+
+			String strLua = "";
+			for (int i = 0; i < args.length; i++)
+				strLua += args[i] + " ";
 
 			LuaCraft.getLogger().info(sender.getName() + " Lua > " + strLua);
 
