@@ -226,7 +226,7 @@ public class LuaState {
 	 * 
 	 * @return the class loader
 	 */
-	public synchronized ClassLoader getClassLoader() {
+	public ClassLoader getClassLoader() {
 		return classLoader;
 	}
 
@@ -240,7 +240,7 @@ public class LuaState {
 	 * @param classLoader
 	 *            the class loader to set
 	 */
-	public synchronized void setClassLoader(ClassLoader classLoader) {
+	public void setClassLoader(ClassLoader classLoader) {
 		if (classLoader == null) {
 			throw new NullPointerException();
 		}
@@ -256,7 +256,7 @@ public class LuaState {
 	 * 
 	 * @return the Java reflector converter
 	 */
-	public synchronized JavaReflector getJavaReflector() {
+	public JavaReflector getJavaReflector() {
 		return javaReflector;
 	}
 
@@ -270,7 +270,7 @@ public class LuaState {
 	 * @param javaReflector
 	 *            the Java reflector
 	 */
-	public synchronized void setJavaReflector(JavaReflector javaReflector) {
+	public void setJavaReflector(JavaReflector javaReflector) {
 		if (javaReflector == null) {
 			throw new NullPointerException();
 		}
@@ -288,7 +288,7 @@ public class LuaState {
 	 *            the object, or <code>null</code>
 	 * @return the Java reflector
 	 */
-	public synchronized JavaFunction getMetamethod(Object obj, Metamethod metamethod) {
+	public JavaFunction getMetamethod(Object obj, Metamethod metamethod) {
 		if (obj != null && obj instanceof JavaReflector) {
 			JavaFunction javaFunction = ((JavaReflector) obj).getMetamethod(metamethod);
 			if (javaFunction != null) {
@@ -307,7 +307,7 @@ public class LuaState {
 	 * 
 	 * @return the converter
 	 */
-	public synchronized Converter getConverter() {
+	public Converter getConverter() {
 		return converter;
 	}
 
@@ -321,7 +321,7 @@ public class LuaState {
 	 * @param converter
 	 *            the converter
 	 */
-	public synchronized void setConverter(Converter converter) {
+	public void setConverter(Converter converter) {
 		if (converter == null) {
 			throw new NullPointerException();
 		}
@@ -337,7 +337,7 @@ public class LuaState {
 	 * 
 	 * @return whether this Lua state is open
 	 */
-	public final synchronized boolean isOpen() {
+	public final boolean isOpen() {
 		return isOpenInternal();
 	}
 
@@ -349,7 +349,7 @@ public class LuaState {
 	 * The method may be invoked on a closed Lua state and has no effect in that case.
 	 * </p>
 	 */
-	public synchronized void close() {
+	public void close() {
 		closeInternal();
 	}
 
@@ -362,7 +362,7 @@ public class LuaState {
 	 *            the argument required by some operations (see Lua Reference Manual)
 	 * @return a return value depending on the GC operation performed (see Lua Reference Manual)
 	 */
-	public synchronized int gc(GcAction what, int data) {
+	public int gc(GcAction what, int data) {
 		check();
 		return lua_gc(what.ordinal(), data);
 	}
@@ -374,7 +374,7 @@ public class LuaState {
 	 * @param library
 	 *            the library
 	 */
-	public synchronized void openLib(Library library) {
+	public void openLib(Library library) {
 		check();
 		library.open(this);
 	}
@@ -386,7 +386,7 @@ public class LuaState {
 	 * The method opens all libraries defined by the {@link Library} enumeration.
 	 * </p>
 	 */
-	public synchronized void openLibs() {
+	public void openLibs() {
 		check();
 		for (Library library : Library.values()) {
 			library.open(this);
@@ -399,7 +399,7 @@ public class LuaState {
 	 * @param namedJavaFunction
 	 *            the Java function to register
 	 */
-	public synchronized void register(NamedJavaFunction namedJavaFunction) {
+	public void register(NamedJavaFunction namedJavaFunction) {
 		check();
 		String name = namedJavaFunction.getName();
 		if (name == null) {
@@ -417,7 +417,7 @@ public class LuaState {
 	 * @param namedJavaFunctions
 	 *            the Java functions of the module
 	 */
-	public synchronized void register(String moduleName, NamedJavaFunction[] namedJavaFunctions) {
+	public void register(String moduleName, NamedJavaFunction[] namedJavaFunctions) {
 		check();
 		/*
 		 * The following code corresponds to luaL_openlib() and must be kept in sync. The original code cannot be called due to the necessity of pushing each C function with an individual closure.
@@ -456,7 +456,7 @@ public class LuaState {
 	 * @throws IOException
 	 *             if an IO error occurs
 	 */
-	public synchronized void load(InputStream inputStream, String chunkName) throws IOException {
+	public void load(InputStream inputStream, String chunkName) throws IOException {
 		if (chunkName == null) {
 			throw new NullPointerException();
 		}
@@ -472,7 +472,7 @@ public class LuaState {
 	 * @param chunkName
 	 *            the name of the chunk for use in error messages
 	 */
-	public synchronized void load(String chunk, String chunkName) {
+	public void load(String chunk, String chunkName) {
 		try {
 			load(new ByteArrayInputStream(chunk.getBytes("UTF-8")), chunkName);
 		} catch (IOException e) {
@@ -480,7 +480,7 @@ public class LuaState {
 		}
 	}
 
-	public synchronized void require(String moduleName) {
+	public void require(String moduleName) {
 		check();
 		getGlobal("require");
 		pushString(moduleName);
@@ -495,7 +495,7 @@ public class LuaState {
 	 * @throws IOException
 	 *             if an IO error occurs
 	 */
-	public synchronized void dump(OutputStream outputStream) throws IOException {
+	public void dump(OutputStream outputStream) throws IOException {
 		check();
 		lua_dump(outputStream);
 	}
@@ -509,7 +509,7 @@ public class LuaState {
 	 * @param returnCount
 	 *            the number of return values, or {@link #MULTRET} to accept all values returned by the function
 	 */
-	public synchronized void call(int argCount, int returnCount) {
+	public void call(int argCount, int returnCount) {
 		check();
 		lua_pcall(argCount, returnCount);
 	}
@@ -521,7 +521,7 @@ public class LuaState {
 	 * @param name
 	 *            the global variable name
 	 */
-	public synchronized void getGlobal(String name) {
+	public void getGlobal(String name) {
 		check();
 		lua_getglobal(name);
 	}
@@ -532,7 +532,7 @@ public class LuaState {
 	 * @param name
 	 *            the global variable name
 	 */
-	public synchronized void setGlobal(String name) throws LuaMemoryAllocationException, LuaRuntimeException {
+	public void setGlobal(String name) throws LuaMemoryAllocationException, LuaRuntimeException {
 		check();
 		lua_setglobal(name);
 	}
@@ -544,7 +544,7 @@ public class LuaState {
 	 * @param b
 	 *            the boolean value to push
 	 */
-	public synchronized void pushBoolean(boolean b) {
+	public void pushBoolean(boolean b) {
 		check();
 		lua_pushboolean(b ? 1 : 0);
 	}
@@ -555,7 +555,7 @@ public class LuaState {
 	 * @param b
 	 *            the byte array to push
 	 */
-	public synchronized void pushByteArray(byte[] b) {
+	public void pushByteArray(byte[] b) {
 		check();
 		lua_pushbytearray(b);
 	}
@@ -566,7 +566,7 @@ public class LuaState {
 	 * @param n
 	 *            the integer value to push
 	 */
-	public synchronized void pushInteger(int n) {
+	public void pushInteger(int n) {
 		check();
 		lua_pushinteger(n);
 	}
@@ -577,7 +577,7 @@ public class LuaState {
 	 * @param javaFunction
 	 *            the function to push
 	 */
-	public synchronized void pushJavaFunction(JavaFunction javaFunction) {
+	public void pushJavaFunction(JavaFunction javaFunction) {
 		check();
 		lua_pushjavafunction(javaFunction);
 	}
@@ -597,7 +597,7 @@ public class LuaState {
 	 *            the Java object
 	 * @see #pushJavaObject(Object)
 	 */
-	public synchronized void pushJavaObjectRaw(Object object) {
+	public void pushJavaObjectRaw(Object object) {
 		check();
 		lua_pushjavaobject(object);
 	}
@@ -610,17 +610,17 @@ public class LuaState {
 	 * @see #getConverter()
 	 * @see #setConverter(Converter)
 	 */
-	public synchronized void pushJavaObject(Object object) {
+	public void pushJavaObject(Object object) {
 		check();
 		getConverter().convertJavaObject(this, object);
 	}
 
-	public synchronized void pushUserdata(Object object) {
+	public void pushUserdata(Object object) {
 		check();
 		lua_pushuserdata(object);
 	}
 
-	public synchronized void pushUserdataWithMeta(Object object, String metaTable) {
+	public void pushUserdataWithMeta(Object object, String metaTable) {
 		pushUserdata(object);
 		newMetatable(metaTable);
 		setMetatable(-2);
@@ -629,7 +629,7 @@ public class LuaState {
 	/**
 	 * Pushes a nil value on the stack.
 	 */
-	public synchronized void pushNil() {
+	public void pushNil() {
 		check();
 		lua_pushnil();
 	}
@@ -640,7 +640,7 @@ public class LuaState {
 	 * @param n
 	 *            the number to push
 	 */
-	public synchronized void pushNumber(double n) {
+	public void pushNumber(double n) {
 		check();
 		lua_pushnumber(n);
 	}
@@ -651,7 +651,7 @@ public class LuaState {
 	 * @param s
 	 *            the string value to push
 	 */
-	public synchronized void pushString(String s) {
+	public void pushString(String s) {
 		check();
 		lua_pushstring(s);
 	}
@@ -668,7 +668,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a boolean
 	 */
-	public synchronized boolean isBoolean(int index) {
+	public boolean isBoolean(int index) {
 		check();
 		return lua_isboolean(index) != 0;
 	}
@@ -684,7 +684,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a function
 	 */
-	public synchronized boolean isCFunction(int index) {
+	public boolean isCFunction(int index) {
 		check();
 		return lua_iscfunction(index) != 0;
 	}
@@ -700,7 +700,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a function
 	 */
-	public synchronized boolean isFunction(int index) {
+	public boolean isFunction(int index) {
 		check();
 		return lua_isfunction(index) != 0;
 	}
@@ -716,7 +716,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a function
 	 */
-	public synchronized boolean isJavaFunction(int index) {
+	public boolean isJavaFunction(int index) {
 		check();
 		return lua_isjavafunction(index) != 0;
 	}
@@ -738,7 +738,7 @@ public class LuaState {
 	 * @return whether the value is a Java object
 	 * @see #isJavaObject(int, Class)
 	 */
-	public synchronized boolean isJavaObjectRaw(int index) {
+	public boolean isJavaObjectRaw(int index) {
 		check();
 		return lua_isjavaobject(index) != 0;
 	}
@@ -756,7 +756,7 @@ public class LuaState {
 	 * @see #setConverter(Converter)
 	 * @see #getConverter()
 	 */
-	public synchronized boolean isJavaObject(int index, Class<?> type) {
+	public boolean isJavaObject(int index, Class<?> type) {
 		check();
 		return converter.getTypeDistance(this, index, type) != Integer.MAX_VALUE;
 	}
@@ -772,7 +772,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is <code>nil</code>
 	 */
-	public synchronized boolean isNil(int index) {
+	public boolean isNil(int index) {
 		check();
 		return lua_isnil(index) != 0;
 	}
@@ -788,7 +788,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is undefined
 	 */
-	public synchronized boolean isNone(int index) {
+	public boolean isNone(int index) {
 		check();
 		return lua_isnone(index) != 0;
 	}
@@ -804,7 +804,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is undefined
 	 */
-	public synchronized boolean isNoneOrNil(int index) {
+	public boolean isNoneOrNil(int index) {
 		check();
 		return lua_isnoneornil(index) != 0;
 	}
@@ -820,7 +820,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a number or a string convertible to a number
 	 */
-	public synchronized boolean isNumber(int index) {
+	public boolean isNumber(int index) {
 		check();
 		return lua_isnumber(index) != 0;
 	}
@@ -836,7 +836,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a string or a number
 	 */
-	public synchronized boolean isString(int index) {
+	public boolean isString(int index) {
 		check();
 		return lua_isstring(index) != 0;
 	}
@@ -852,17 +852,17 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a table
 	 */
-	public synchronized boolean isTable(int index) {
+	public boolean isTable(int index) {
 		check();
 		return lua_istable(index) != 0;
 	}
 
-	public synchronized boolean isUserdata(int index) {
+	public boolean isUserdata(int index) {
 		check();
 		return lua_isuserdata(index) != 0;
 	}
 
-	public synchronized boolean isUserdata(int index, Class<?> formalType) {
+	public boolean isUserdata(int index, Class<?> formalType) {
 		check();
 
 		Object object = toUserdata(index);
@@ -885,7 +885,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return whether the value is a thread
 	 */
-	public synchronized boolean isThread(int index) {
+	public boolean isThread(int index) {
 		check();
 		return lua_isthread(index) != 0;
 	}
@@ -900,7 +900,7 @@ public class LuaState {
 	 *            the second stack index
 	 * @return whether the values are equal
 	 */
-	public synchronized boolean equal(int index1, int index2) {
+	public boolean equal(int index1, int index2) {
 		check();
 		return lua_equal(index1, index2) != 0;
 	}
@@ -914,8 +914,7 @@ public class LuaState {
 	 *            the second stack index
 	 * @return whether the value at the first index is less than the value at the second index
 	 */
-	public synchronized boolean lessThan(int index1, int index2)
-			throws LuaMemoryAllocationException, LuaRuntimeException {
+	public boolean lessThan(int index1, int index2) throws LuaMemoryAllocationException, LuaRuntimeException {
 		check();
 		return lua_lessthan(index1, index2) != 0;
 	}
@@ -927,7 +926,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the length
 	 */
-	public synchronized int length(int index) {
+	public int length(int index) {
 		check();
 		return lua_objlen(index);
 	}
@@ -941,7 +940,7 @@ public class LuaState {
 	 *            the second stack index
 	 * @return whether the values are equal
 	 */
-	public synchronized boolean rawEqual(int index1, int index2) {
+	public boolean rawEqual(int index1, int index2) {
 		check();
 		return lua_rawequal(index1, index2) != 0;
 	}
@@ -953,7 +952,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the boolean representation of the value
 	 */
-	public synchronized boolean toBoolean(int index) {
+	public boolean toBoolean(int index) {
 		check();
 		return lua_toboolean(index) != 0;
 	}
@@ -965,7 +964,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the byte array representation of the value
 	 */
-	public synchronized byte[] toByteArray(int index) {
+	public byte[] toByteArray(int index) {
 		check();
 		return lua_tobytearray(index);
 	}
@@ -977,7 +976,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the integer representation, or <code>0</code>
 	 */
-	public synchronized int toInteger(int index) {
+	public int toInteger(int index) {
 		check();
 		return lua_tointeger(index);
 	}
@@ -989,7 +988,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the Java function, or <code>null</code>
 	 */
-	public synchronized JavaFunction toJavaFunction(int index) {
+	public JavaFunction toJavaFunction(int index) {
 		check();
 		return lua_tojavafunction(index);
 	}
@@ -1006,7 +1005,7 @@ public class LuaState {
 	 * @return the Java object, or <code>null</code>
 	 * @see #toJavaObject(int, Class)
 	 */
-	public synchronized Object toJavaObjectRaw(int index) {
+	public Object toJavaObjectRaw(int index) {
 		check();
 		return lua_tojavaobject(index);
 	}
@@ -1024,12 +1023,12 @@ public class LuaState {
 	 * @see #getConverter()
 	 * @see #setConverter(Converter)
 	 */
-	public synchronized <T> T toJavaObject(int index, Class<T> type) {
+	public <T> T toJavaObject(int index, Class<T> type) {
 		check();
 		return converter.convertLuaValue(this, index, type);
 	}
 
-	public synchronized Object toUserdata(int index) {
+	public Object toUserdata(int index) {
 		check();
 		return lua_touserdata(index);
 	}
@@ -1041,7 +1040,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the number representation, or <code>0.0</code>
 	 */
-	public synchronized double toNumber(int index) {
+	public double toNumber(int index) {
 		check();
 		return lua_tonumber(index);
 	}
@@ -1053,7 +1052,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the pointer representation, or <code>0L</code> if none
 	 */
-	public synchronized long toPointer(int index) {
+	public long toPointer(int index) {
 		check();
 		return lua_topointer(index);
 	}
@@ -1065,7 +1064,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the string representation, or <code>null</code>
 	 */
-	public synchronized String toString(int index) {
+	public String toString(int index) {
 		check();
 		return lua_tostring(index);
 	}
@@ -1081,7 +1080,7 @@ public class LuaState {
 	 *            the stack index
 	 * @return the type, or <code>null</code> if the stack index is undefined
 	 */
-	public synchronized LuaType type(int index) {
+	public LuaType type(int index) {
 		check();
 		int type = lua_type(index);
 		return type >= 0 ? LuaType.values()[type] : null;
@@ -1100,7 +1099,7 @@ public class LuaState {
 	 * @see LuaType#displayText()
 	 * @see Class#getCanonicalName()
 	 */
-	public synchronized String typeName(int index) {
+	public String typeName(int index) {
 		check();
 		LuaType type = type(index);
 		if (type == null) {
@@ -1137,7 +1136,7 @@ public class LuaState {
 	 * @param n
 	 *            the number of values to concatenate
 	 */
-	public synchronized void concat(int n) {
+	public void concat(int n) {
 		check();
 		lua_concat(n);
 	}
@@ -1147,7 +1146,7 @@ public class LuaState {
 	 * 
 	 * @return the number of values on the tack
 	 */
-	public synchronized int getTop() {
+	public int getTop() {
 		check();
 		return lua_gettop();
 	}
@@ -1158,7 +1157,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index
 	 */
-	public synchronized void insert(int index) {
+	public void insert(int index) {
 		check();
 		lua_insert(index);
 	}
@@ -1169,7 +1168,7 @@ public class LuaState {
 	 * @param count
 	 *            the number of values to pop
 	 */
-	public synchronized void pop(int count) {
+	public void pop(int count) {
 		check();
 		lua_pop(count);
 	}
@@ -1180,7 +1179,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index
 	 */
-	public synchronized void pushValue(int index) {
+	public void pushValue(int index) {
 		check();
 		lua_pushvalue(index);
 	}
@@ -1191,7 +1190,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index
 	 */
-	public synchronized void remove(int index) {
+	public void remove(int index) {
 		check();
 		lua_remove(index);
 	}
@@ -1202,7 +1201,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index
 	 */
-	public synchronized void replace(int index) {
+	public void replace(int index) {
 		check();
 		lua_replace(index);
 	}
@@ -1217,7 +1216,7 @@ public class LuaState {
 	 * @param index
 	 *            the index of the new top of the stack
 	 */
-	public synchronized void setTop(int index) {
+	public void setTop(int index) {
 		check();
 		lua_settop(index);
 	}
@@ -1229,7 +1228,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index containing the table
 	 */
-	public synchronized void getTable(int index) {
+	public void getTable(int index) {
 		check();
 		lua_gettable(index);
 	}
@@ -1242,12 +1241,12 @@ public class LuaState {
 	 * @param key
 	 *            the string key
 	 */
-	public synchronized void getField(int index, String key) {
+	public void getField(int index, String key) {
 		check();
 		lua_getfield(index, key);
 	}
 
-	public synchronized void newMetatable(String meta) {
+	public void newMetatable(String meta) {
 		check();
 		pushValue(REGISTRYINDEX);
 		getField(-1, meta);
@@ -1263,7 +1262,7 @@ public class LuaState {
 	/**
 	 * Creates a new table and pushes it on the stack.
 	 */
-	public synchronized void newTable() {
+	public void newTable() {
 		check();
 		lua_newtable();
 	}
@@ -1276,7 +1275,7 @@ public class LuaState {
 	 * @param recordCount
 	 *            the number of record elements
 	 */
-	public synchronized void newTable(int arrayCount, int recordCount) {
+	public void newTable(int arrayCount, int recordCount) {
 		check();
 		lua_createtable(arrayCount, recordCount);
 	}
@@ -1288,7 +1287,7 @@ public class LuaState {
 	 *            the stack index containing the table
 	 * @return whether there is a next key
 	 */
-	public synchronized boolean next(int index) {
+	public boolean next(int index) {
 		check();
 		return lua_next(index) != 0;
 	}
@@ -1299,7 +1298,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index containing the table
 	 */
-	public synchronized void rawGet(int index) {
+	public void rawGet(int index) {
 		check();
 		lua_rawget(index);
 	}
@@ -1312,7 +1311,7 @@ public class LuaState {
 	 * @param key
 	 *            the integer key
 	 */
-	public synchronized void rawGet(int index, int key) {
+	public void rawGet(int index, int key) {
 		check();
 		lua_rawgeti(index, key);
 	}
@@ -1323,7 +1322,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index containing the table
 	 */
-	public synchronized void rawSet(int index) {
+	public void rawSet(int index) {
 		check();
 		lua_rawset(index);
 	}
@@ -1336,7 +1335,7 @@ public class LuaState {
 	 * @param key
 	 *            the integer key
 	 */
-	public synchronized void rawSet(int index, int key) {
+	public void rawSet(int index, int key) {
 		check();
 		lua_rawseti(index, key);
 	}
@@ -1347,7 +1346,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index containing the table
 	 */
-	public synchronized void setTable(int index) {
+	public void setTable(int index) {
 		check();
 		lua_settable(index);
 	}
@@ -1360,7 +1359,7 @@ public class LuaState {
 	 * @param key
 	 *            the string key
 	 */
-	public synchronized void setField(int index, String key) {
+	public void setField(int index, String key) {
 		check();
 		lua_setfield(index, key);
 	}
@@ -1375,7 +1374,7 @@ public class LuaState {
 	 *            the string key
 	 * @return whether the metafield was pushed on the stack
 	 */
-	public synchronized boolean getMetafield(int index, String key) {
+	public boolean getMetafield(int index, String key) {
 		check();
 		return lua_getmetafield(index, key) != 0;
 	}
@@ -1387,7 +1386,7 @@ public class LuaState {
 	 *            the stack index containing the value to get the metatable from
 	 * @return whether the metatable was pushed on the stack
 	 */
-	public synchronized boolean getMetatable(int index) {
+	public boolean getMetatable(int index) {
 		check();
 		return lua_getmetatable(index) != 0;
 	}
@@ -1399,7 +1398,7 @@ public class LuaState {
 	 *            the stack index containing the value to set the metatable for
 	 * @return whether the metatable was set
 	 */
-	public synchronized boolean setMetatable(int index) {
+	public boolean setMetatable(int index) {
 		check();
 		return lua_setmetatable(index) != 0;
 	}
@@ -1411,7 +1410,7 @@ public class LuaState {
 	 * @param index
 	 *            the stack index containing the value to get the environment table from
 	 */
-	public synchronized void getFEnv(int index) {
+	public void getFEnv(int index) {
 		check();
 		lua_getfenv(index);
 	}
@@ -1423,7 +1422,7 @@ public class LuaState {
 	 *            the stack index containing the value to set the environment table for
 	 * @return whether the environment table was set
 	 */
-	public synchronized boolean setFEnv(int index) {
+	public boolean setFEnv(int index) {
 		check();
 		return lua_setfenv(index) != 0;
 	}
@@ -1432,7 +1431,7 @@ public class LuaState {
 	/**
 	 * Pops the start function of a new Lua thread from the stack and creates the new thread with that start function. The new thread is pushed on the stack.
 	 */
-	public synchronized void newThread() {
+	public void newThread() {
 		check();
 		lua_newthread();
 	}
@@ -1446,7 +1445,7 @@ public class LuaState {
 	 *            the number of arguments to pass
 	 * @return the number of values returned by the thread
 	 */
-	public synchronized int resume(int index, int argCount) {
+	public int resume(int index, int argCount) {
 		check();
 		return lua_resume(index, argCount);
 	}
@@ -1458,7 +1457,7 @@ public class LuaState {
 	 *            the index
 	 * @return the status
 	 */
-	public synchronized int status(int index) {
+	public int status(int index) {
 		check();
 		return lua_status(index);
 	}
@@ -1470,7 +1469,7 @@ public class LuaState {
 	 *            the number of results to pass
 	 * @return the return value of the Java function
 	 */
-	public synchronized int yield(int returnCount) {
+	public int yield(int returnCount) {
 		check();
 		return lua_yield(returnCount);
 	}
@@ -1484,7 +1483,7 @@ public class LuaState {
 	 * @return the reference integer key
 	 * @see #unref(int, int)
 	 */
-	public synchronized int ref(int index) {
+	public int ref(int index) {
 		check();
 		return lua_ref(index);
 
@@ -1499,7 +1498,7 @@ public class LuaState {
 	 *            the reference integer key
 	 * @see #ref(int)
 	 */
-	public synchronized void unref(int index, int reference) {
+	public void unref(int index, int reference) {
 		check();
 		lua_unref(index, reference);
 	}
@@ -1516,7 +1515,7 @@ public class LuaState {
 	 *            the stack index containing the table
 	 * @return the number of entries in the table
 	 */
-	public synchronized int tableSize(int index) {
+	public int tableSize(int index) {
 		check();
 		return lua_tablesize(index);
 	}
@@ -1537,7 +1536,7 @@ public class LuaState {
 	 * @param count
 	 *            the number of elements to move
 	 */
-	public synchronized void tableMove(int index, int from, int to, int count) {
+	public void tableMove(int index, int from, int to, int count) {
 		check();
 		lua_tablemove(index, from, to, count);
 	}
@@ -1553,7 +1552,7 @@ public class LuaState {
 	 * @param msg
 	 *            the error message
 	 */
-	public synchronized void checkArg(int index, boolean condition, String msg) {
+	public void checkArg(int index, boolean condition, String msg) {
 		check();
 		if (condition) {
 			return;
@@ -1568,7 +1567,7 @@ public class LuaState {
 	 *            the argument index
 	 * @return the boolean value, or the default value
 	 */
-	public synchronized boolean checkBoolean(int index) {
+	public boolean checkBoolean(int index) {
 		check();
 		if (!isBoolean(index)) {
 			throw getArgTypeException(index, LuaType.BOOLEAN);
@@ -1585,7 +1584,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the boolean value
 	 */
-	public synchronized boolean checkBoolean(int index, boolean d) {
+	public boolean checkBoolean(int index, boolean d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1600,7 +1599,7 @@ public class LuaState {
 	 *            the argument index
 	 * @return the byte array value
 	 */
-	public synchronized byte[] checkByteArray(int index) {
+	public byte[] checkByteArray(int index) {
 		check();
 		if (!isString(index)) {
 			throw getArgTypeException(index, LuaType.STRING);
@@ -1617,7 +1616,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the string value, or the default value
 	 */
-	public synchronized byte[] checkByteArray(int index, byte[] d) {
+	public byte[] checkByteArray(int index, byte[] d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1632,7 +1631,7 @@ public class LuaState {
 	 *            the argument index
 	 * @return the integer value
 	 */
-	public synchronized int checkInteger(int index) {
+	public int checkInteger(int index) {
 		check();
 		if (!isNumber(index)) {
 			throw getArgTypeException(index, LuaType.NUMBER);
@@ -1649,7 +1648,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the integer value, or the default value
 	 */
-	public synchronized int checkInteger(int index, int d) {
+	public int checkInteger(int index, int d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1664,7 +1663,7 @@ public class LuaState {
 	 *            the argument index
 	 * @return the number value
 	 */
-	public synchronized double checkNumber(int index) {
+	public double checkNumber(int index) {
 		check();
 		if (!isNumber(index)) {
 			throw getArgTypeException(index, LuaType.NUMBER);
@@ -1681,7 +1680,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the number value, or the default value
 	 */
-	public synchronized double checkNumber(int index, double d) {
+	public double checkNumber(int index, double d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1689,7 +1688,7 @@ public class LuaState {
 		return checkNumber(index);
 	}
 
-	public synchronized JavaFunction checkJavaFunction(int index) {
+	public JavaFunction checkJavaFunction(int index) {
 		check();
 		checkType(index, LuaType.FUNCTION);
 		return toJavaFunction(index);
@@ -1708,7 +1707,7 @@ public class LuaState {
 	 *            the expected type
 	 * @return the Java object, or <code>null</code>
 	 */
-	public synchronized <T> T checkJavaObject(int index, Class<T> clazz) {
+	public <T> T checkJavaObject(int index, Class<T> clazz) {
 		check();
 		if (!isJavaObject(index, clazz)) {
 			throw getArgException(index,
@@ -1728,7 +1727,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the Java object, or the default value
 	 */
-	public synchronized <T> T checkJavaObject(int index, Class<T> clazz, T d) {
+	public <T> T checkJavaObject(int index, Class<T> clazz, T d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1745,7 +1744,7 @@ public class LuaState {
 	 *            the options
 	 * @return the string value
 	 */
-	public synchronized String checkOption(int index, String[] options) {
+	public String checkOption(int index, String[] options) {
 		check();
 		String s = checkString(index);
 		for (int i = 0; i < options.length; i++) {
@@ -1767,7 +1766,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the string value, or the default value
 	 */
-	public synchronized String checkOption(int index, String[] options, String d) {
+	public String checkOption(int index, String[] options, String d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1782,7 +1781,7 @@ public class LuaState {
 	 *            the argument index
 	 * @return the string value
 	 */
-	public synchronized String checkString(int index) {
+	public String checkString(int index) {
 		check();
 		if (!isString(index)) {
 			throw getArgTypeException(index, LuaType.STRING);
@@ -1799,7 +1798,7 @@ public class LuaState {
 	 *            the default value
 	 * @return the string value, or the default value
 	 */
-	public synchronized String checkString(int index, String d) {
+	public String checkString(int index, String d) {
 		check();
 		if (isNoneOrNil(index)) {
 			return d;
@@ -1807,7 +1806,7 @@ public class LuaState {
 		return checkString(index);
 	}
 
-	public synchronized Object checkUserdata(int index) {
+	public Object checkUserdata(int index) {
 		check();
 		if (!isUserdata(index)) {
 			throw getArgTypeException(index, LuaType.USERDATA);
@@ -1815,7 +1814,7 @@ public class LuaState {
 		return toUserdata(index);
 	}
 
-	public synchronized <T> Object checkUserdata(int index, Class<T> formalType, String expected) {
+	public <T> Object checkUserdata(int index, Class<T> formalType, String expected) {
 		check();
 		if (!isUserdata(index) || !formalType.isAssignableFrom(toUserdata(index).getClass())) {
 			throw getArgException(index, String.format("exptected %s, got %s", expected, typeName(index)));
@@ -1831,7 +1830,7 @@ public class LuaState {
 	 * @param type
 	 *            the type
 	 */
-	public synchronized void checkType(int index, LuaType type) {
+	public void checkType(int index, LuaType type) {
 		check();
 		if (type(index) != type) {
 			throw getArgTypeException(index, type);
@@ -1846,7 +1845,7 @@ public class LuaState {
 	 *            the stack index containing the Lua value
 	 * @return the Lua value proxy
 	 */
-	public synchronized LuaValueProxy getProxy(int index) {
+	public LuaValueProxy getProxy(int index) {
 		pushValue(index);
 		return new LuaValueProxyImpl(ref(REGISTRYINDEX));
 	}
@@ -1861,7 +1860,7 @@ public class LuaState {
 	 * @return the proxy object
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized <T> T getProxy(int index, Class<T> interfaze) {
+	public <T> T getProxy(int index, Class<T> interfaze) {
 		return (T) getProxy(index, new Class<?>[] { interfaze });
 	}
 
@@ -1874,7 +1873,7 @@ public class LuaState {
 	 *            the interfaces
 	 * @return the proxy object
 	 */
-	public synchronized LuaValueProxy getProxy(int index, Class<?>[] interfaces) {
+	public LuaValueProxy getProxy(int index, Class<?>[] interfaces) {
 		pushValue(index);
 		if (!isTable(index)) {
 			throw new IllegalArgumentException(String.format("index %d is not a table", index));

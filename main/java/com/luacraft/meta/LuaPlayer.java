@@ -3,13 +3,16 @@ package com.luacraft.meta;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
+import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.FoodStats;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -619,6 +622,23 @@ public class LuaPlayer {
 		}
 	};
 
+	/**
+	 * @author Gregor
+	 * @function Msg
+	 * @info Print something to a players chat
+	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @return nil
+	 */
+
+	public static JavaFunction Msg = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			String chatMsg = LuaLibUtil.toChat(l, 2);
+			self.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Player");
 		{
@@ -701,6 +721,8 @@ public class LuaPlayer {
 			l.setField(-2, "IsFlightAllowed");
 			l.pushJavaFunction(GetTeam);
 			l.setField(-2, "GetTeam");
+			l.pushJavaFunction(Msg);
+			l.setField(-2, "Msg");
 		}
 		l.pop(1);
 	}

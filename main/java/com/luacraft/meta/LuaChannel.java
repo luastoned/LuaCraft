@@ -101,6 +101,7 @@ public class LuaChannel {
 			l.setField(-2, "__tostring");
 
 			LuaUserdata.SetupBasicMeta(l);
+			LuaUserdata.SetupMeta(l, false);
 
 			l.newMetatable("Object");
 			l.setField(-2, "__basemeta");

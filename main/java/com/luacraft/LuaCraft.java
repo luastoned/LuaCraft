@@ -85,7 +85,8 @@ public class LuaCraft {
 		if (event.getSide() == Side.CLIENT) {
 			LuaClient luaState = new LuaClient();
 			synchronized (luaState) {
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.CLIENT, luaState);
@@ -93,7 +94,8 @@ public class LuaCraft {
 		} else {
 			LuaServer luaState = new LuaServer();
 			synchronized (luaState) {
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.SERVER, luaState);
@@ -114,7 +116,8 @@ public class LuaCraft {
 			LuaServer luaState = new LuaServer();
 			synchronized (luaState) {
 				luaState.setSideOverride(Side.CLIENT); // Singleplayer fix..
-				luaState.initialize();
+				luaState.initialize(true);
+				luaState.runScripts();
 			}
 			synchronized (luaStates) {
 				luaStates.put(Side.SERVER, luaState);

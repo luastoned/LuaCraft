@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
+import com.luacraft.library.LuaLibUtil;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.util.ChatComponentText;
 
 public class LuaLibGame {
 	private static Minecraft client = LuaCraft.getClient();
@@ -123,6 +125,26 @@ public class LuaLibGame {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function ChatPrint
+	 * @info Print a string of text to the chatbox
+	 * @arguments [[String]]:msg OR [[Number]]:color See [[color]] for further information
+	 * @return nil
+	 */
+
+	public static JavaFunction ChatPrint = new JavaFunction() {
+		public int invoke(LuaState l) {
+			if (client.thePlayer == null)
+				return 0;
+
+			String chatMsg = LuaLibUtil.toChat(l, 1);
+			client.thePlayer.addChatMessage(new ChatComponentText(chatMsg));
+			return 0;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		l.newTable();
 		{
@@ -136,6 +158,8 @@ public class LuaLibGame {
 			l.setField(-2, "HasFocus");
 			l.pushJavaFunction(Say);
 			l.setField(-2, "Say");
+			l.pushJavaFunction(ChatPrint);
+			l.setField(-2, "ChatPrint");
 		}
 		l.setGlobal("game");
 	}

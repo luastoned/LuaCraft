@@ -3,6 +3,7 @@ package com.luacraft.library;
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaChannel;
+import com.luacraft.classes.LuaJavaScriptThread;
 import com.luacraft.classes.LuaJavaThread;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -21,9 +22,25 @@ public class LuaLibThread {
 	public static JavaFunction NewThread = new JavaFunction() {
 		public int invoke(LuaState l) {
 			String file = l.checkString(1);
-			LuaJavaThread thread = new LuaJavaThread((LuaCraftState) l, file);
+			LuaJavaThread thread = new LuaJavaScriptThread((LuaCraftState) l, file);
 			thread.setName(file);
 			l.pushUserdataWithMeta(thread, "Thread");
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library thread
+	 * @function GetThread
+	 * @info Returns the current active thread the script is using
+	 * @arguments nil
+	 * @return [[Thread]]:thread
+	 */
+
+	public static JavaFunction GetThread = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushUserdataWithMeta((LuaJavaThread) Thread.currentThread(), "Thread");
 			return 1;
 		}
 	};
@@ -59,6 +76,8 @@ public class LuaLibThread {
 		{
 			l.pushJavaFunction(NewThread);
 			l.setField(-2, "NewThread");
+			l.pushJavaFunction(GetThread);
+			l.setField(-2, "GetThread");
 			l.pushJavaFunction(GetChannel);
 			l.setField(-2, "GetChannel");
 		}

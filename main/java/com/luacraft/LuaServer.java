@@ -9,10 +9,9 @@ import com.luacraft.meta.server.LuaPropertyManager;
 
 public class LuaServer extends LuaShared {
 
-	public void initialize() {
-		initializeShared();
+	public void initialize(boolean hooks) {
+		initializeShared(hooks);
 		loadLibraries();
-		runScripts();
 	}
 
 	public void runScripts() {
