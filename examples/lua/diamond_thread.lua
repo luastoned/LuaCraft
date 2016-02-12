@@ -26,7 +26,7 @@ local chunks = 2
 local min = Vector(-16*chunks, -16*chunks, 0)
 local max = Vector(16*chunks, 16*chunks, 15)
 
-while true do
+while not script:IsInterrupted() do -- Run until something stops us
 	if LocalPlayer() then
 		local world = World()
 
@@ -38,7 +38,7 @@ while true do
 		for _,pos in VectorPairs(pos + min, pos + max) do
 			block = Block(pos)
 			if not block or block:GetID() ~= 56 then continue end
-			chan:Push(block:GetPos())
+			chan:Push(block:GetPos()) -- Send positions to the channel that the main thread can read from
 		end
 	end
 	collectgarbage()

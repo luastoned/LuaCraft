@@ -1,5 +1,9 @@
-local testThread = thread.NewThread("diamond_thread.lua")
-testThread:Start()
+local diamond_thread = thread.NewThread("diamond_thread.lua")
+print(diamond_thread)
+if not diamond_thread:IsAlive() then
+	print("Starting Thread")
+	diamond_thread:Start()
+end
 
 local chan = thread.GetChannel("diamonds")
 
