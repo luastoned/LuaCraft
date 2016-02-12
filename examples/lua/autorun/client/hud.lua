@@ -4,6 +4,7 @@ local timeMat = Resource("luacraft:silkicons/time.png")
 local vectMat = Resource("luacraft:silkicons/vector.png")
 local eyeMat = Resource("luacraft:silkicons/eye.png")
 local mapMat = Resource("luacraft:silkicons/map.png")
+local fpsMat = Resource("luacraft:silkicons/camera.png")
 
 function _R.World:GetTimeString( ampm )
 	local thing = "AM"
@@ -25,7 +26,7 @@ function _R.World:GetTimeString( ampm )
 	return string.format("%02d:%02d", hour, minute)
 end
 
-hook.Add( "render.world", "debug", function(ticks)
+hook.Add( "render.world", "debug", function()
 	local me = LocalPlayer()
 
 	render.SetDrawColor(255,255,255)
@@ -61,12 +62,34 @@ hook.Add( "render.world", "debug", function(ticks)
 	end
 end)
 
-hook.Add( "render.gameoverlay", "debug", function(time)
+local MAX_SAMPLES = 120
+local tickSum = 0
+local curTick = 0
+local ticks = {}
+
+hook.Add( "render.gameoverlay", "debug", function(dt)
+
+	tickSum = tickSum - (ticks[curTick] or 0)
+	tickSum = tickSum + dt
+	ticks[curTick] = dt
+
+	curTick = curTick + 1
+	if (curTick >= MAX_SAMPLES) then
+		curTick = 0
+	end
+
+	surface.SetDrawColor(255, 255, 255)
+
+	local fps = math.floor(tickSum/MAX_SAMPLES * 100)
+
+	surface.SetTexture(fpsMat)
+	surface.DrawTexturedRect( ScrW() - 10, 2, 8, 8 )
+	font:DrawText(fps, ScrW() - 12 - font:GetWidth(fps), 2, true )
+
 	local me = LocalPlayer()
 	local world = World()
 	local pos = me:GetPos()
 
-	surface.SetDrawColor(255, 255, 255)
 	surface.SetTexture( timeMat )
 	surface.DrawTexturedRect( 2, 2, 8, 8 )
 	font:DrawText( world:GetTimeString(true), 12, 2, true )

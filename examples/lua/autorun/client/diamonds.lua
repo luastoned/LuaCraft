@@ -5,11 +5,22 @@ local chan = thread.GetChannel("diamonds")
 
 local diamonds = {}
 
+local function indexVec(pos, vec)
+	local index = ("%i%i%i"):format(pos.x,pos.y,pos.z)
+	diamonds[index] = vec
+end
+
 hook.Add("game.tick", "Diamond Sync", function()
 	while true do
 		local pop = chan:Pop()
 		if not pop then break end
-		diamonds[pop] = true
+		indexVec(pop, pop)
+	end
+end)
+
+hook.Add("player.mineblock", "Diamond Break", function(ply, block, exp)
+	if block:GetID() == 56 then
+		indexVec(block:GetPos(), nil)
 	end
 end)
 
@@ -20,7 +31,7 @@ hook.Add("render.world", "Diamond Render", function()
 
 	render.SetDrawColor(0,128,255)
 
-	for pos,_ in pairs(diamonds) do
+	for _,pos in pairs(diamonds) do
 		render.DrawBoundingBox(pos, pos + block_size)
 	end
 

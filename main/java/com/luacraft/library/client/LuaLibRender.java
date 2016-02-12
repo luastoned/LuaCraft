@@ -17,6 +17,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -544,7 +545,8 @@ public class LuaLibRender {
 
 	public static JavaFunction ScrW = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushNumber(client.displayWidth);
+			ScaledResolution scale = new ScaledResolution(client);
+			l.pushNumber(scale.getScaledWidth());
 			return 1;
 		}
 	};
@@ -560,7 +562,8 @@ public class LuaLibRender {
 
 	public static JavaFunction ScrH = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushNumber(client.displayHeight);
+			ScaledResolution scale = new ScaledResolution(client);
+			l.pushNumber(scale.getScaledHeight());
 			return 1;
 		}
 	};
