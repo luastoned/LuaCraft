@@ -70,6 +70,7 @@ public class LuaShared extends LuaCraftState {
 			MinecraftForge.EVENT_BUS.unregister(luaEvent);
 			luaEvent = null;
 		}
+		LuaLibThread.interruptActiveThreads();
 		super.close();
 	}
 

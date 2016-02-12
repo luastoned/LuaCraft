@@ -1,5 +1,7 @@
 package com.luacraft.library;
 
+import java.util.HashMap;
+
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaChannel;
@@ -9,6 +11,13 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 public class LuaLibThread {
+
+	public static HashMap<String, LuaJavaThread> threadScripts = new HashMap<String, LuaJavaThread>();
+
+	public static void interruptActiveThreads() {
+		for (LuaJavaThread thread : threadScripts.values())
+			thread.interrupt();
+	}
 
 	/**
 	 * @author Jake
@@ -22,8 +31,15 @@ public class LuaLibThread {
 	public static JavaFunction NewThread = new JavaFunction() {
 		public int invoke(LuaState l) {
 			String file = l.checkString(1);
-			LuaJavaThread thread = new LuaJavaScriptThread((LuaCraftState) l, file);
-			thread.setName(file);
+
+			LuaJavaThread thread = threadScripts.get(file);
+
+			if (thread == null) {
+				thread = new LuaJavaScriptThread((LuaCraftState) l, file);
+				thread.setName(file);
+				threadScripts.put(file, thread);
+			}
+
 			l.pushUserdataWithMeta(thread, "Thread");
 			return 1;
 		}
