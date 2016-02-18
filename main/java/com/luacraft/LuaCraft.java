@@ -161,7 +161,7 @@ public class LuaCraft {
 		if (luaLoader.isEclipse)
 			in = new FileInputStream(new File(rootDir, "../src/main/resources/" + file));
 		else
-			in = LuaCraft.class.getResourceAsStream(File.separator + file);
+			in = LuaCraft.class.getResourceAsStream('/' + file);
 
 		return in;
 	}
