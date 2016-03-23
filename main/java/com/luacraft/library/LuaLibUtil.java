@@ -27,6 +27,7 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -106,7 +107,8 @@ public class LuaLibUtil {
 			Vec3 entityPos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
 			double distance = start.distanceTo(entityPos);
-			MovingObjectPosition trace = entity.getBoundingBox().calculateIntercept(start, end);
+			
+			MovingObjectPosition trace = entity.boundingBox.calculateIntercept(start, end);
 
 			if (trace != null && (hitDistance == -1 || distance < hitDistance)) {
 				hitDistance = distance;

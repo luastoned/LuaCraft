@@ -2,6 +2,7 @@ package com.luacraft.library;
 
 import java.net.URL;
 
+import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.LuaJavaHTTPRequest;
 import com.naef.jnlua.JavaFunction;
@@ -25,6 +26,7 @@ public class LuaLibHTTP {
 
 				LuaJavaHTTPRequest request = new LuaJavaHTTPRequest(l, url, 2);
 				request.connection.setRequestMethod("GET");
+				request.connection.setRequestProperty("User-Agent", "LuaCraft/" + LuaCraft.VERSION );
 
 				if (l.isTable(3)) {
 					l.pushNil();
