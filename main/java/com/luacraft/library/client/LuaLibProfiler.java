@@ -5,10 +5,11 @@ import com.luacraft.LuaCraftState;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.profiler.Profiler;
 
 public class LuaLibProfiler {
-	public static Profiler profiler = LuaCraft.getClient().mcProfiler;
+	public static Profiler profiler = LuaCraft.getForgeClient().getClient().mcProfiler;
 
 	/**
 	 * @author Jake

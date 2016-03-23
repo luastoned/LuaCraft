@@ -11,7 +11,7 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 
 public class LuaGlobals {
-	private static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 
 	/**
 	 * @author Gregor

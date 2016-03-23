@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public class LuaEntity {
-	private static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 
 	/**
 	 * @author Gregor

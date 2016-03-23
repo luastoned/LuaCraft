@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import com.luacraft.classes.LuaJavaBlock;
 import com.naef.jnlua.LuaRuntimeException;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
@@ -42,8 +43,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;;
+import net.minecraftforge.event.world.BlockEvent.PlaceEvent;;
 
 public class LuaEventManager {
 	LuaCraftState l = null;

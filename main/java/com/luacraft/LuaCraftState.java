@@ -13,13 +13,12 @@ import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaStackTraceElement;
 import com.naef.jnlua.LuaState;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.server.FMLServerHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 
 public class LuaCraftState extends LuaState {
 	private boolean scriptEnforcer = false;

@@ -33,7 +33,6 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Configuration;
 
 @Mod(modid = LuaCraft.MODID, version = LuaCraft.VERSION)
@@ -58,10 +57,6 @@ public class LuaCraft {
 
 	public static FMLClientHandler getForgeClient() {
 		return FMLClientHandler.instance();
-	}
-
-	public static Minecraft getClient() {
-		return getForgeClient().getClient();
 	}
 
 	@EventHandler

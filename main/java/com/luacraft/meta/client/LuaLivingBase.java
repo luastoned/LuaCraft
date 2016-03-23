@@ -15,7 +15,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 public class LuaLivingBase {
-	private static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 
 	public static JavaFunction GetAimVector = new JavaFunction() {
 		public int invoke(LuaState l) {

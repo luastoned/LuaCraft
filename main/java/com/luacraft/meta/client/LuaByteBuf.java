@@ -11,7 +11,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 public class LuaByteBuf {
 
-	public static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 
 	/**
 	 * @author Jake

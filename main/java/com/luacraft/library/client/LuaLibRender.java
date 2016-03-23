@@ -21,13 +21,12 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
 public class LuaLibRender {
-	private static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 
 	static Tessellator tessellator = Tessellator.instance;
 

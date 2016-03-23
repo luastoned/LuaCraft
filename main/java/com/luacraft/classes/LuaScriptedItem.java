@@ -16,7 +16,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata {

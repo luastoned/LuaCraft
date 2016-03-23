@@ -10,7 +10,6 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -773,7 +772,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMins = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getBoundingBox();
+			AxisAlignedBB bb = self.boundingBox;
 			Vector mins = new Vector(bb.minX, bb.minZ, bb.minY);
 			mins.push(l);
 			return 1;
@@ -791,7 +790,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMaxs = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getBoundingBox();
+			AxisAlignedBB bb = self.boundingBox;
 			Vector maxs = new Vector(bb.maxX, bb.maxZ, bb.maxY);
 			maxs.push(l);
 			return 1;

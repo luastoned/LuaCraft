@@ -1,7 +1,5 @@
 package com.luacraft.library.client;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import com.luacraft.LuaCraft;
@@ -17,7 +15,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.util.ChatComponentText;
 
 public class LuaLibGame {
-	private static Minecraft client = LuaCraft.getClient();
+	private static Minecraft client = LuaCraft.getForgeClient().getClient();
 	private static NetworkManager net = LuaCraft.getForgeClient().getClientToServerNetworkManager();
 
 	/**

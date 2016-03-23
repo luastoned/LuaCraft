@@ -1,7 +1,5 @@
 package com.luacraft.classes.gui;
 
-import java.io.IOException;
-
 import com.luacraft.LuaCraftState;
 
 import net.minecraft.client.gui.GuiScreen;
