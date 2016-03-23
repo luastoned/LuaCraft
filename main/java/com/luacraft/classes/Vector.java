@@ -147,7 +147,7 @@ public class Vector implements LuaUserdata {
 	}
 
 	public Vec3 toVec3() {
-		return new Vec3(x, z, y);
+		return Vec3.createVectorHelper(x, z, y);
 	}
 
 	public String toString() {

@@ -2,7 +2,7 @@ package com.luacraft.asm;
 
 import java.util.Map;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 /**
  * @author dmillerw

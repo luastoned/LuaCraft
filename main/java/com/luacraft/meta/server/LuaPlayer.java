@@ -29,7 +29,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			try {
-				l.pushBoolean(self.worldObj.getScoreboard().addPlayerToTeam(self.getName(), l.checkString(2)));
+				l.pushBoolean(self.worldObj.getScoreboard().func_151392_a(self.getDisplayName(), l.checkString(2)));
 				return 1;
 			} catch (IllegalArgumentException e) {
 				l.pushBoolean(false);
@@ -67,7 +67,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 
-			String ip = self.playerNetServerHandler.netManager.getRemoteAddress().toString();
+			String ip = self.playerNetServerHandler.netManager.getSocketAddress().toString();
 			ip = ip.substring(ip.indexOf("/") + 1);
 			ip = ip.substring(0, ip.indexOf(":"));
 			l.pushString(ip);
@@ -120,7 +120,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			ServerConfigurationManager config = server.getConfigurationManager();
-			l.pushBoolean(config.getOppedPlayers().getEntry(self.getGameProfile()) != null);
+			l.pushBoolean(config.func_152596_g(self.getGameProfile()));
 			return 1;
 		}
 	};
@@ -142,9 +142,9 @@ public class LuaPlayer {
 			GameProfile user = self.getGameProfile();
 
 			if (state)
-				config.addOp(user);
+				config.func_152605_a(user);
 			else
-				config.removeOp(user);
+				config.func_152610_b(user);
 
 			return 0;
 		}
@@ -197,7 +197,7 @@ public class LuaPlayer {
 					cal != null ? cal.getTime() : null, reason);
 
 			self.playerNetServerHandler.kickPlayerFromServer(reason);
-			config.getBannedPlayers().addEntry(banEntry);
+			config.func_152608_h().func_152687_a(banEntry);
 			return 0;
 		}
 	};

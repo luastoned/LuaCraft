@@ -69,7 +69,7 @@ public class LuaEntityItem {
 	public static JavaFunction GetAge = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
-			l.pushInteger(self.getAge());
+			l.pushInteger(self.age);
 			return 1;
 		}
 	};

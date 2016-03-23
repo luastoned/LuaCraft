@@ -17,19 +17,17 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.WorldInfo;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class LuaWorld {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushString(String.format("World [%d][%s]", self.provider.getDimensionId(),
+			l.pushString(String.format("World [%d][%s]", self.provider.dimensionId,
 					self.getWorldInfo().getWorldName()));
 			return 1;
 		}
@@ -91,7 +89,7 @@ public class LuaWorld {
 
 			int k = 63;
 
-			while (!self.isAirBlock(new BlockPos(x, k + 1, y)))
+			while (!self.isAirBlock(x, k + 1, y))
 				k++;
 
 			LuaJavaBlock thisBlock = new LuaJavaBlock(self, x, k, y);
@@ -160,7 +158,7 @@ public class LuaWorld {
 			List<EntityPlayer> playerList = self.playerEntities;
 
 			for (EntityPlayer player : playerList) {
-				String playerName = player.getDisplayNameString().toLowerCase();
+				String playerName = player.getDisplayName().toLowerCase();
 				if (playerName.contains(search.toLowerCase())) {
 					LuaUserdata.PushUserdata(l, player);
 					return 1;
@@ -412,7 +410,7 @@ public class LuaWorld {
 	public static JavaFunction GetDifficulty = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushNumber(self.getDifficulty().ordinal());
+			l.pushNumber(self.difficultySetting.ordinal());
 			return 1;
 		}
 	};
@@ -428,7 +426,7 @@ public class LuaWorld {
 	public static JavaFunction SetDifficulty = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			self.getWorldInfo().setDifficulty(EnumDifficulty.getDifficultyEnum(l.checkInteger(2)));
+			self.difficultySetting = EnumDifficulty.getDifficultyEnum(l.checkInteger(2));
 			return 0;
 		}
 	};
@@ -464,7 +462,7 @@ public class LuaWorld {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			WorldInfo info = self.getWorldInfo();
-			info.setSpawn(new BlockPos(pos.x, pos.z, pos.y));
+			info.setSpawnPosition((int) pos.x, (int) pos.z, (int) pos.y);
 			return 0;
 		}
 	};
@@ -480,7 +478,7 @@ public class LuaWorld {
 	public static JavaFunction GetAnimalSpawning = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(World.class, self, "spawnPeacefulMobs"));
+			l.pushBoolean(self.spawnPeacefulMobs);
 			return 0;
 		}
 	};
@@ -496,7 +494,7 @@ public class LuaWorld {
 	public static JavaFunction SetAnimalSpawning = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			ReflectionHelper.setPrivateValue(World.class, self, l.checkBoolean(2), "spawnPeacefulMobs");
+			self.spawnPeacefulMobs = l.checkBoolean(2);
 			return 0;
 		}
 	};
@@ -512,7 +510,7 @@ public class LuaWorld {
 	public static JavaFunction GetMobSpawning = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushBoolean((Boolean) ReflectionHelper.getPrivateValue(World.class, self, "spawnHostileMobs"));
+			l.pushBoolean(self.spawnHostileMobs);
 			return 1;
 		}
 	};
@@ -528,7 +526,7 @@ public class LuaWorld {
 	public static JavaFunction SetMobSpawning = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			ReflectionHelper.setPrivateValue(World.class, self, l.checkBoolean(2), "spawnHostileMobs");
+			self.spawnHostileMobs = l.checkBoolean(2);
 			return 0;
 		}
 	};
@@ -627,7 +625,7 @@ public class LuaWorld {
 	public static JavaFunction GetDimension = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushNumber(self.provider.getDimensionId());
+			l.pushNumber(self.provider.dimensionId);
 			return 1;
 		}
 	};

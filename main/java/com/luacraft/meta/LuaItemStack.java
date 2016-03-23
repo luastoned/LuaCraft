@@ -71,7 +71,7 @@ public class LuaItemStack {
 	public static JavaFunction SetID = new JavaFunction() {
 		public int invoke(LuaState l) {
 			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
-			self.setItem(Item.getItemById(l.checkInteger(2, 1)));
+			self.field_151002_e = Item.getItemById(l.checkInteger(2, 1));
 			return 0;
 		}
 	};
@@ -299,7 +299,7 @@ public class LuaItemStack {
 	public static JavaFunction AddEnchantment = new JavaFunction() {
 		public int invoke(LuaState l) {
 			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
-			self.addEnchantment(Enchantment.getEnchantmentById(l.checkInteger(2, 0)), l.checkInteger(3, 1));
+			self.addEnchantment(Enchantment.enchantmentsList[l.checkInteger(2, 0)], l.checkInteger(3, 1));
 			return 0;
 		}
 	};

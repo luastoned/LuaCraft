@@ -11,7 +11,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 
 public class LuaJavaCommand extends CommandBase {
 	private LuaCraftState l;
@@ -49,7 +48,7 @@ public class LuaJavaCommand extends CommandBase {
 		return true; // The command callback should be checking whether or not the command can be ran
 	}
 
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
 		synchronized (l) {
 			try {
 				pushAutoCompleteFunc(commandName);

@@ -675,7 +675,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			World world = (World) l.checkUserdata(2, World.class, "World");
-			self.travelToDimension(world.provider.getDimensionId());
+			self.travelToDimension(world.provider.dimensionId);
 			return 0;
 		}
 	};
@@ -773,7 +773,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMins = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getEntityBoundingBox();
+			AxisAlignedBB bb = self.getBoundingBox();
 			Vector mins = new Vector(bb.minX, bb.minZ, bb.minY);
 			mins.push(l);
 			return 1;
@@ -791,7 +791,7 @@ public class LuaEntity {
 	public static JavaFunction OBBMaxs = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			AxisAlignedBB bb = self.getEntityBoundingBox();
+			AxisAlignedBB bb = self.getBoundingBox();
 			Vector maxs = new Vector(bb.maxX, bb.maxZ, bb.maxY);
 			maxs.push(l);
 			return 1;
@@ -980,38 +980,6 @@ public class LuaEntity {
 		}
 	};
 
-	/**
-	 * @author Jake
-	 * @function IsSilent
-	 * @info Returns if the player is silent or not
-	 * @arguments nil
-	 * @return [[Boolean]]:silent
-	 */
-
-	public static JavaFunction IsSilent = new JavaFunction() {
-		public int invoke(LuaState l) {
-			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushBoolean(self.isSilent());
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function SetSilent
-	 * @info Sets if the player is silent or not
-	 * @arguments [[Boolean]]:silent
-	 * @return nil
-	 */
-
-	public static JavaFunction SetSilent = new JavaFunction() {
-		public int invoke(LuaState l) {
-			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			self.setSilent(l.checkBoolean(2));
-			return 0;
-		}
-	};
-
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Entity");
 		{
@@ -1138,10 +1106,6 @@ public class LuaEntity {
 			l.setField(-2, "GetNBTTag");
 			l.pushJavaFunction(GetDataWatcher);
 			l.setField(-2, "GetDataWatcher");
-			l.pushJavaFunction(IsSilent);
-			l.setField(-2, "IsSilent");
-			l.pushJavaFunction(SetSilent);
-			l.setField(-2, "SetSilent");
 		}
 		l.pop(1);
 

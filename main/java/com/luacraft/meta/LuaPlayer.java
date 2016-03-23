@@ -11,10 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.FoodStats;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class LuaPlayer {
 	public static JavaFunction __tostring = new JavaFunction() {
@@ -36,7 +35,7 @@ public class LuaPlayer {
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString(self.getDisplayNameString());
+			l.pushString(self.getDisplayName());
 			return 1;
 		}
 	};
@@ -52,7 +51,7 @@ public class LuaPlayer {
 	public static JavaFunction GetUserName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString(self.getName());
+			l.pushString(self.getDisplayName());
 			return 1;
 		}
 	};
@@ -116,7 +115,7 @@ public class LuaPlayer {
 	public static JavaFunction SetHunger = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			ReflectionHelper.setPrivateValue(FoodStats.class, self.getFoodStats(), l.checkInteger(2), "foodLevel");
+			self.getFoodStats().setFoodLevel(l.checkInteger(2));
 			return 0;
 		}
 	};
@@ -482,7 +481,7 @@ public class LuaPlayer {
 	public static JavaFunction GetSkinURL = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushString("http://s3.amazonaws.com/MinecraftSkins/" + self.getName() + ".png");
+			l.pushString("http://s3.amazonaws.com/MinecraftSkins/" + self.getDisplayName() + ".png");
 			return 1;
 		}
 	};
@@ -515,8 +514,8 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.setSpawnChunk(new BlockPos((int) pos.x, (int) pos.z, (int) pos.y), l.checkBoolean(3, false),
-					l.checkInteger(4, self.dimension));
+			ChunkCoordinates bedPos = new ChunkCoordinates((int) pos.x, (int) pos.z, (int) pos.y);
+			self.setSpawnChunk(bedPos, l.checkBoolean(3, false), l.checkInteger(4, self.dimension));
 			return 0;
 		}
 	};
@@ -532,9 +531,9 @@ public class LuaPlayer {
 	public static JavaFunction GetBedPos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			BlockPos bed = self.getBedLocation(l.checkInteger(2, self.dimension));
+			ChunkCoordinates bed = self.getBedLocation(l.checkInteger(2, self.dimension));
 			if (bed != null) {
-				Vector pos = new Vector(bed.getX(), bed.getZ(), bed.getY());
+				Vector pos = new Vector(bed.posX, bed.posZ, bed.posY);
 				pos.push(l);
 				return 1;
 			}

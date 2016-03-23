@@ -2,11 +2,11 @@ package com.luacraft;
 
 import com.naef.jnlua.LuaRuntimeException;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class LuaEventManagerClient {
 	LuaCraftState l = null;

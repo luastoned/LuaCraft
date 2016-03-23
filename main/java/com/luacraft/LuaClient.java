@@ -10,7 +10,6 @@ import com.luacraft.meta.client.LuaByteBuf;
 import com.luacraft.meta.client.LuaEntity;
 import com.luacraft.meta.client.LuaFont;
 import com.luacraft.meta.client.LuaLivingBase;
-import com.luacraft.meta.client.LuaModelResource;
 import com.luacraft.meta.client.LuaVector;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -60,7 +59,6 @@ public class LuaClient extends LuaShared {
 		LuaEntity.Init(this);
 		LuaFont.Init(this);
 		LuaLivingBase.Init(this);
-		LuaModelResource.Init(this);
 		LuaVector.Init(this);
 
 		pushBoolean(true);

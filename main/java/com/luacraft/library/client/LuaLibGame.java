@@ -2,6 +2,7 @@ package com.luacraft.library.client;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
@@ -10,8 +11,8 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiPlayerInfo;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.util.ChatComponentText;
 
@@ -67,25 +68,22 @@ public class LuaLibGame {
 		public int invoke(LuaState l) {
 			if (client.thePlayer == null)
 				return 0;
-
+			
 			NetHandlerPlayClient net = client.thePlayer.sendQueue;
-			Collection playerInfo = net.getPlayerInfoMap();
-			Iterator iterator = playerInfo.iterator();
-
-			int i = 1;
-
+			List<GuiPlayerInfo> playerInfo = net.playerInfoList;
 			l.newTable();
-			while (iterator.hasNext()) {
-				NetworkPlayerInfo info = (NetworkPlayerInfo) iterator.next();
+			int i = 1;
+			for (GuiPlayerInfo info: playerInfo)
+			{
 				l.pushInteger(i++);
 				l.newTable();
-				l.pushString(info.getGameProfile().getName());
+				l.pushString(info.name);
 				l.setField(-2, "name");
-				l.pushInteger(info.getResponseTime());
+				l.pushInteger(info.responseTime);
 				l.setField(-2, "ping");
 				l.setTable(-3);
 			}
-
+			
 			return 1;
 		}
 	};

@@ -6,6 +6,20 @@ import org.lwjgl.input.Mouse;
 import com.luacraft.classes.LuaJavaBlock;
 import com.naef.jnlua.LuaRuntimeException;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemSmeltedEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
@@ -29,21 +43,7 @@ import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemSmeltedEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;;
 
 public class LuaEventManager {
 	LuaCraftState l = null;
@@ -852,7 +852,7 @@ public class LuaEventManager {
 				l.pushString("player.bonemeal");
 				LuaUserdata.PushUserdata(l, event.entityPlayer);
 				LuaUserdata.PushUserdata(l, event.world);
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.x, event.y, event.z));
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
@@ -995,9 +995,6 @@ public class LuaEventManager {
 			if (!l.isOpen())
 				return;
 
-			if (event.pos == null || event.face == null)
-				return;
-
 			try {
 				l.pushHookCall();
 
@@ -1014,7 +1011,7 @@ public class LuaEventManager {
 				}
 
 				LuaUserdata.PushUserdata(l, event.entityPlayer);
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.entityPlayer.worldObj, event.x, event.y, event.z));
 				l.pushFace(event.face);
 				l.call(4, 1);
 
@@ -1047,7 +1044,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.mineblock");
 				LuaUserdata.PushUserdata(l, event.getPlayer());
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getPlayer().worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getPlayer().worldObj, event.x, event.y, event.z));
 				l.pushNumber(event.getExpToDrop());
 				l.call(4, 1);
 
@@ -1080,7 +1077,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.placeblock");
 				LuaUserdata.PushUserdata(l, event.player);
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.player.worldObj, event.pos));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.player.worldObj, event.x, event.y, event.z));
 				l.call(3, 1);
 
 				if (!l.isNil(-1))

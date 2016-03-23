@@ -12,14 +12,15 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class LuaLibSurface {
 	private static Minecraft client = LuaCraft.getClient();
+	
+	static Tessellator tessellator = Tessellator.instance;
 
 	public static ResourceLocation currentTexture = null;
 	public static Color drawColor = new Color(255, 255, 255, 255);
@@ -50,7 +51,7 @@ public class LuaLibSurface {
 
 	public static JavaFunction GetDefaultFont = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushUserdataWithMeta(client.fontRendererObj, "Font");
+			l.pushUserdataWithMeta(client.fontRenderer, "Font");
 			return 1;
 		}
 	};
@@ -156,25 +157,25 @@ public class LuaLibSurface {
 
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
 
-			Tessellator tessellator = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-			worldrenderer.pos(x + w, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
-			worldrenderer.pos(x, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
-			worldrenderer.pos(x, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
-			worldrenderer.pos(x + w, y + h, 0.0D).color(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a).endVertex();
+			tessellator.startDrawingQuads();
+			tessellator.setColorRGBA(drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+			tessellator.addVertex(x + w, y, 0);
+			tessellator.addVertex(x, y, 0);
+			tessellator.setColorRGBA(fadeColor.r, fadeColor.g, fadeColor.b, fadeColor.a);
+			tessellator.addVertex(x, y + h, 0);
+			tessellator.addVertex(x + w, y + h, 0);
 			tessellator.draw();
 
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			return 0;
 		}
 	};
@@ -214,18 +215,17 @@ public class LuaLibSurface {
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
 
-			GlStateManager.enableTexture2D();
-			GlStateManager.color(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glColor4f(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
 
 			client.renderEngine.bindTexture(currentTexture);
 
-			Tessellator tessellator = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			worldrenderer.pos(x + w, y, 0.0D).tex(1.D, 0.D).endVertex();
-			worldrenderer.pos(x, y, 0.0D).tex(0.D, 0.D).endVertex();
-			worldrenderer.pos(x, y + h, 0.0D).tex(0.D, 1.D).endVertex();
-			worldrenderer.pos(x + w, y + h, 0.0D).tex(1.D, 1.D).endVertex();
+			tessellator.startDrawingQuads();
+			tessellator.setColorOpaque_I(0xffffff);
+			tessellator.addVertexWithUV(x, y + h, 0.D, 0.D, 1.D);
+			tessellator.addVertexWithUV(x + w, y + h, 0.D, 1.D, 1.D);
+			tessellator.addVertexWithUV(x + w, y, 0.D, 1.D, 0.D);
+			tessellator.addVertexWithUV(x, y, 0.D, 0.D, 0.D);
 			tessellator.draw();
 			return 0;
 		}

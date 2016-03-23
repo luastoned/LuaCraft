@@ -9,7 +9,7 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,10 +22,9 @@ public class LuaBlock {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
 
-			int id = Block.getIdFromBlock(self.getBlock());
-			int meta = Block.getStateId(self.blockWorld.getBlockState(self.getPos()));
-
-			l.pushString(String.format("%s [%d, %d, %d][%d %d]", self.getBlock().getLocalizedName(), self.x, self.z,
+			int id = Block.getIdFromBlock(self.block);
+			int meta = self.getMeta();
+			l.pushString(String.format("%s [%d, %d, %d][%d %d]", self.block.getLocalizedName(), self.x, self.z,
 					self.y, id, meta));
 			return 1;
 		}
@@ -84,15 +83,16 @@ public class LuaBlock {
 				y = l.checkInteger(3, 0);
 				z = l.checkInteger(4, 0);
 			}
+			
+			Block block = self.blockWorld.getBlock(self.x, self.y, self.z);
 
-			IBlockState meta = self.blockWorld.getBlockState(self.getPos());
-			self.blockWorld.setBlockToAir(self.getPos());
+			self.blockWorld.setBlockToAir(self.x, self.y, self.z);
 
 			self.x = (int) x;
 			self.y = (int) z;
 			self.z = (int) y;
 
-			self.blockWorld.setBlockState(self.getPos(), meta, 3);
+			self.blockWorld.setBlock(self.x, self.z, self.y, block);
 			return 0;
 		}
 	};
@@ -108,8 +108,7 @@ public class LuaBlock {
 	public static JavaFunction GetID = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			int id = Block.getIdFromBlock(self.state.getBlock());
-			l.pushInteger(id);
+			l.pushInteger(self.getID());
 			return 1;
 		}
 	};
@@ -125,9 +124,7 @@ public class LuaBlock {
 	public static JavaFunction SetID = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			int id = l.checkInteger(2, 0);
-			IBlockState state = Block.getStateById(id);
-			self.blockWorld.setBlockState(self.getPos(), state);
+			self.setID(l.checkInteger(2, 0));
 			return 0;
 		}
 	};
@@ -143,7 +140,7 @@ public class LuaBlock {
 	public static JavaFunction GetMeta = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushInteger(self.getBlock().getMetaFromState((IBlockState) self.getState()));
+			l.pushInteger(self.getMeta());
 			return 1;
 		}
 	};
@@ -159,9 +156,7 @@ public class LuaBlock {
 	public static JavaFunction SetMeta = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			int metaID = l.checkInteger(2, 0);
-			IBlockState meta = self.getBlock().getStateFromMeta(metaID);
-			self.blockWorld.setBlockState(self.getPos(), meta);
+			self.setMeta(l.checkInteger(2, 0));
 			return 0;
 		}
 	};
@@ -177,7 +172,7 @@ public class LuaBlock {
 	public static JavaFunction GetClass = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.getBlock().getUnlocalizedName());
+			l.pushString(self.block.getUnlocalizedName());
 			return 1;
 		}
 	};
@@ -193,7 +188,7 @@ public class LuaBlock {
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.getBlock().getLocalizedName());
+			l.pushString(self.block.getLocalizedName());
 			return 1;
 		}
 	};
@@ -209,7 +204,7 @@ public class LuaBlock {
 	public static JavaFunction GetBiome = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.blockWorld.getWorldChunkManager().getBiomeGenerator(self.getPos()).biomeName);
+			l.pushString(self.blockWorld.getWorldChunkManager().getBiomeGenAt(self.x, self.z).biomeName);
 			return 1;
 		}
 	};
@@ -226,9 +221,8 @@ public class LuaBlock {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
 
-			self.getBlock().dropBlockAsItemWithChance(self.blockWorld, self.getPos(), (IBlockState) self.getState(),
-					(float) l.checkNumber(2, 1), 0);
-			self.blockWorld.setBlockToAir(self.getPos());
+			self.dropWithChance(l.checkNumber(2, 1));
+			self.setAir();
 			return 0;
 		}
 	};
@@ -245,7 +239,7 @@ public class LuaBlock {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
 			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack");
-			self.getBlock().spawnAsEntity(self.blockWorld, self.getPos(), item);
+			self.dropItem(item);
 			return 0;
 		}
 	};
@@ -261,7 +255,7 @@ public class LuaBlock {
 	public static JavaFunction GetContainer = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			TileEntity tile = self.blockWorld.getTileEntity(self.getPos());
+			TileEntity tile = self.getTileEntity();
 			if (tile instanceof IInventory) {
 				l.pushUserdataWithMeta(tile, "Container");
 				return 1;
@@ -281,13 +275,13 @@ public class LuaBlock {
 	public static JavaFunction GetSignText = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			TileEntitySign tile = (TileEntitySign) self.blockWorld.getTileEntity(self.getPos());
+			TileEntitySign tile = (TileEntitySign) self.getTileEntity();
 
 			l.newTable();
 
 			for (int i = 0; i < tile.signText.length; i++) {
 				l.pushInteger(i + 1);
-				l.pushString(tile.signText[i].getUnformattedTextForChat());
+				l.pushString(tile.signText[i]);
 				l.setTable(-3);
 			}
 			return 1;
@@ -329,7 +323,7 @@ public class LuaBlock {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
 			l.checkType(2, LuaType.TABLE);
 
-			TileEntitySign tile = (TileEntitySign) self.blockWorld.getTileEntity(self.getPos());
+			TileEntitySign tile = (TileEntitySign) self.getTileEntity();
 
 			l.pushNil();
 
@@ -341,7 +335,7 @@ public class LuaBlock {
 				else
 					out.append(l.toString(-1));
 
-				tile.signText[l.toInteger(-2)] = new ChatComponentText(out.toString());
+				tile.signText[l.toInteger(-2)] = out.toString();
 
 				l.pop(1); // Pop the value, keep the key
 			}

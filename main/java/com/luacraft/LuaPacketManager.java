@@ -2,12 +2,12 @@ package com.luacraft;
 
 import com.naef.jnlua.LuaRuntimeException;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientCustomPacketEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
 
 public class LuaPacketManager {
 
@@ -25,19 +25,6 @@ public class LuaPacketManager {
 
 			try {
 				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
-
-				// Peek into the packet
-				String func = buffer.readStringFromBuffer(32767);
-
-				// If it's a LuaFile handle it internally
-				if (func.equals("LuaFile")) {
-					String file = buffer.readStringFromBuffer(32767);
-					byte[] data = buffer.readByteArray();
-					l.downloadLuaFile(file, data);
-					return;
-				}
-
-				buffer.readerIndex(0);
 				l.pushIncomingNet();
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.call(1, 0);

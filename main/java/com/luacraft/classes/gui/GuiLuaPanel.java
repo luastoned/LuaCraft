@@ -25,12 +25,7 @@ public class GuiLuaPanel extends GuiScreen {
 		l.call(2, 1);
 
 		if (l.isNoneOrNil(1))
-			try {
-				super.keyTyped(par1, par2);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			super.keyTyped(par1, par2);
 
 		l.setTop(0);
 	}
@@ -43,12 +38,7 @@ public class GuiLuaPanel extends GuiScreen {
 		l.call(3, 1);
 
 		if (l.isNoneOrNil(1))
-			try {
-				super.mouseClicked(par1, par2, par3);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			super.mouseClicked(par1, par2, par3);
 
 		l.setTop(0);
 	}

@@ -1,45 +1,67 @@
 package com.luacraft.classes;
 
-import com.naef.jnlua.LuaUserdata;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class LuaJavaBlock implements LuaUserdata {
-	public int x = 0;
-	public int y = 0;
-	public int z = 0;
-
+public class LuaJavaBlock {
+	public Block block;
 	public World blockWorld;
-	public IBlockState state;
-
+	
+	public int x,y,z;
+	
 	public LuaJavaBlock(World world, int x, int y, int z) {
-		this(world, new BlockPos(x, y, z));
-	}
-
-	public LuaJavaBlock(World world, BlockPos pos) {
+		block = world.getBlock(x, y, z);
 		blockWorld = world;
-		x = pos.getX();
-		y = pos.getY();
-		z = pos.getZ();
-		state = world.getBlockState(pos);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
-
-	public IBlockState getState() {
-		return state;
+	
+	public int getID() {
+		return Block.getIdFromBlock(block);
 	}
-
-	public Block getBlock() {
-		return state.getBlock();
+	
+	public void setID(int id) {
+		Block newBlock = Block.getBlockById(id);
+		blockWorld.setBlock(x, y, z, newBlock);
+		block = newBlock;
 	}
-
-	public BlockPos getPos() {
-		return new BlockPos(x, y, z);
+	
+	public int getMeta() {
+		return blockWorld.getBlockMetadata(x,y,z);
 	}
-
-	public String getTypeName() {
-		return "Block";
+	
+	public void setMeta(int meta) {
+		blockWorld.setBlockMetadataWithNotify(x, y, z, meta, 3);
+	}
+	
+	public void setAir() {
+		blockWorld.setBlockToAir(x,y,z);
+	}
+	
+	public void dropWithChance(double chance) {
+		block.dropBlockAsItemWithChance(blockWorld, x, y, z, getMeta(), (float) chance, 0);
+	}
+	
+	public void dropItem(ItemStack item) {
+		float f = 0.7F;
+        double d0 = (double)(blockWorld.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+        double d1 = (double)(blockWorld.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+        double d2 = (double)(blockWorld.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+        EntityItem entityitem = new EntityItem(blockWorld, (double)x + d0, (double)y + d1, (double)z + d2, item);
+        entityitem.delayBeforeCanPickup = 10;
+        setAir();
+        blockWorld.spawnEntityInWorld(entityitem);
+	}
+	
+	public TileEntity getTileEntity() {
+		return blockWorld.getTileEntity(x, y, z);
+	}
+	
+	public Vector getVec() {
+		return new Vector(x,z,y);
 	}
 }

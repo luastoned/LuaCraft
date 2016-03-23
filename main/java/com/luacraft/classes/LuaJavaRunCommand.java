@@ -7,15 +7,14 @@ import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.naef.jnlua.LuaException;
 
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class LuaJavaRunCommand extends CommandBase {
 	private Side runState = Side.SERVER;
@@ -54,7 +53,7 @@ public class LuaJavaRunCommand extends CommandBase {
 		return true;
 	}
 
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
 		List<String> options = new ArrayList<String>();
 
 		if (args.length < 2) {
@@ -116,7 +115,7 @@ public class LuaJavaRunCommand extends CommandBase {
 			for (int i = 0; i < args.length; i++)
 				strLua += args[i] + " ";
 
-			LuaCraft.getLogger().info(sender.getName() + " Lua > " + strLua);
+			LuaCraft.getLogger().info(sender.getCommandSenderName() + " Lua > " + strLua);
 
 			try {
 				l.load(strLua, StatCollector.translateToLocal("luacraft.console"));

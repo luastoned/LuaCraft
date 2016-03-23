@@ -69,40 +69,6 @@ public class LuaEntityDamageSource {
 		}
 	};
 
-	/**
-	 * @author Jake
-	 * @function IsThornsDamage
-	 * @info Return whether this damage source was caused by thorns.
-	 * @arguments nil
-	 * @return [[Boolean]]:thorns
-	 */
-
-	public static JavaFunction IsThornsDamage = new JavaFunction() {
-		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
-					"EntityDamageSource");
-			LuaUserdata.PushUserdata(l, self.getIsThornsDamage());
-			return 1;
-		}
-	};
-
-	/**
-	 * @author Jake
-	 * @function SetIsThornsDamage
-	 * @info Set this damage source to deal thorn damage.
-	 * @arguments nil
-	 * @return [[DamageSource]]:this
-	 */
-
-	public static JavaFunction SetIsThornsDamage = new JavaFunction() {
-		public int invoke(LuaState l) {
-			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
-					"EntityDamageSource");
-			LuaUserdata.PushUserdata(l, self.setIsThornsDamage());
-			return 1;
-		}
-	};
-
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("EntityDamageSource");
 		{
@@ -121,10 +87,6 @@ public class LuaEntityDamageSource {
 			l.setField(-2, "GetSource");
 			l.pushJavaFunction(IsDifficultyScaled);
 			l.setField(-2, "IsDifficultyScaled");
-			l.pushJavaFunction(IsThornsDamage);
-			l.setField(-2, "IsThornsDamage");
-			l.pushJavaFunction(SetIsThornsDamage);
-			l.setField(-2, "SetIsThornsDamage");
 		}
 		l.pop(1);
 	}

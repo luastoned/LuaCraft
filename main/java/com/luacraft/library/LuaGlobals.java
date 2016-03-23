@@ -16,6 +16,7 @@ import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -28,7 +29,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings.GameType;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class LuaGlobals {
 	/**
@@ -449,8 +449,6 @@ public class LuaGlobals {
 		l.setGlobal("MODE_CREATIVE");
 		l.pushNumber(GameType.ADVENTURE.ordinal());
 		l.setGlobal("MODE_ADVENTURE");
-		l.pushNumber(GameType.SPECTATOR.ordinal());
-		l.setGlobal("MODE_SPECTATOR");
 
 		l.pushNumber(EnumDifficulty.PEACEFUL.ordinal());
 		l.setGlobal("DIFFICULTY_PEACEFUL");

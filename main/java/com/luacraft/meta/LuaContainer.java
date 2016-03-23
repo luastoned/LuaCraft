@@ -61,7 +61,7 @@ public class LuaContainer {
 	public static JavaFunction GetName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
-			l.pushString(self.getName());
+			l.pushString(self.getInventoryName());
 			return 1;
 		}
 	};

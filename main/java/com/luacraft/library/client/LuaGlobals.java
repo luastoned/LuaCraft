@@ -9,7 +9,6 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 
 public class LuaGlobals {
 	private static Minecraft client = LuaCraft.getClient();
@@ -73,24 +72,6 @@ public class LuaGlobals {
 		}
 	};
 
-	/**
-	 * @author Jake
-	 * @function ModelResource
-	 * @info Creates a new [[ModelResource]] object
-	 * @arguments [[String]]:path, [ [[String]]:modid ]
-	 * @return [[ModelResource]]:resource
-	 */
-
-	public static JavaFunction ModelResource = new JavaFunction() {
-		public int invoke(LuaState l) {
-			if (l.getTop() > 1)
-				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1), l.checkString(2)), "ModelResource");
-			else
-				l.pushUserdataWithMeta(new ModelResourceLocation(l.checkString(1)), "ModelResource");
-			return 1;
-		}
-	};
-
 	public static void Init(final LuaCraftState l) {
 		l.pushJavaFunction(Block);
 		l.setGlobal("Block");
@@ -98,8 +79,6 @@ public class LuaGlobals {
 		l.setGlobal("World");
 		l.pushJavaFunction(LocalPlayer);
 		l.setGlobal("LocalPlayer");
-		l.pushJavaFunction(ModelResource);
-		l.setGlobal("ModelResource");
 
 		/**
 		 * @author Jake

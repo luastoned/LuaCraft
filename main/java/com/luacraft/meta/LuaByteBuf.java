@@ -495,7 +495,11 @@ public class LuaByteBuf {
 	public static JavaFunction WriteNBTTag = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			self.writeNBTTagCompoundToBuffer((NBTTagCompound) l.checkUserdata(2, NBTTagCompound.class, "NBTTag"));
+			try {
+				self.writeNBTTagCompoundToBuffer((NBTTagCompound) l.checkUserdata(2, NBTTagCompound.class, "NBTTag"));
+			} catch (IOException e) {
+				throw new LuaRuntimeException(e);
+			}
 			return 0;
 		}
 	};
@@ -531,7 +535,11 @@ public class LuaByteBuf {
 	public static JavaFunction WriteItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			self.writeItemStackToBuffer((ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack"));
+			try {
+				self.writeItemStackToBuffer((ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack"));
+			} catch (IOException e) {
+				throw new LuaRuntimeException(e);
+			}
 			return 0;
 		}
 	};
@@ -567,7 +575,11 @@ public class LuaByteBuf {
 	public static JavaFunction WriteString = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			self.writeString(l.checkString(2));
+			try {
+				self.writeStringToBuffer(l.checkString(2));
+			} catch (IOException e) {
+				throw new LuaRuntimeException(e);
+			}
 			return 0;
 		}
 	};
@@ -583,7 +595,11 @@ public class LuaByteBuf {
 	public static JavaFunction ReadString = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			l.pushString(self.readStringFromBuffer((int) l.checkNumber(2, 32767)));
+			try {
+				l.pushString(self.readStringFromBuffer((int) l.checkNumber(2, 32767)));
+			} catch (IOException e) {
+				throw new LuaRuntimeException(e);
+			}
 			return 1;
 		}
 	};

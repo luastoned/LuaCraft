@@ -19,25 +19,24 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
 public class LuaLibRender {
 	private static Minecraft client = LuaCraft.getClient();
 
-	static Tessellator tessellator = Tessellator.getInstance();
-	static WorldRenderer renderer = tessellator.getWorldRenderer();
+	static Tessellator tessellator = Tessellator.instance;
 
 	public static Disk renderDisk = new Disk();
 	public static Cylinder renderCylinder = new Cylinder();
 	public static Sphere renderSphere = new Sphere();
 	public static boolean ignoreZ = false;
 	public static int currentTexture = -1;
-	public static FontRenderer currentFont = client.fontRendererObj;
+	public static FontRenderer currentFont = client.fontRenderer;
 	public static Color drawColor = new Color(255, 255, 255, 255);
 
 	/**
@@ -123,33 +122,33 @@ public class LuaLibRender {
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.depthMask(false);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDepthMask(false);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(vecX, vecY, vecZ);
+			GL11.glPushMatrix();
+			GL11.glTranslated(vecX, vecY, vecZ);
 
-			GlStateManager.rotate((float) (90 - ang1.p), 1, 0, 0);
-			GlStateManager.rotate((float) (180 - ang1.y), 0, 1, 0);
-			GlStateManager.rotate((float) (ang1.r), 0, 0, 1);
+			GL11.glRotatef((float) (90 - ang1.p), 1, 0, 0);
+			GL11.glRotatef((float) (180 - ang1.y), 0, 1, 0);
+			GL11.glRotatef((float) (ang1.r), 0, 0, 1);
 
-			GlStateManager.scale(flScale, flScale, flScale);
+			GL11.glScalef(flScale, flScale, flScale);
 
 			currentFont.drawString(text, l.checkInteger(5, 0), l.checkInteger(6, 0), drawColor.getRGBA(),
 					l.checkBoolean(7, false));
 
-			GlStateManager.popMatrix();
-			GlStateManager.depthMask(true);
-			GlStateManager.disableBlend();
+			GL11.glPopMatrix();
+			GL11.glDepthMask(true);
+			GL11.glDisable(GL11.GL_BLEND);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 
 			return 0;
@@ -182,31 +181,32 @@ public class LuaLibRender {
 			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
 			GL11.glLineWidth(lineWidth);
 
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
-			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-			renderer.pos(minX, minY, minZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
-			renderer.pos(maxX, maxY, maxZ).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
+			
+			tessellator.startDrawing(GL11.GL_LINES);
+			tessellator.addVertex(minX, minY, minZ);
+			tessellator.addVertex(maxX, maxY, maxZ);
 			tessellator.draw();
 
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 
 			return 0;
@@ -239,51 +239,52 @@ public class LuaLibRender {
 			double maxX = vec2.x - posX, maxY = vec2.z - posY, maxZ = vec2.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
-			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+			OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+			GL11.glShadeModel(GL11.GL_SMOOTH);
 
-			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
-			renderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-			renderer.pos(minX, minY, minZ).endVertex();
-			renderer.pos(maxX, minY, minZ).endVertex();
-			renderer.pos(maxX, minY, maxZ).endVertex();
-			renderer.pos(minX, minY, maxZ).endVertex();
-			renderer.pos(minX, minY, minZ).endVertex();
+			tessellator.startDrawing(GL11.GL_LINE_STRIP);
+			tessellator.addVertex(minX, minY, minZ);
+			tessellator.addVertex(maxX, minY, minZ);
+			tessellator.addVertex(maxX, minY, maxZ);
+			tessellator.addVertex(minX, minY, maxZ);
+			tessellator.addVertex(minX, minY, minZ);
 			tessellator.draw();
-			renderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-			renderer.pos(minX, maxY, minZ).endVertex();
-			renderer.pos(maxX, maxY, minZ).endVertex();
-			renderer.pos(maxX, maxY, maxZ).endVertex();
-			renderer.pos(minX, maxY, maxZ).endVertex();
-			renderer.pos(minX, maxY, minZ).endVertex();
+			tessellator.startDrawing(GL11.GL_LINE_STRIP);
+			tessellator.addVertex(minX, maxY, minZ);
+			tessellator.addVertex(maxX, maxY, minZ);
+			tessellator.addVertex(maxX, maxY, maxZ);
+			tessellator.addVertex(minX, maxY, maxZ);
+			tessellator.addVertex(minX, maxY, minZ);
 			tessellator.draw();
-			renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-			renderer.pos(minX, minY, minZ).endVertex();
-			renderer.pos(minX, maxY, minZ).endVertex();
-			renderer.pos(maxX, minY, minZ).endVertex();
-			renderer.pos(maxX, maxY, minZ).endVertex();
-			renderer.pos(maxX, minY, maxZ).endVertex();
-			renderer.pos(maxX, maxY, maxZ).endVertex();
-			renderer.pos(minX, minY, maxZ).endVertex();
-			renderer.pos(minX, maxY, maxZ).endVertex();
+			tessellator.startDrawing(GL11.GL_LINES);
+			tessellator.addVertex(minX, minY, minZ);
+			tessellator.addVertex(minX, maxY, minZ);
+			tessellator.addVertex(maxX, minY, minZ);
+			tessellator.addVertex(maxX, maxY, minZ);
+			tessellator.addVertex(maxX, minY, maxZ);
+			tessellator.addVertex(maxX, maxY, maxZ);
+			tessellator.addVertex(minX, minY, maxZ);
+			tessellator.addVertex(minX, maxY, maxZ);
 			tessellator.draw();
 
-			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
+			GL11.glShadeModel(GL11.GL_FLAT);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 			return 0;
 		}
@@ -316,19 +317,19 @@ public class LuaLibRender {
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.disableTexture2D();
-			GlStateManager.depthMask(false);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDepthMask(false);
 
-			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(vecX, vecY, vecZ);
+			GL11.glPushMatrix();
+			GL11.glTranslated(vecX, vecY, vecZ);
 
 			GL11.glRotated(90 - ang1.p, 1, 0, 0);
 			GL11.glRotated(180 - ang1.y, 0, 1, 0);
@@ -336,15 +337,15 @@ public class LuaLibRender {
 
 			renderDisk.draw(flRadius2, flRadius1, iSlices, 1);
 
-			GlStateManager.popMatrix();
+			GL11.glPopMatrix();
 
-			GlStateManager.depthMask(true);
-			GlStateManager.enableTexture2D();
-			GlStateManager.disableBlend();
+			GL11.glDepthMask(true);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 
 			return 0;
@@ -379,19 +380,19 @@ public class LuaLibRender {
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.disableTexture2D();
-			GlStateManager.depthMask(false);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDepthMask(false);
 
-			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(vecX, vecY, vecZ);
+			GL11.glPushMatrix();
+			GL11.glTranslated(vecX, vecY, vecZ);
 
 			GL11.glRotated(90 - ang1.p, 1, 0, 0);
 			GL11.glRotated(180 - ang1.y, 0, 1, 0);
@@ -399,15 +400,15 @@ public class LuaLibRender {
 
 			renderCylinder.draw(flRadius1, flRadius2, flLength, iSlices, iSlices);
 
-			GlStateManager.popMatrix();
+			GL11.glPopMatrix();
 
-			GlStateManager.depthMask(true);
-			GlStateManager.enableTexture2D();
-			GlStateManager.disableBlend();
+			GL11.glDepthMask(true);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 
 			return 0;
@@ -439,31 +440,31 @@ public class LuaLibRender {
 			double vecX = vec1.x - posX, vecY = vec1.z - posY, vecZ = vec1.y - posZ;
 
 			if (ignoreZ) {
-				GlStateManager.disableDepth();
-				GlStateManager.disableCull();
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.disableTexture2D();
-			GlStateManager.depthMask(false);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDepthMask(false);
 
-			GlStateManager.color(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
+			GL11.glColor4f(drawColor.r / 255.f, drawColor.g / 255.f, drawColor.b / 255.f, drawColor.a / 255.f);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(vecX, vecY, vecZ);
+			GL11.glPushMatrix();
+			GL11.glTranslated(vecX, vecY, vecZ);
 
 			renderSphere.draw(flRadius1, iSlices, iSlices);
 
-			GlStateManager.popMatrix();
+			GL11.glPopMatrix();
 
-			GlStateManager.depthMask(true);
-			GlStateManager.enableTexture2D();
-			GlStateManager.disableBlend();
+			GL11.glDepthMask(true);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_BLEND);
 
 			if (ignoreZ) {
-				GlStateManager.enableDepth();
-				GlStateManager.enableCull();
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
+				GL11.glEnable(GL11.GL_CULL_FACE);
 			}
 
 			return 0;
@@ -481,7 +482,7 @@ public class LuaLibRender {
 
 	public static JavaFunction EyeAngles = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Entity view = client.getRenderViewEntity();
+			Entity view = client.renderViewEntity;
 			float p = view.prevRotationPitch
 					+ (view.rotationPitch - view.prevRotationPitch) * client.timer.renderPartialTicks;
 			float y = view.prevRotationYaw
@@ -503,15 +504,10 @@ public class LuaLibRender {
 
 	public static JavaFunction EyePos = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Entity view = client.getRenderViewEntity();
-			Vec3 camPos = ActiveRenderInfo.getPosition();
+			EntityLivingBase view = client.renderViewEntity;
 			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
-			double x = camPos.xCoord + eyePos.xCoord;
-			double y = camPos.yCoord + eyePos.yCoord;
-			double z = camPos.zCoord + eyePos.zCoord;
-
-			Vector pos = new Vector(x, z, y);
+			Vector pos = new Vector(eyePos.xCoord, eyePos.zCoord, eyePos.yCoord);
 			pos.push(l);
 			return 1;
 		}
@@ -528,7 +524,7 @@ public class LuaLibRender {
 
 	public static JavaFunction GetViewEntity = new JavaFunction() {
 		public int invoke(LuaState l) {
-			Entity view = client.getRenderViewEntity();
+			Entity view = client.renderViewEntity;
 			LuaUserdata.PushUserdata(l, view);
 			return 1;
 		}
@@ -545,7 +541,7 @@ public class LuaLibRender {
 
 	public static JavaFunction ScrW = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ScaledResolution scale = new ScaledResolution(client);
+			ScaledResolution scale = new ScaledResolution(client, client.displayWidth, client.displayHeight);
 			l.pushNumber(scale.getScaledWidth());
 			return 1;
 		}
@@ -562,7 +558,7 @@ public class LuaLibRender {
 
 	public static JavaFunction ScrH = new JavaFunction() {
 		public int invoke(LuaState l) {
-			ScaledResolution scale = new ScaledResolution(client);
+			ScaledResolution scale = new ScaledResolution(client, client.displayWidth, client.displayHeight);
 			l.pushNumber(scale.getScaledHeight());
 			return 1;
 		}

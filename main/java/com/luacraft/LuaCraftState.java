@@ -16,10 +16,10 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.server.FMLServerHandler;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.server.FMLServerHandler;
 
 public class LuaCraftState extends LuaState {
 	private boolean scriptEnforcer = false;
@@ -149,24 +149,24 @@ public class LuaCraftState extends LuaState {
 		remove(-2);
 	}
 
-	public void pushFace(EnumFacing face) {
-		switch (face) {
-		case DOWN:
+	public void pushFace(int sideHit) {
+		switch (sideHit) {
+		case 0:
 			new Vector(0, 0, -1).push(this);
 			break;
-		case UP:
+		case 1:
 			new Vector(0, 0, 1).push(this);
 			break;
-		case SOUTH:
-			new Vector(0, 1, 0).push(this);
-			break;
-		case NORTH:
+		case 2:
 			new Vector(0, -1, 0).push(this);
 			break;
-		case WEST:
+		case 3:
+			new Vector(0, 1, 0).push(this);
+			break;
+		case 4:
 			new Vector(-1, 0, 0).push(this);
 			break;
-		case EAST:
+		case 5:
 			new Vector(1, 0, 0).push(this);
 			break;
 		default:

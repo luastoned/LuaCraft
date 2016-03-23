@@ -56,7 +56,7 @@ public class LuaLibGame {
 			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
 
 			for (EntityPlayer player : playerList) {
-				String playerName = player.getDisplayNameString().toLowerCase();
+				String playerName = player.getDisplayName().toLowerCase();
 				if (playerName.contains(search.toLowerCase())) {
 					LuaUserdata.PushUserdata(l, player);
 					return 1;
@@ -369,9 +369,9 @@ public class LuaLibGame {
 
 	public static JavaFunction ConCommand = new JavaFunction() {
 		public int invoke(LuaState l) {
-			RConConsoleSource.getInstance().resetLog();
-			server.getCommandManager().executeCommand(RConConsoleSource.getInstance(), l.checkString(1));
-			String result = RConConsoleSource.getInstance().getLogContents();
+			RConConsoleSource.instance.resetLog();
+			server.getCommandManager().executeCommand(RConConsoleSource.instance, l.checkString(1));
+			String result = RConConsoleSource.instance.getLogContents();
 			l.pushString(result);
 			return 1;
 		}

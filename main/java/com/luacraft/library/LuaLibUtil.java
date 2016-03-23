@@ -27,7 +27,6 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -95,8 +94,6 @@ public class LuaLibUtil {
 	}
 
 	private static MovingObjectPosition traceEntity(World world, Vec3 start, Vec3 end, List<Entity> filter) {
-		Chunk chunk = world.getChunkFromBlockCoords(new BlockPos(start));
-
 		MovingObjectPosition result = null;
 		double hitDistance = -1;
 
@@ -105,9 +102,11 @@ public class LuaLibUtil {
 
 			if (filter.contains(entity))
 				continue;
+			
+			Vec3 entityPos = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 
-			double distance = start.distanceTo(entity.getPositionVector());
-			MovingObjectPosition trace = entity.getEntityBoundingBox().calculateIntercept(start, end);
+			double distance = start.distanceTo(entityPos);
+			MovingObjectPosition trace = entity.getBoundingBox().calculateIntercept(start, end);
 
 			if (trace != null && (hitDistance == -1 || distance < hitDistance)) {
 				hitDistance = distance;
@@ -153,7 +152,7 @@ public class LuaLibUtil {
 			l.pushBoolean(true);
 			l.setField(-2, "Hit");
 
-			LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
+			LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.blockX, trace.blockY, trace.blockZ);
 			LuaUserdata.PushUserdata(l, thisBlock);
 			l.setField(-2, "HitBlock");
 

@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Vec3;
 
 public class LuaVector {
@@ -47,26 +48,24 @@ public class LuaVector {
 		public int invoke(LuaState l) {
 			Vector self = (Vector) l.checkUserdata(1, Vector.class, "Vector");
 
-			Entity view = client.getRenderViewEntity();
+			EntityLivingBase view = client.renderViewEntity;
 
-			Vec3 viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
-
-			Vec3 camPos = ActiveRenderInfo.getPosition();
+			Vec3 viewNormal = view.getLookVec().normalize();
 			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
-			float vecX = (float) ((camPos.xCoord + eyePos.xCoord) - self.x);
-			float vecY = (float) ((camPos.yCoord + eyePos.yCoord) - self.z);
-			float vecZ = (float) ((camPos.zCoord + eyePos.zCoord) - self.y);
+			float vecX = (float) (eyePos.xCoord - self.x);
+			float vecY = (float) (eyePos.yCoord - self.z);
+			float vecZ = (float) (eyePos.zCoord - self.y);
 
 			Vector3f pos = new Vector3f(vecX, vecY, vecZ);
 
-			viewMatrix.load(ActiveRenderInfo.MODELVIEW.asReadOnlyBuffer());
-			projectionMatrix.load(ActiveRenderInfo.PROJECTION.asReadOnlyBuffer());
+			viewMatrix.load(ActiveRenderInfo.modelview.asReadOnlyBuffer());
+			projectionMatrix.load(ActiveRenderInfo.projection.asReadOnlyBuffer());
 
 			pos = Vec3TransformCoordinate(pos, viewMatrix);
 			pos = Vec3TransformCoordinate(pos, projectionMatrix);
 
-			ScaledResolution scaledRes = new ScaledResolution(client);
+			ScaledResolution scaledRes = new ScaledResolution(client, client.displayWidth, client.displayHeight);
 			pos.x = (float) ((scaledRes.getScaledWidth() * (pos.x + 1.0)) / 2.0);
 			pos.y = (float) (scaledRes.getScaledHeight() * (1.0 - ((pos.y + 1.0) / 2.0)));
 

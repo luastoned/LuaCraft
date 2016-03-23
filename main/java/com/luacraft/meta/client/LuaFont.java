@@ -8,7 +8,6 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class LuaFont {
 	public static JavaFunction __tostring = new JavaFunction() {
@@ -83,15 +82,15 @@ public class LuaFont {
 			int x = l.checkInteger(3);
 			int y = l.checkInteger(4);
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			if (l.checkBoolean(5, false))
 				self.drawStringWithShadow(text, x, y, LuaLibSurface.drawColor.getRGBA());
 			else
 				self.drawString(text, x, y, LuaLibSurface.drawColor.getRGBA());
 
-			GlStateManager.disableBlend();
+			GL11.glDisable(GL11.GL_BLEND);
 			return 0;
 		}
 	};
@@ -112,12 +111,12 @@ public class LuaFont {
 			int y = l.checkInteger(4);
 			int width = l.checkInteger(5);
 
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			self.drawSplitString(text, x, y, width, LuaLibSurface.drawColor.getRGBA());
 
-			GlStateManager.disableBlend();
+			GL11.glDisable(GL11.GL_BLEND);
 			return 0;
 		}
 	};

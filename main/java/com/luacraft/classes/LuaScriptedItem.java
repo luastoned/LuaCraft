@@ -5,8 +5,10 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,12 +16,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata {
 	private LuaState l;
@@ -77,24 +75,24 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 
 	public static void Init(LuaState l) {
 
-		l.pushInteger(EnumAction.NONE.ordinal());
+		l.pushInteger(EnumAction.none.ordinal());
 		l.setGlobal("ITEM_ACTION_NONE");
-		l.pushInteger(EnumAction.EAT.ordinal());
+		l.pushInteger(EnumAction.eat.ordinal());
 		l.setGlobal("ITEM_ACTION_EAT");
-		l.pushInteger(EnumAction.DRINK.ordinal());
+		l.pushInteger(EnumAction.drink.ordinal());
 		l.setGlobal("ITEM_ACTION_DRINK");
-		l.pushInteger(EnumAction.BLOCK.ordinal());
+		l.pushInteger(EnumAction.block.ordinal());
 		l.setGlobal("ITEM_ACTION_BLOCK");
-		l.pushInteger(EnumAction.BOW.ordinal());
+		l.pushInteger(EnumAction.bow.ordinal());
 		l.setGlobal("ITEM_ACTION_BOW");
 
-		l.pushInteger(EnumRarity.COMMON.ordinal());
+		l.pushInteger(EnumRarity.common.ordinal());
 		l.setGlobal("ITEM_RARITY_COMMON");
-		l.pushInteger(EnumRarity.UNCOMMON.ordinal());
+		l.pushInteger(EnumRarity.uncommon.ordinal());
 		l.setGlobal("ITEM_RARITY_UNCOMMON");
-		l.pushInteger(EnumRarity.RARE.ordinal());
+		l.pushInteger(EnumRarity.rare.ordinal());
 		l.setGlobal("ITEM_RARITY_RARE");
-		l.pushInteger(EnumRarity.EPIC.ordinal());
+		l.pushInteger(EnumRarity.epic.ordinal());
 		l.setGlobal("ITEM_RARITY_EPIC");
 
 		l.newMetatable("ScriptedItem");
@@ -106,11 +104,11 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			l.setField(-2, "MaxStackSize");
 			l.pushBoolean(false);
 			l.setField(-2, "Full3D");
-			l.pushInteger(EnumAction.NONE.ordinal());
+			l.pushInteger(EnumAction.none.ordinal());
 			l.setField(-2, "UseAction");
 			l.pushInteger(0);
 			l.setField(-2, "UseDuration");
-			l.pushInteger(EnumRarity.COMMON.ordinal());
+			l.pushInteger(EnumRarity.common.ordinal());
 			l.setField(-2, "Rarity");
 			l.pushInteger(6000);
 			l.setField(-2, "Lifespan");
@@ -213,33 +211,7 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
-		synchronized (l) {
-			if (!l.isOpen())
-				return super.getModel(stack, player, useRemaining);
-
-			pushValue("GetModel");
-			{
-				pushSelf();
-				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdata.PushUserdata(l, player);
-				l.pushInteger(useRemaining);
-			}
-			l.call(4, 1);
-
-			ModelResourceLocation ret = null;
-
-			if (l.isUserdata(1, ModelResourceLocation.class))
-				ret = (ModelResourceLocation) l.toUserdata(1);
-
-			l.setTop(0);
-			return ret;
-		}
-	}
-
-	@Override
+	/*@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side,
 			float hitX, float hitY, float hitZ) {
 		synchronized (l) {
@@ -286,7 +258,7 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			l.setTop(0);
 			return ret;
 		}
-	}
+	}*/
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
@@ -354,11 +326,11 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos,
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, int x, int y, int z,
 			EntityLivingBase playerIn) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onBlockDestroyed(stack, worldIn, blockIn, pos, playerIn);
+				return super.onBlockDestroyed(stack, worldIn, blockIn, x, y, z, playerIn);
 
 			pushValue("OnBlockDestroyed");
 			{
@@ -457,15 +429,15 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 
 			switch (ret) {
 			case 0:
-				return EnumAction.NONE;
+				return EnumAction.none;
 			case 1:
-				return EnumAction.EAT;
+				return EnumAction.eat;
 			case 2:
-				return EnumAction.DRINK;
+				return EnumAction.drink;
 			case 3:
-				return EnumAction.BLOCK;
+				return EnumAction.block;
 			case 4:
-				return EnumAction.BOW;
+				return EnumAction.bow;
 			}
 
 			return EnumAction.values()[ret];
@@ -496,13 +468,13 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 
 			switch (ret) {
 			case 0:
-				return EnumRarity.COMMON;
+				return EnumRarity.common;
 			case 1:
-				return EnumRarity.UNCOMMON;
+				return EnumRarity.uncommon;
 			case 2:
-				return EnumRarity.RARE;
+				return EnumRarity.rare;
 			case 3:
-				return EnumRarity.EPIC;
+				return EnumRarity.epic;
 			}
 
 			return EnumRarity.values()[ret];
