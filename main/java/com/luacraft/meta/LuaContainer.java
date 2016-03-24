@@ -68,6 +68,56 @@ public class LuaContainer {
 
 	/**
 	 * @author Jake
+	 * @function AddItem
+	 * @info Gets the slot position of the first empty slot
+	 * @arguments nil
+	 * @return [[Number]]:slot
+	 */
+
+	public static JavaFunction AddItem = new JavaFunction() {
+		public int invoke(LuaState l) {
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
+			ItemStack item = (ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack");
+			
+			for (int i = 0; i < self.getSizeInventory(); ++i)
+			{
+				ItemStack slot = self.getStackInSlot(i);
+				if (self.getStackInSlot(i) == null)
+	            {
+	            	l.pushInteger(i);
+	                return 1;
+	            }
+			}
+			
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function GetFirstEmptySlot
+	 * @info Gets the slot position of the first empty slot
+	 * @arguments nil
+	 * @return [[Number]]:slot
+	 */
+
+	public static JavaFunction GetFirstEmptySlot = new JavaFunction() {
+		public int invoke(LuaState l) {
+			IInventory self = (IInventory) l.checkUserdata(1, IInventory.class, "Container");
+			
+			for (int i = 0; i < self.getSizeInventory(); ++i)
+	            if (self.getStackInSlot(i) == null)
+	            {
+	            	l.pushInteger(i);
+	                return 1;
+	            }
+			
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
 	 * @function GetSlot
 	 * @info Gets the item stack within the slot
 	 * @arguments nil
@@ -178,6 +228,10 @@ public class LuaContainer {
 			l.setField(-2, "GetStackLimit");
 			l.pushJavaFunction(GetName);
 			l.setField(-2, "GetName");
+			l.pushJavaFunction(AddItem);
+			l.setField(-2, "AddItem");
+			l.pushJavaFunction(GetFirstEmptySlot);
+			l.setField(-2, "GetFirstEmptySlot");
 			l.pushJavaFunction(GetSlot);
 			l.setField(-2, "GetSlot");
 			l.pushJavaFunction(SetSlot);
