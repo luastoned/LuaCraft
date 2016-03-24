@@ -69,8 +69,8 @@ public class LuaContainer {
 	/**
 	 * @author Jake
 	 * @function AddItem
-	 * @info Gets the slot position of the first empty slot
-	 * @arguments nil
+	 * @info Adds an ItemStack in the first empty slot
+	 * @arguments [[ItemStack]]:item
 	 * @return [[Number]]:slot
 	 */
 
