@@ -24,7 +24,7 @@ public class LuaPacketManager {
 				return;
 
 			try {
-				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
+				PacketBuffer buffer = new PacketBuffer(event.getPacket().payload());
 
 				// Peek into the packet
 				String func = buffer.readStringFromBuffer(32767);
@@ -54,8 +54,8 @@ public class LuaPacketManager {
 				return;
 
 			try {
-				PacketBuffer buffer = new PacketBuffer(event.packet.payload());
-				EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
+				PacketBuffer buffer = new PacketBuffer(event.getPacket().payload());
+				EntityPlayerMP player = ((NetHandlerPlayServer) event.getHandler()).playerEntity;
 				l.pushIncomingNet();
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.pushUserdataWithMeta(player, "Player");

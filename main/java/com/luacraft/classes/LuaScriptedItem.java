@@ -6,7 +6,7 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +14,8 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -49,7 +49,8 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			l.pushValue(1);
 			l.setTable(-3);
 
-			GameRegistry.registerItem(item, classname);
+			//GameRegistry.registerItem(item, classname);
+			GameRegistry.register(item, new ResourceLocation(classname)); // TODO: Inspect, this is most likely not going to work
 			return 0;
 		}
 	};
@@ -96,6 +97,13 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 		l.setGlobal("ITEM_RARITY_RARE");
 		l.pushInteger(EnumRarity.EPIC.ordinal());
 		l.setGlobal("ITEM_RARITY_EPIC");
+
+		l.pushInteger(EnumActionResult.SUCCESS.ordinal());
+		l.setGlobal("ACTION_RESULT_SUCCESS");
+		l.pushInteger(EnumActionResult.PASS.ordinal());
+		l.setGlobal("ACTION_RESULT_PASS");
+		l.pushInteger(EnumActionResult.FAIL.ordinal());
+		l.setGlobal("ACTION_RESULT_FAIL");
 
 		l.newMetatable("ScriptedItem");
 		{
@@ -213,6 +221,9 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 		}
 	}
 
+	/*
+	// REMOVED in 1.9
+	// TODO: Find replacement
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
@@ -238,13 +249,13 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			return ret;
 		}
 	}
+	*/
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side,
-			float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+				return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 
 			pushValue("OnItemUse");
 			{
@@ -253,28 +264,29 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 				LuaUserdata.PushUserdata(l, playerIn);
 				LuaUserdata.PushUserdata(l, worldIn);
 				LuaUserdata.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
-				l.pushInteger(side.ordinal());
+				l.pushInteger(facing.ordinal());
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
 			l.call(7, 1);
 			boolean ret = l.toBoolean(1);
+			int action = l.toInteger(1);
 			l.setTop(0);
-			return ret;
+			return EnumActionResult.values()[action];
 		}
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemUseFinish(stack, worldIn, playerIn);
+				return super.onItemUseFinish(stack, worldIn, entityLiving);
 
 			pushValue("OnItemUseFinish");
 			{
 				pushSelf();
 				l.pushUserdataWithMeta(stack, "ItemStack");
 				LuaUserdata.PushUserdata(l, worldIn);
-				LuaUserdata.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, entityLiving); // TODO: Check this
 			}
 			l.call(4, 1);
 
@@ -289,10 +301,10 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemRightClick(itemStackIn, worldIn, playerIn);
+				return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 
 			pushValue("OnItemRightClick");
 			{
@@ -309,7 +321,7 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 				ret = (ItemStack) l.toUserdata(1);
 
 			l.setTop(0);
-			return ret;
+			return new ActionResult<>(EnumActionResult.SUCCESS, ret);
 		}
 	}
 
@@ -354,11 +366,10 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack stack, World worldIn, Block blockIn, BlockPos pos,
-			EntityLivingBase playerIn) {
+	public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState blockIn, BlockPos pos, EntityLivingBase entityLiving) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onBlockDestroyed(stack, worldIn, blockIn, pos, playerIn);
+				return super.onBlockDestroyed(stack, worldIn, blockIn, pos, entityLiving);
 
 			pushValue("OnBlockDestroyed");
 			{
@@ -366,7 +377,7 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 				l.pushUserdataWithMeta(stack, "ItemStack");
 				LuaUserdata.PushUserdata(l, worldIn);
 				LuaUserdata.PushUserdata(l, blockIn);
-				LuaUserdata.PushUserdata(l, playerIn);
+				LuaUserdata.PushUserdata(l, entityLiving); // TODO: Check this
 			}
 			l.call(5, 1);
 			boolean ret = l.toBoolean(1);
@@ -376,10 +387,10 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	}
 
 	@Override
-	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target) {
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.itemInteractionForEntity(stack, playerIn, target);
+				return super.itemInteractionForEntity(stack, playerIn, target, hand);
 
 			pushValue("CanInteractWithEntity");
 			{

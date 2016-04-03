@@ -1,5 +1,7 @@
 package com.luacraft.library.client;
 
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Cylinder;
 import org.lwjgl.util.glu.Disk;
@@ -21,16 +23,14 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 
 public class LuaLibRender {
 	private static Minecraft client = LuaCraft.getClient();
 
 	static Tessellator tessellator = Tessellator.getInstance();
-	static WorldRenderer renderer = tessellator.getWorldRenderer();
+	static VertexBuffer renderer = tessellator.getBuffer();
 
 	public static Disk renderDisk = new Disk();
 	public static Cylinder renderCylinder = new Cylinder();
@@ -504,8 +504,8 @@ public class LuaLibRender {
 	public static JavaFunction EyePos = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity view = client.getRenderViewEntity();
-			Vec3 camPos = ActiveRenderInfo.getPosition();
-			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
+			Vec3d camPos = ActiveRenderInfo.getPosition();
+			Vec3d eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
 			double x = camPos.xCoord + eyePos.xCoord;
 			double y = camPos.yCoord + eyePos.yCoord;

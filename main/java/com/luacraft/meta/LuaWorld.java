@@ -17,8 +17,11 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
@@ -29,7 +32,7 @@ public class LuaWorld {
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushString(String.format("World [%d][%s]", self.provider.getDimensionId(),
+			l.pushString(String.format("World [%d][%s]", self.provider.getDimension(),
 					self.getWorldInfo().getWorldName()));
 			return 1;
 		}
@@ -116,7 +119,7 @@ public class LuaWorld {
 			String chatMsg = LuaLibUtil.toChat(l, 1);
 
 			for (EntityPlayer player : playerList)
-				player.addChatMessage(new ChatComponentText(chatMsg));
+				player.addChatMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};
@@ -593,7 +596,7 @@ public class LuaWorld {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.addWeatherEffect(new EntityLightningBolt(self, pos.x, pos.z, pos.y));
+			self.addWeatherEffect(new EntityLightningBolt(self, pos.x, pos.z, pos.y, l.checkBoolean(3, false)));
 			return 0;
 		}
 	};
@@ -627,7 +630,7 @@ public class LuaWorld {
 	public static JavaFunction GetDimension = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			l.pushNumber(self.provider.getDimensionId());
+			l.pushNumber(self.provider.getDimension());
 			return 1;
 		}
 	};
@@ -644,8 +647,8 @@ public class LuaWorld {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			l.pushString(
-					self.getWorldChunkManager().getBiomeGenAt(null, (int) pos.x, (int) pos.y, 0, 0, false).toString());
+			// TODO: I think this will work
+			l.pushString(self.getBiomeGenForCoords(new BlockPos(pos.toVec3d())).getBiomeName());
 			return 1;
 		}
 	};
@@ -654,7 +657,7 @@ public class LuaWorld {
 	 * @author Jake
 	 * @function EmitSound
 	 * @info Play a sound emitting from the position given
-	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [ [[Number]]:Pitch, [[Number]]:Volume ]
+	 * @arguments [[Vector]]:Position, [[String]]:Sound name, [[String]]:Sound catagory, [ [[Number]]:Pitch, [[Number]]:Volume, [[Boolean]]:DistanceDelay ]
 	 * @return nil
 	 */
 
@@ -662,8 +665,8 @@ public class LuaWorld {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.playSoundEffect(pos.x, pos.z, pos.y, l.checkString(3), (float) l.checkNumber(4, 1),
-					(float) l.checkNumber(5, 1));
+			SoundCategory category = SoundCategory.getByName(l.checkString(3));
+			//self.playSound(pos.x, pos.z, pos.y, new SoundEvent(new ResourceLocation(l.checkString(4))), category, (float)l.checkNumber(4, 1), (float)l.checkNumber(5, 1), l.checkBoolean(6, false)); // TODO: Check this
 			return 0;
 		}
 	};

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import com.luacraft.classes.FileMount;
 import com.luacraft.classes.Vector;
+import com.luacraft.console.ConsoleManager;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaStackTraceElement;
 import com.naef.jnlua.LuaState;
@@ -73,18 +74,22 @@ public class LuaCraftState extends LuaState {
 
 	public void print(String str) {
 		LuaCraft.getLogger().info(str);
+		ConsoleManager.get(getActualSide()).onPrint(str);
 	}
 
 	public void error(String str) {
 		LuaCraft.getLogger().error(str);
+		ConsoleManager.get(getActualSide()).onError(str);
 	}
 
 	public void info(String str) {
 		LuaCraft.getLogger().info(str);
+		ConsoleManager.get(getActualSide()).onInfo(str);
 	}
 
 	public void warning(String str) {
 		LuaCraft.getLogger().warn(str);
+		ConsoleManager.get(getActualSide()).onWarning(str);
 	}
 
 	/**

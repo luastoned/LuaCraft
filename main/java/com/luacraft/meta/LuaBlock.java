@@ -14,8 +14,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 public class LuaBlock {
 	public static JavaFunction __tostring = new JavaFunction() {
@@ -209,7 +209,7 @@ public class LuaBlock {
 	public static JavaFunction GetBiome = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.blockWorld.getWorldChunkManager().getBiomeGenerator(self.getPos()).biomeName);
+			l.pushString(self.blockWorld.getBiomeGenForCoords(self.getPos()).getBiomeName());
 			return 1;
 		}
 	};
@@ -303,7 +303,7 @@ public class LuaBlock {
 			StringBuilder out = new StringBuilder();
 
 			if (l.type(-1) == LuaType.NUMBER) {
-				EnumChatFormatting format = EnumChatFormatting.values()[l.toInteger(-1)];
+				TextFormatting format = TextFormatting.values()[l.toInteger(-1)];
 				out.append(format);
 			} else
 				out.append(l.toString(-1));
@@ -341,7 +341,7 @@ public class LuaBlock {
 				else
 					out.append(l.toString(-1));
 
-				tile.signText[l.toInteger(-2)] = new ChatComponentText(out.toString());
+				tile.signText[l.toInteger(-2)] = new TextComponentString(out.toString());
 
 				l.pop(1); // Pop the value, keep the key
 			}

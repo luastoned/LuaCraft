@@ -11,7 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -249,7 +251,7 @@ public class LuaEntity {
 	public static JavaFunction IsMounted = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushBoolean(self.ridingEntity != null);
+			l.pushBoolean(self.isRiding());
 			return 1;
 		}
 	};
@@ -266,7 +268,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			Entity other = (Entity) l.checkUserdata(2, Entity.class, "Entity");
-			self.mountEntity(other);
+			self.startRiding(other);
 			return 0;
 		}
 	};
@@ -282,7 +284,7 @@ public class LuaEntity {
 	public static JavaFunction GetMount = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushUserdataWithMeta(self.ridingEntity, "Entity");
+			l.pushUserdataWithMeta(self.getRidingEntity(), "Entity");
 			return 1;
 		}
 	};
@@ -675,7 +677,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			World world = (World) l.checkUserdata(2, World.class, "World");
-			self.travelToDimension(world.provider.getDimensionId());
+			self.changeDimension(world.provider.getDimension());
 			return 0;
 		}
 	};
@@ -862,7 +864,11 @@ public class LuaEntity {
 	public static JavaFunction PlaySound = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.playSound(l.checkString(2), (float) l.checkNumber(3, 1), (float) l.checkNumber(4, 1));
+			//self.playSound(l.checkString(2), (float) l.checkNumber(3, 1), (float) l.checkNumber(4, 1));
+			// TODO: Check to make sure this works
+			// Either I do this or use soundEventRegistry
+			// Might need to create a new lua metatable for this
+			// self.playSound(new SoundEvent(new ResourceLocation(l.checkString(2))), (float) l.checkNumber(3, 1), (float) l.checkNumber(4, 1)); // TODO: Check this
 			return 0;
 		}
 	};
@@ -975,7 +981,7 @@ public class LuaEntity {
 	public static JavaFunction GetDataWatcher = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushUserdataWithMeta(self.getDataWatcher(), "DataWatcher");
+			l.pushUserdataWithMeta(self.getDataManager(), "DataWatcher");
 			return 1;
 		}
 	};

@@ -11,9 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class LuaPlayer {
@@ -148,7 +148,7 @@ public class LuaPlayer {
 	public static JavaFunction GetArmor = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushInteger(self.inventory.getTotalArmorValue());
+			l.pushInteger(self.getTotalArmorValue());
 			return 1;
 		}
 	};
@@ -222,7 +222,7 @@ public class LuaPlayer {
 	public static JavaFunction GetActiveSlot = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayer.class, "Player");
-			l.pushUserdataWithMeta(self.getCurrentEquippedItem(), "ItemStack");
+			l.pushUserdataWithMeta(self.inventory.getCurrentItem(), "ItemStack");
 			return 1;
 		}
 	};
@@ -635,7 +635,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			String chatMsg = LuaLibUtil.toChat(l, 2);
-			self.addChatMessage(new ChatComponentText(chatMsg));
+			self.addChatMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};

@@ -12,6 +12,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
+import com.luacraft.console.ConsoleFrame;
+import com.luacraft.console.ConsoleManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,8 +40,12 @@ import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = LuaCraft.MODID, version = LuaCraft.VERSION)
+@Mod(modid = LuaCraft.MODID,
+		name = LuaCraft.MODNAME,
+		version = LuaCraft.VERSION,
+		guiFactory = "com.luacraft.LuaCraftGuiFactory")
 public class LuaCraft {
+	public static final String MODNAME = "LuaCraft";
 	public static final String MODID = "luacraft";
 	public static final String VERSION = "1.2";
 
@@ -48,13 +56,15 @@ public class LuaCraft {
 
 	private static Logger luaLogger;
 	private static LuaLoader luaLoader = new LuaLoader(rootDir);
-	private static HashMap<Side, LuaCraftState> luaStates = new HashMap<Side, LuaCraftState>();
+	public static HashMap<Side, LuaCraftState> luaStates = new HashMap<Side, LuaCraftState>();
 
 	public static FMLEventChannel channel = null;
 
 	public static Configuration config;
+	public static File configFile;
 
 	public static boolean scriptEnforcer = true;
+	public static boolean enableDeveloperConsole = true;
 
 	public static FMLClientHandler getForgeClient() {
 		return FMLClientHandler.instance();
@@ -71,9 +81,12 @@ public class LuaCraft {
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
-		scriptEnforcer = config.getBoolean("script-enforcer", "server", true,
-				"Prevent clients from running their own Lua scripts");
+		loadConfig();
 		config.save();
+
+		configFile = config.getConfigFile();
+
+		ConsoleManager.create();
 	}
 
 	@EventHandler
@@ -138,6 +151,14 @@ public class LuaCraft {
 				luaStates.remove(Side.SERVER);
 			}
 		}
+	}
+
+	public static void loadConfig()
+	{
+		scriptEnforcer = config.get(Configuration.CATEGORY_GENERAL, "script-enforcer", true, "Prevent clients from running their own Lua scripts").getBoolean();
+
+		// TODO: Allow toggling
+		enableDeveloperConsole = config.get(Configuration.CATEGORY_GENERAL, "developer-console", true, "Console for lua input and output").getBoolean();
 	}
 
 	public static Logger getLogger() {

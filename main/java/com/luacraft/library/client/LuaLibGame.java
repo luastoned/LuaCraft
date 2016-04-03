@@ -13,7 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 public class LuaLibGame {
 	private static Minecraft client = LuaCraft.getClient();
@@ -140,7 +140,7 @@ public class LuaLibGame {
 				return 0;
 
 			String chatMsg = LuaLibUtil.toChat(l, 1);
-			client.thePlayer.addChatMessage(new ChatComponentText(chatMsg));
+			client.thePlayer.addChatMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};

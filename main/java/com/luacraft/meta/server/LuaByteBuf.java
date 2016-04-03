@@ -6,7 +6,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.S3FPacketCustomPayload;
+import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
 
 public class LuaByteBuf {
@@ -24,7 +24,7 @@ public class LuaByteBuf {
 	public static JavaFunction Send = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			S3FPacketCustomPayload packet = new S3FPacketCustomPayload("LuaCraft", self);
+			SPacketCustomPayload packet = new SPacketCustomPayload("LuaCraft", self);
 
 			for (int i = 2; i <= l.getTop(); i++) {
 				if (l.isUserdata(i, EntityPlayerMP.class)) {
@@ -57,12 +57,12 @@ public class LuaByteBuf {
 	public static JavaFunction Broadcast = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			S3FPacketCustomPayload packet = new S3FPacketCustomPayload("LuaCraft", self);
+			SPacketCustomPayload packet = new SPacketCustomPayload("LuaCraft", self);
 
 			if (l.isNumber(2))
-				server.getConfigurationManager().sendPacketToAllPlayersInDimension(packet, l.toInteger(2));
+				server.getPlayerList().sendPacketToAllPlayersInDimension(packet, l.toInteger(2));
 			else
-				server.getConfigurationManager().sendPacketToAllPlayers(packet);
+				server.getPlayerList().sendPacketToAllPlayers(packet);
 
 			return 0;
 		}

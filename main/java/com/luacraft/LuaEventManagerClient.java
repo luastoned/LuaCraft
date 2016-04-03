@@ -35,9 +35,9 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("input.mousemove");
-				l.pushNumber(event.button);
-				l.pushNumber(event.x);
-				l.pushNumber(event.y);
+				l.pushNumber(event.getButton());
+				l.pushNumber(event.getX());
+				l.pushNumber(event.getY());
 				l.call(4, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -56,7 +56,7 @@ public class LuaEventManagerClient {
 	@SubscribeEvent
 	public void onRenderGameOverlay(RenderGameOverlayEvent event) {
 		synchronized (l) {
-			if (event.type != RenderGameOverlayEvent.ElementType.ALL)
+			if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
 				return;
 
 			if (l.getMinecraft().thePlayer == null)
@@ -68,7 +68,7 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("render.gameoverlay");
-				l.pushNumber(event.partialTicks);
+				l.pushNumber(event.getPartialTicks());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -96,7 +96,7 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("render.world");
-				l.pushNumber(event.partialTicks);
+				l.pushNumber(event.getPartialTicks());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -121,8 +121,8 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("player.prerender");
-				LuaUserdata.PushUserdata(l, event.entityPlayer);
-				l.pushNumber(event.partialRenderTick);
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushNumber(event.getPartialRenderTick());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -147,8 +147,8 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				l.pushString("player.postrender");
-				LuaUserdata.PushUserdata(l, event.entityPlayer);
-				l.pushNumber(event.partialRenderTick);
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushNumber(event.getPartialRenderTick());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);

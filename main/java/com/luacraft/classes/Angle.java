@@ -3,7 +3,7 @@ package com.luacraft.classes;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaUserdata;
 
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class Angle implements LuaUserdata {
 	public double p = 0;

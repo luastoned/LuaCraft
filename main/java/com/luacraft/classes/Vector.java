@@ -3,7 +3,7 @@ package com.luacraft.classes;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaUserdata;
 
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class Vector implements LuaUserdata {
 	public double x = 0;
@@ -22,7 +22,7 @@ public class Vector implements LuaUserdata {
 		this.z = z;
 	}
 
-	public Vector(Vec3 vec) {
+	public Vector(Vec3d vec) {
 		x = vec.xCoord;
 		y = vec.zCoord;
 		z = vec.yCoord;
@@ -146,8 +146,8 @@ public class Vector implements LuaUserdata {
 		return new Vector(u / d, v / d, 0);
 	}
 
-	public Vec3 toVec3() {
-		return new Vec3(x, z, y);
+	public Vec3d toVec3d() {
+		return new Vec3d(x, z, y);
 	}
 
 	public String toString() {

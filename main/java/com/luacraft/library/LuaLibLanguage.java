@@ -11,8 +11,8 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.StringTranslate;
+import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.translation.LanguageMap;
 
 public class LuaLibLanguage {
 
@@ -37,9 +37,9 @@ public class LuaLibLanguage {
 				for (int i = 2; i <= top; i++)
 					strings[i - 1] = l.checkString(i);
 
-				translated = StatCollector.translateToLocalFormatted(l.checkString(1), strings);
+				translated = I18n.translateToLocalFormatted(l.checkString(1), strings);
 			} else
-				translated = StatCollector.translateToLocal(l.checkString(1));
+				translated = I18n.translateToLocal(l.checkString(1));
 
 			l.pushString(translated);
 			return 1;
@@ -60,7 +60,7 @@ public class LuaLibLanguage {
 			File file = FileMount.GetFile(l.checkString(1));
 			try {
 				InputStream stream = new FileInputStream(file);
-				StringTranslate.inject(stream);
+				LanguageMap.inject(stream);
 			} catch (FileNotFoundException e) {
 				throw new LuaRuntimeException("Cannot open " + file.getName() + ": No such file or directory");
 			}
@@ -79,7 +79,7 @@ public class LuaLibLanguage {
 
 	public static JavaFunction CanTranslate = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushBoolean(StatCollector.canTranslate(l.checkString(1)));
+			l.pushBoolean(I18n.canTranslate(l.checkString(1)));
 			return 1;
 		}
 	};

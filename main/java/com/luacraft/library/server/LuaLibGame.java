@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 
 public class LuaLibGame {
 	private static MinecraftServer server = null;
@@ -28,7 +28,7 @@ public class LuaLibGame {
 
 	public static JavaFunction GetPlayers = new JavaFunction() {
 		public int invoke(LuaState l) {
-			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
 
 			l.newTable();
 			int i = 1;
@@ -53,7 +53,7 @@ public class LuaLibGame {
 	public static JavaFunction GetPlayerByName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			String search = l.checkString(1);
-			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
 
 			for (EntityPlayer player : playerList) {
 				String playerName = player.getDisplayNameString().toLowerCase();
@@ -77,11 +77,11 @@ public class LuaLibGame {
 
 	public static JavaFunction ChatPrint = new JavaFunction() {
 		public int invoke(LuaState l) {
-			List<EntityPlayerMP> playerList = server.getConfigurationManager().playerEntityList;
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
 
 			String chatMsg = LuaLibUtil.toChat(l, 1);
 			for (EntityPlayerMP player : playerList)
-				player.addChatMessage(new ChatComponentText(chatMsg));
+				player.addChatMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};
@@ -97,7 +97,7 @@ public class LuaLibGame {
 
 	public static JavaFunction MaxPlayers = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushNumber(server.getConfigurationManager().getMaxPlayers());
+			l.pushNumber(server.getPlayerList().getMaxPlayers());
 			return 1;
 		}
 	};
@@ -113,7 +113,7 @@ public class LuaLibGame {
 
 	public static JavaFunction GetMOTD = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushString(server.getMotd());
+			l.pushString(server.getMOTD());
 			return 1;
 		}
 	};
@@ -337,7 +337,7 @@ public class LuaLibGame {
 
 	public static JavaFunction GetHostName = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushString(server.getHostname());
+			l.pushString(server.getServerHostname());
 			return 1;
 		}
 	};
@@ -369,9 +369,9 @@ public class LuaLibGame {
 
 	public static JavaFunction ConCommand = new JavaFunction() {
 		public int invoke(LuaState l) {
-			RConConsoleSource.getInstance().resetLog();
-			server.getCommandManager().executeCommand(RConConsoleSource.getInstance(), l.checkString(1));
-			String result = RConConsoleSource.getInstance().getLogContents();
+			RConConsoleSource source = new RConConsoleSource(server);
+			server.getCommandManager().executeCommand(source, l.checkString(1));
+			String result = source.getLogContents();
 			l.pushString(result);
 			return 1;
 		}
@@ -388,7 +388,7 @@ public class LuaLibGame {
 
 	public static JavaFunction GetViewDistance = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushNumber(server.getConfigurationManager().getViewDistance());
+			l.pushNumber(server.getPlayerList().getViewDistance());
 			return 1;
 		}
 	};

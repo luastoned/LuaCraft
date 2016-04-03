@@ -11,7 +11,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListBansEntry;
 
 public class LuaPlayer {
@@ -119,8 +119,7 @@ public class LuaPlayer {
 	public static JavaFunction IsOP = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
-			ServerConfigurationManager config = server.getConfigurationManager();
-			l.pushBoolean(config.getOppedPlayers().getEntry(self.getGameProfile()) != null);
+			l.pushBoolean(server.getPlayerList().getOppedPlayers().getEntry(self.getGameProfile()) != null);
 			return 1;
 		}
 	};
@@ -138,7 +137,7 @@ public class LuaPlayer {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			boolean state = l.checkBoolean(2);
 
-			ServerConfigurationManager config = server.getConfigurationManager();
+			PlayerList config = server.getPlayerList();
 			GameProfile user = self.getGameProfile();
 
 			if (state)
@@ -191,13 +190,11 @@ public class LuaPlayer {
 
 			String banner = l.checkString(4, "LuaCraft");
 
-			ServerConfigurationManager config = server.getConfigurationManager();
-
 			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), date, banner,
 					cal != null ? cal.getTime() : null, reason);
 
 			self.playerNetServerHandler.kickPlayerFromServer(reason);
-			config.getBannedPlayers().addEntry(banEntry);
+			server.getPlayerList().getBannedPlayers().addEntry(banEntry);
 			return 0;
 		}
 	};

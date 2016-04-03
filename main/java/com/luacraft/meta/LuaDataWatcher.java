@@ -1,18 +1,26 @@
 package com.luacraft.meta;
 
+import com.google.common.base.Optional;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-import net.minecraft.entity.DataWatcher;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+
+// TODO: Test all these out after updating them to use the new MC 1.9 classes
 
 public class LuaDataWatcher {
-
 	public static JavaFunction __tostring = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
+			EntityDataManager self = (EntityDataManager)l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
 			l.pushString(String.format("DataWatcher: 0x%08x", l.toPointer(1)));
 			return 1;
 		}
@@ -28,8 +36,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddByte = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), (byte) l.checkInteger(3, 0));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			// TODO: check this out
+			self.register(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.BYTE), (byte)l.checkInteger(3));
 			return 0;
 		}
 	};
@@ -44,8 +53,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetByte = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), (byte) l.checkInteger(3));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), (byte) l.checkInteger(3));
+			self.set(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.BYTE), (byte)l.checkInteger(3));
 			return 0;
 		}
 	};
@@ -60,8 +70,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetByte = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			l.pushNumber(self.getWatchableObjectByte(l.checkInteger(2)));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//l.pushNumber(self.getWatchableObjectByte(l.checkInteger(2)));
+			l.pushNumber(self.get(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.BYTE)));
 			return 1;
 		}
 	};
@@ -76,8 +87,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddShort = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), (short) l.checkInteger(3, 0));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.addObject(l.checkInteger(2), (short) l.checkInteger(3, 0));
+			self.register(new DataParameter<>((int)l.checkUserdata(2), DataSerializersExtra.SHORT), (short) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -92,8 +104,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetShort = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), (short) l.checkInteger(3));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), (short) l.checkInteger(3));
+			self.set(new DataParameter<>((int)l.checkUserdata(2), DataSerializersExtra.SHORT), (short) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -108,8 +121,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetShort = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			l.pushNumber(self.getWatchableObjectShort(l.checkInteger(2)));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//l.pushNumber(self.getWatchableObjectShort(l.checkInteger(2)));
+			l.pushNumber(self.get(new DataParameter<>((int)l.checkUserdata(2), DataSerializersExtra.SHORT)));
 			return 1;
 		}
 	};
@@ -124,8 +138,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddInt = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), l.checkInteger(3, 0));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.addObject(l.checkInteger(2), l.checkInteger(3, 0));
+			self.register(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.VARINT), (int) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -140,8 +155,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetInt = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), l.checkInteger(3));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), l.checkInteger(3));
+			self.set(new DataParameter<>((int) l.checkUserdata(2), DataSerializers.VARINT), (int) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -156,8 +172,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetInt = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			l.pushInteger(self.getWatchableObjectInt(l.checkInteger(2)));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//l.pushInteger(self.getWatchableObjectInt(l.checkInteger(2)));
+			l.pushInteger(self.get(new DataParameter<>((int) l.checkUserdata(2), DataSerializers.VARINT)));
 			return 1;
 		}
 	};
@@ -172,8 +189,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddFloat = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), (float) l.checkNumber(3, 0));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.addObject(l.checkInteger(2), (float) l.checkNumber(3, 0));
+			self.register(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.FLOAT), (float) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -188,8 +206,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetFloat = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), (float) l.checkNumber(3));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), (float) l.checkNumber(3));
+			self.set(new DataParameter<>((int) l.checkUserdata(2), DataSerializers.FLOAT), (float) l.checkInteger(3, 0));
 			return 0;
 		}
 	};
@@ -204,8 +223,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetFloat = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			l.pushNumber(self.getWatchableObjectFloat(l.checkInteger(2)));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//l.pushNumber(self.getWatchableObjectFloat(l.checkInteger(2)));
+			l.pushNumber(self.get(new DataParameter<>((int)l.checkUserdata(2), DataSerializers.FLOAT)));
 			return 1;
 		}
 	};
@@ -220,8 +240,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddString = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), l.checkString(3, ""));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.addObject(l.checkInteger(2), l.checkString(3, ""));
+			self.register(new DataParameter<>(l.checkInteger(2), DataSerializers.STRING), l.checkString(3, ""));
 			return 0;
 		}
 	};
@@ -236,8 +257,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetString = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), l.checkString(3));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), l.checkString(3));
+			self.set(new DataParameter<>(l.checkInteger(2), DataSerializers.STRING), l.checkString(3));
 			return 0;
 		}
 	};
@@ -252,8 +274,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetString = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			l.pushString(self.getWatchableObjectString(l.checkInteger(2)));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//l.pushString(self.getWatchableObjectString(l.checkInteger(2)));
+			l.pushString(self.get(new DataParameter<>(l.checkInteger(2), DataSerializers.STRING)));
 			return 1;
 		}
 	};
@@ -268,8 +291,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction AddItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.addObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.addObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
+			self.register(new DataParameter<>((int)l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK), Optional.of((ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack")));
 			return 0;
 		}
 	};
@@ -284,8 +308,9 @@ public class LuaDataWatcher {
 
 	public static JavaFunction SetItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			self.updateObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//self.updateObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
+			self.set(new DataParameter<>((int) l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK), Optional.of((ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack")));
 			return 0;
 		}
 	};
@@ -300,9 +325,10 @@ public class LuaDataWatcher {
 
 	public static JavaFunction GetItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DataWatcher self = (DataWatcher) l.checkUserdata(1, DataWatcher.class, "DataWatcher");
-			ItemStack item = self.getWatchableObjectItemStack(l.checkInteger(2));
-			l.pushUserdataWithMeta(item, "ItemStack");
+			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
+			//ItemStack item = self.getWatchableObjectItemStack(l.checkInteger(2));
+			//l.pushUserdataWithMeta(item, "ItemStack");
+			l.pushUserdataWithMeta(self.get(new DataParameter<>((int)l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK)), "ItemStack");
 			return 1;
 		}
 	};
@@ -363,5 +389,27 @@ public class LuaDataWatcher {
 		}
 		l.pop(1);
 
+	}
+
+	/**
+	 * Probably could just use DataSerializers.VARIANT but whatever
+	 */
+	public static class DataSerializersExtra
+	{
+		public static final DataSerializer<Short> SHORT = new DataSerializer<Short>()
+		{
+			public void write(PacketBuffer buf, Short value)
+			{
+				buf.writeShort(value.shortValue());
+			}
+			public Short read(PacketBuffer buf)
+			{
+				return Short.valueOf(buf.readShort());
+			}
+			public DataParameter<Short> createKey(int id)
+			{
+				return new DataParameter(id, this);
+			}
+		};
 	}
 }

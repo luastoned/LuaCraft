@@ -7,7 +7,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.CPacketCustomPayload;
 
 public class LuaByteBuf {
 
@@ -27,7 +27,7 @@ public class LuaByteBuf {
 				return 0;
 
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			C17PacketCustomPayload packet = new C17PacketCustomPayload("LuaCraft", self);
+			CPacketCustomPayload packet = new CPacketCustomPayload("LuaCraft", self);
 			client.thePlayer.sendQueue.addToSendQueue(packet);
 			return 0;
 		}

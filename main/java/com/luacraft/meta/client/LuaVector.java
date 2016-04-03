@@ -1,5 +1,6 @@
 package com.luacraft.meta.client;
 
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
 
 public class LuaVector {
 	private static Minecraft client = LuaCraft.getClient();
@@ -49,10 +49,10 @@ public class LuaVector {
 
 			Entity view = client.getRenderViewEntity();
 
-			Vec3 viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
+			Vec3d viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
 
-			Vec3 camPos = ActiveRenderInfo.getPosition();
-			Vec3 eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
+			Vec3d camPos = ActiveRenderInfo.getPosition();
+			Vec3d eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
 			float vecX = (float) ((camPos.xCoord + eyePos.xCoord) - self.x);
 			float vecY = (float) ((camPos.yCoord + eyePos.yCoord) - self.z);

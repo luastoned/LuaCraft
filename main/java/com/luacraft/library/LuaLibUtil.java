@@ -15,6 +15,10 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.xml.bind.DatatypeConverter;
 
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.codec.binary.Hex;
 
 import com.luacraft.LuaCraftState;
@@ -27,10 +31,7 @@ import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaType;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -80,7 +81,7 @@ public class LuaLibUtil {
 				continue;
 
 			if (l.type(i) == LuaType.NUMBER) {
-				EnumChatFormatting format = EnumChatFormatting.values()[l.toInteger(i)];
+				TextFormatting format = TextFormatting.values()[l.toInteger(i)];
 				message.append(format);
 			} else {
 				l.getGlobal("tostring");
@@ -94,10 +95,10 @@ public class LuaLibUtil {
 		return message.toString();
 	}
 
-	private static MovingObjectPosition traceEntity(World world, Vec3 start, Vec3 end, List<Entity> filter) {
+	private static RayTraceResult traceEntity(World world, Vec3d start, Vec3d end, List<Entity> filter) {
 		Chunk chunk = world.getChunkFromBlockCoords(new BlockPos(start));
 
-		MovingObjectPosition result = null;
+		RayTraceResult result = null;
 		double hitDistance = -1;
 
 		for (Object obj : world.loadedEntityList) {
@@ -107,7 +108,7 @@ public class LuaLibUtil {
 				continue;
 
 			double distance = start.distanceTo(entity.getPositionVector());
-			MovingObjectPosition trace = entity.getEntityBoundingBox().calculateIntercept(start, end);
+			RayTraceResult trace = entity.getEntityBoundingBox().calculateIntercept(start, end);
 
 			if (trace != null && (hitDistance == -1 || distance < hitDistance)) {
 				hitDistance = distance;
@@ -125,11 +126,11 @@ public class LuaLibUtil {
 
 	public static void pushTrace(LuaCraftState l, World world, Vector start, Vector endpos, boolean hitWater,
 			List<Entity> filter) {
-		MovingObjectPosition trace = world.rayTraceBlocks(start.toVec3(), endpos.toVec3(), hitWater);
+		RayTraceResult trace = world.rayTraceBlocks(start.toVec3d(), endpos.toVec3d(), hitWater);
 
 		// Use the block trace end position so we can't find entities through blocks
-		MovingObjectPosition entTrace = traceEntity(world, start.toVec3(),
-				trace != null ? trace.hitVec : endpos.toVec3(), filter);
+		RayTraceResult entTrace = traceEntity(world, start.toVec3d(),
+				trace != null ? trace.hitVec : endpos.toVec3d(), filter);
 
 		l.newTable();
 
@@ -167,7 +168,7 @@ public class LuaLibUtil {
 			l.pushBoolean(false);
 			l.setField(-2, "Hit");
 
-			Vector hitpos = new Vector(endpos.toVec3());
+			Vector hitpos = new Vector(endpos.toVec3d());
 			hitpos.push(l);
 			l.setField(-2, "HitPos");
 		}
