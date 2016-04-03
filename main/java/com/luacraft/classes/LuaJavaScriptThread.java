@@ -18,21 +18,27 @@ public class LuaJavaScriptThread extends LuaJavaThread {
 	public void run() {
 		if (state.getActualSide().isClient()) {
 			l = new LuaClient();
-			l.setSideOverride(state.getSideOverride());
-			((LuaClient) l).initialize(false);
+			synchronized (l) {
+				l.setSideOverride(state.getSideOverride());
+				((LuaClient) l).initialize(false);
+			}
 		} else {
 			l = new LuaServer();
-			l.setSideOverride(state.getSideOverride());
-			((LuaServer) l).initialize(false);
+			synchronized (l) {
+				l.setSideOverride(state.getSideOverride());
+				((LuaServer) l).initialize(false);
+			}
 		}
 
-		if (l.isOpen() && file != null) {
-			try {
-				l.includeFile(file);
-			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
-			} finally {
-				l.close();
+		synchronized (l) {
+			if (l.isOpen() && file != null) {
+				try {
+					l.includeFile(file);
+				} catch (LuaRuntimeException e) {
+					l.handleLuaError(e);
+				} finally {
+					l.close();
+				}
 			}
 		}
 	}

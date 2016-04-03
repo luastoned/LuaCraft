@@ -2,6 +2,7 @@ package com.luacraft;
 
 import com.naef.jnlua.LuaRuntimeException;
 
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
