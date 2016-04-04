@@ -39,6 +39,7 @@ public class LuaShared extends LuaCraftState {
 	private LuaPacketManager packet;
 
 	public void initializeShared(boolean hooks) {
+		if(hooks) setupReloader();
 		loadLibraries();
 		loadExtensions();
 

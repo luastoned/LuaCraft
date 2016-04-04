@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.luacraft.classes.FileMount;
@@ -21,10 +22,24 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
+import org.lwjgl.Sys;
 
-public class LuaCraftState extends LuaState {
+public class LuaCraftState extends LuaState implements ILuaReloader {
 	private boolean scriptEnforcer = false;
 	private Side sideOverride = null;
+
+	protected LuaReloader reloader;
+
+	public void setupReloader()
+	{
+		reloader = new LuaReloader(this);
+	}
+
+	public void close()
+	{
+		if(reloader != null) reloader.shutdown();
+		super.close();
+	}
 
 	public void setSideOverride(Side side) {
 		sideOverride = side;
@@ -74,22 +89,22 @@ public class LuaCraftState extends LuaState {
 
 	public void print(String str) {
 		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getActualSide()).onPrint(str);
+		ConsoleManager.get(getSide()).onPrint(str);
 	}
 
 	public void error(String str) {
 		LuaCraft.getLogger().error(str);
-		ConsoleManager.get(getActualSide()).onError(str);
+		ConsoleManager.get(getSide()).onError(str);
 	}
 
 	public void info(String str) {
 		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getActualSide()).onInfo(str);
+		ConsoleManager.get(getSide()).onInfo(str);
 	}
 
 	public void warning(String str) {
 		LuaCraft.getLogger().warn(str);
-		ConsoleManager.get(getActualSide()).onWarning(str);
+		ConsoleManager.get(getSide()).onWarning(str);
 	}
 
 	/**
@@ -186,7 +201,10 @@ public class LuaCraftState extends LuaState {
 
 	public void autorun(String side) {
 		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side);
-
+		if(reloader != null) {
+			reloader.register("lua/autorun/" + side);
+			print("Watching directory 'lua/autorun/" + side + "' for change");
+		}
 		for (File file : files)
 			includeFile(file);
 	}
@@ -255,5 +273,17 @@ public class LuaCraftState extends LuaState {
 		print("Loading: " + file);
 		load(in, file);
 		call(0, 0);
+	}
+
+	@Override
+	public synchronized void onFileChange(File file) {
+		try {
+			if (file.isFile()) {
+				print(String.format("Reloading file %s", file.getName()));
+				includeFile(file);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
