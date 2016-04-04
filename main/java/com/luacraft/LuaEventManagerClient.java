@@ -1,7 +1,9 @@
 package com.luacraft;
 
+import com.luacraft.classes.Color;
 import com.naef.jnlua.LuaRuntimeException;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -57,7 +59,7 @@ public class LuaEventManagerClient {
 	@SubscribeEvent
 	public void onRenderGameOverlay(RenderGameOverlayEvent event) {
 		synchronized (l) {
-			if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
+			if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT) // Changed this from ElementType.ALL
 				return;
 
 			if (l.getMinecraft().thePlayer == null)
