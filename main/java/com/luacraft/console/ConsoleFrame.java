@@ -71,6 +71,13 @@ public class ConsoleFrame extends JFrame
                 super.windowDeactivated(e);
                 isFocused = false;
             }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                LuaCraft.config.developerConsole.set(false);
+                LuaCraft.config.save();
+            }
         });
 
         // Tabs

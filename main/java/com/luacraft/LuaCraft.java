@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import com.luacraft.console.ConsoleFrame;
 import com.luacraft.console.ConsoleManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
@@ -60,11 +61,7 @@ public class LuaCraft {
 
 	public static FMLEventChannel channel = null;
 
-	public static Configuration config;
-	public static File configFile;
-
-	public static boolean scriptEnforcer = true;
-	public static boolean enableDeveloperConsole = true;
+	public static LuaConfig config;
 
 	public static FMLClientHandler getForgeClient() {
 		return FMLClientHandler.instance();
@@ -79,12 +76,7 @@ public class LuaCraft {
 		ModContainer modContainer = FMLCommonHandler.instance().findContainerFor(this);
 		luaLogger = LogManager.getLogger(modContainer.getName());
 
-		config = new Configuration(event.getSuggestedConfigurationFile());
-		config.load();
-		loadConfig();
-		config.save();
-
-		configFile = config.getConfigFile();
+		config = new LuaConfig(event.getSuggestedConfigurationFile());
 
 		ConsoleManager.create();
 	}
@@ -94,6 +86,8 @@ public class LuaCraft {
 		channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("LuaCraft");
 
 		NativeSupport.getInstance().setLoader(luaLoader);
+
+		MinecraftForge.EVENT_BUS.register(config);
 
 		if (event.getSide() == Side.CLIENT) {
 			LuaClient luaState = new LuaClient();
@@ -151,14 +145,6 @@ public class LuaCraft {
 				luaStates.remove(Side.SERVER);
 			}
 		}
-	}
-
-	public static void loadConfig()
-	{
-		scriptEnforcer = config.get(Configuration.CATEGORY_GENERAL, "script-enforcer", true, "Prevent clients from running their own Lua scripts").getBoolean();
-
-		// TODO: Allow toggling
-		enableDeveloperConsole = config.get(Configuration.CATEGORY_GENERAL, "developer-console", true, "Console for lua input and output").getBoolean();
 	}
 
 	public static Logger getLogger() {

@@ -11,12 +11,12 @@ public class LuaCraftGuiConfig extends GuiConfig
     public LuaCraftGuiConfig(GuiScreen parent)
     {
         super(parent,
-                (new ConfigElement(LuaCraft.config.getCategory(Configuration.CATEGORY_GENERAL))).getChildElements(),
+                (new ConfigElement(LuaCraft.config.general)).getChildElements(),
                 LuaCraft.MODID,
                 false,
                 false,
                 "LuaCraft configuration");
-        titleLine2 = LuaCraft.configFile.getAbsolutePath();
+        titleLine2 = LuaCraft.config.config.getConfigFile().getAbsolutePath();
     }
 
     @Override

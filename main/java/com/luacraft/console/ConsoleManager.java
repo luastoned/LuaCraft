@@ -35,7 +35,7 @@ public class ConsoleManager
     public static void onConfigChange()
     {
         if(console != null) {
-            console.setVisible(LuaCraft.enableDeveloperConsole);
+            console.setVisible(LuaCraft.config.developerConsole.getBoolean());
         }
     }
 

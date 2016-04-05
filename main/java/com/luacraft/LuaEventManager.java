@@ -56,15 +56,6 @@ public class LuaEventManager {
 
 	// FML Bus
 
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-	{
-		if(event.getModID().equals(LuaCraft.MODID)) {
-			LuaCraft.loadConfig();
-			ConsoleManager.onConfigChange();
-		}
-	}
-
 	// Command Events
 
 	/**
