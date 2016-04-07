@@ -10,67 +10,84 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Seems like the best method is to have multiple watchers and multiple threads...
+ */
+
 public class LuaReloader {
-	private Thread thread;
 	private WatchService watcher;
 	private ILuaReloader luaCallbackState;
 
 	private boolean requestDestroy = false;
 
-	public LuaReloader()
-	{
+	public LuaReloader() {
 		try {
 			watcher = FileSystems.getDefault().newWatchService();
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		thread = new Thread(createThread());
-		thread.start();
+		new Thread(createThread()).start();
 	}
-	public LuaReloader(ILuaReloader reloader)
-	{
-		this(); setLuaCallbackState(reloader);
+	public LuaReloader(ILuaReloader reloader) {
+		this(); setCallback(reloader);
 	}
 
-	public WatchService getWatcher()
-	{
+	/**
+	 * Gets the watcher object
+	 * @return watcher
+	 */
+	public WatchService getWatcher() {
 		return watcher;
 	}
 
-	public void setLuaCallbackState(ILuaReloader reloader)
-	{
+	/**
+	 * Sets the function that is called when there is file change detected
+	 * @param reloader class that implements the ILuaReloader
+	 */
+	public void setCallback(ILuaReloader reloader) {
 		luaCallbackState = reloader;
 	}
-	public void call(File file)
-	{
+
+	/**
+	 * Calls the callback safely
+	 * @param file File that changed
+	 */
+	public void call(File file) {
 		if(luaCallbackState != null) luaCallbackState.onFileChange(file);
 	}
 
-	public void register(Path file)
-	{
+	/**
+	 * Adds a new directory to the watcher
+	 * @param file Object containing the path
+	 */
+	public void register(Path file) {
 		try {
 			file.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
-	public void register(String file)
-	{
+
+	/**
+	 * Adds a new directory to the watcher
+	 * @param file String that will be converted to a path
+	 */
+	public void register(String file) {
 		register(FileSystems.getDefault().getPath(file));
 	}
 
-	public void shutdown()
-	{
+	/**
+	 * Call this when the lua state shuts down
+	 */
+	public void shutdown() {
 		requestDestroy = true;
-		try {
-			watcher.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 	}
 
-	private Runnable createThread()
-	{
+	/**
+	 * A thread that waits for changes
+	 * @return new runnable instance
+	 */
+	private Runnable createThread() {
 		return new Runnable() {
 			@Override
 			public void run() {
@@ -103,6 +120,12 @@ public class LuaReloader {
 					}
 				} catch(InterruptedException e) {
 					e.printStackTrace();
+				} finally {
+					try {
+						watcher.close();
+					} catch(IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		};
