@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.luacraft.classes.FileMount;
@@ -22,7 +21,6 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.server.FMLServerHandler;
-import org.lwjgl.Sys;
 
 public class LuaCraftState extends LuaState implements ILuaReloader {
 	private boolean scriptEnforcer = false;
@@ -89,22 +87,22 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 
 	public void print(String str) {
 		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getSide()).onPrint(str);
+		ConsoleManager.get(getActualSide()).onPrint(str);
 	}
 
 	public void error(String str) {
 		LuaCraft.getLogger().error(str);
-		ConsoleManager.get(getSide()).onError(str);
+		ConsoleManager.get(getActualSide()).onError(str);
 	}
 
 	public void info(String str) {
 		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getSide()).onInfo(str);
+		ConsoleManager.get(getActualSide()).onInfo(str);
 	}
 
 	public void warning(String str) {
 		LuaCraft.getLogger().warn(str);
-		ConsoleManager.get(getSide()).onWarning(str);
+		ConsoleManager.get(getActualSide()).onWarning(str);
 	}
 
 	/**
@@ -200,24 +198,25 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void autorun(String side) {
-		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side);
+		String path;
+		ArrayList<File> files = FileMount.GetFilesIn(path = "lua\\autorun\\" + side);
 		if(reloader != null) {
-			reloader.register("lua/autorun/" + side);
-			print("Watching directory 'lua/autorun/" + side + "' for change");
+			reloader.register(new File(FileMount.GetMountedRoot(), path).getPath());
 		}
+
 		for (File file : files)
 			includeFile(file);
 	}
 
 	public void includeDirectory(String base) {
-		ArrayList<File> files = FileMount.GetFilesIn("lua/" + base);
+		ArrayList<File> files = FileMount.GetFilesIn("lua\\" + base);
 
 		for (File file : files)
 			includeFiles(file);
 	}
 
 	public void includeFile(String f) {
-		File file = FileMount.GetFile("lua/" + f);
+		File file = FileMount.GetFile("lua\\" + f);
 		includeFile(file);
 	}
 

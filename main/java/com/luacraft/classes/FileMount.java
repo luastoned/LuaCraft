@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import com.luacraft.LuaCraft;
 
 public class FileMount {
-	static ArrayList<File> mounted = new ArrayList<File>();
+	private static File mountedRoot;
+	private static ArrayList<File> mounted = new ArrayList<File>();
 
 	public static String CleanPath(File file) {
 		String clean = file.getPath();
@@ -17,28 +18,47 @@ public class FileMount {
 		return file.getName();
 	}
 
+	public static void CreateDirectories(String path) {
+		File file = GetFileInMountedRoot(path);
+		if(!file.exists())
+			file.mkdirs();
+	}
+
+	public static void SetMountedRoot(String path) {
+		mountedRoot = GetFileInRoot(path);
+	}
+
 	public static File GetFileInRoot(String file) {
 		return new File(LuaCraft.rootDir, file);
 	}
 
-	public static void MountDirectory(String path) {
-		MountDirectory(path, false);
+	public static File GetFileInMountedRoot(String file) {
+		if(mountedRoot == null) {
+			return GetFileInRoot(file);
+		} else {
+			return new File(GetMountedRoot(), file);
+		}
 	}
 
-	public static void MountDirectory(String path, boolean head) {
-		File dir = new File(LuaCraft.rootDir, path);
+	public static void MountDirectory(String path) {
+		File dir = GetFileInMountedRoot(path);
 
 		if (!dir.isDirectory())
 			return;
 
-		if (head)
-			mounted.add(0, dir);
-		else
-			mounted.add(dir);
+		mounted.add(dir);
+	}
+
+	public static ArrayList<File> GetMountedDirectories() {
+		return new ArrayList<>(mounted);
+	}
+
+	public static File GetMountedRoot() {
+		return mountedRoot;
 	}
 
 	public static File GetFile(String file) {
-		File rootFile = GetFileInRoot(file);
+		File rootFile = GetFileInMountedRoot(file);
 
 		if (rootFile.exists())
 			return rootFile;
@@ -55,7 +75,7 @@ public class FileMount {
 	public static ArrayList<File> GetFilesIn(String folder) {
 		ArrayList<File> files = new ArrayList<File>();
 
-		File root = GetFileInRoot(folder);
+		File root = GetFileInMountedRoot(folder);
 
 		if (root.isDirectory())
 			for (File file : root.listFiles())

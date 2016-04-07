@@ -12,11 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
-import com.luacraft.console.ConsoleFrame;
+import com.luacraft.classes.FileMount;
 import com.luacraft.console.ConsoleManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +23,6 @@ import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -77,8 +74,6 @@ public class LuaCraft {
 		luaLogger = LogManager.getLogger(modContainer.getName());
 
 		config = new LuaConfig(event.getSuggestedConfigurationFile());
-
-		ConsoleManager.create();
 	}
 
 	@EventHandler
@@ -88,6 +83,16 @@ public class LuaCraft {
 		NativeSupport.getInstance().setLoader(luaLoader);
 
 		MinecraftForge.EVENT_BUS.register(config);
+
+		ConsoleManager.create();
+
+		FileMount.SetMountedRoot("luacraft" + File.separator); // You can remove this line and it will place all the files under the main directory, but I think this makes it cleaner
+		FileMount.CreateDirectories("addons");
+		FileMount.CreateDirectories("lua\\autorun\\client");
+		FileMount.CreateDirectories("lua\\autorun\\server");
+		FileMount.CreateDirectories("lua\\autorun\\shared");
+
+		LuaAddonManager.initialize();
 
 		if (event.getSide() == Side.CLIENT) {
 			LuaClient luaState = new LuaClient();
