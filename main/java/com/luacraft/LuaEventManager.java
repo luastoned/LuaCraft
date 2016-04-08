@@ -23,7 +23,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -876,6 +875,7 @@ public class LuaEventManager {
 	 * @return [[Boolean]]:cancel
 	 */
 
+	/* dead
 	@SubscribeEvent
 	public void onEntityInteract(EntityInteractEvent event) {
 		synchronized (l) {
@@ -899,6 +899,7 @@ public class LuaEventManager {
 			}
 		}
 	}
+	*/
 
 	// TODO: EntityItemPickupEvent
 
@@ -1003,22 +1004,10 @@ public class LuaEventManager {
 			try {
 				l.pushHookCall();
 
-				switch (event.getAction()) {
-				case LEFT_CLICK_BLOCK:
-					l.pushString("player.leftclick");
-					break;
-				case RIGHT_CLICK_AIR:
-					l.pushString("player.rightclick");
-					break;
-				case RIGHT_CLICK_BLOCK:
-					l.pushString("player.rightclick");
-					break;
-				}
-
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
 				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getEntityPlayer().worldObj, event.getPos()));
 				l.pushFace(event.getFace());
-				l.call(4, 1);
+				l.call(3, 1);
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
