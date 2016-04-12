@@ -12,7 +12,7 @@ import java.util.TreeMap;
  */
 public class LuaResourcePackLoader {
     private static final Map<String,LuaResourcePack> resources = new HashMap<>();
-    private static final File jarFolder = FileMount.GetFileInMountedRoot("jars");
+    private static final File jarFolder = FileMount.GetFileInRoot("jars");
 
     public static void initialize() {
         LuaResourcePack custom = register("luacraft-resources");
@@ -27,7 +27,7 @@ public class LuaResourcePackLoader {
         // Load assets under the root (probably should not use the regular root)
         custom.addFolder(
                 custom.addFolder(root, LuaCraft.DEFAULT_RESOURCEPACK),
-                FileMount.GetFileInMountedRoot("assets"), true);
+                FileMount.GetFileInRoot("assets"), true);
 
         // Load addon assets
         for(LuaAddon addon : LuaAddonManager.getAddons()) {

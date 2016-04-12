@@ -20,10 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
+import java.util.jar.*;
 
 /**
  * Used for mounting assets to a jar file so that Minecraft can read it
@@ -293,7 +290,7 @@ public class LuaResourcePack implements IResourcePack {
      * @param path path to the file relative to the jar
      * @return input stream to the file
      */
-    public InputStream getResourceFromJar(String path) {
+    private InputStream getResourceFromJar(String path) {
         InputStream input = null;
         String url = "jar:file:/" + getJarFile().getPath() + "!/" + path;
         url = url.replace("\\", "/");
@@ -311,20 +308,26 @@ public class LuaResourcePack implements IResourcePack {
         return input;
     }
 
+    private String resourceLocationToPathString(ResourceLocation location) {
+        return String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath());
+    }
+
     /**
      *  Implemented methods for the IResourcePack below
      */
 
     @Override
     public InputStream getInputStream(ResourceLocation location) throws IOException {
-        return getResourceFromJar(String.format("assets/%s/%s", location.getResourceDomain(), location.getResourcePath()));
+        return getResourceFromJar(resourceLocationToPathString(location));
     }
 
     @Override
     public boolean resourceExists(ResourceLocation location) {
         boolean exists = false;
         try {
-            exists = getInputStream(location) != null;
+            JarFile jar = new JarFile(jarFile);
+            JarEntry entry = jar.getJarEntry(resourceLocationToPathString(location));
+            exists = (entry != null);
         } catch(IOException e) {
             e.printStackTrace();
         }
