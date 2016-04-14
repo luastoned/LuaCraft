@@ -46,6 +46,7 @@ public class LuaCraft {
 	public static final String MODNAME = "LuaCraft";
 	public static final String MODID = "luacraft";
 	public static final String VERSION = "1.2";
+	public static final String DEFAULT_RESOURCEPACK = "luacraftassets";
 
 	public static HashMap<String, LuaJavaChannel> threadChannels = new HashMap<String, LuaJavaChannel>();
 
@@ -74,6 +75,16 @@ public class LuaCraft {
 		luaLogger = LogManager.getLogger(modContainer.getName());
 
 		config = new LuaConfig(event.getSuggestedConfigurationFile());
+
+		FileMount.SetRoot(rootDir + "luacraft");
+		FileMount.CreateDirectories("addons");
+		FileMount.CreateDirectories("jars");
+		FileMount.CreateDirectories("lua\\autorun\\client");
+		FileMount.CreateDirectories("lua\\autorun\\server");
+		FileMount.CreateDirectories("lua\\autorun\\shared");
+
+		LuaAddonManager.initialize();
+		LuaResourcePackLoader.initialize();
 	}
 
 	@EventHandler
@@ -85,14 +96,6 @@ public class LuaCraft {
 		MinecraftForge.EVENT_BUS.register(config);
 
 		ConsoleManager.create();
-
-		FileMount.SetMountedRoot("luacraft" + File.separator); // You can remove this line and it will place all the files under the main directory, but I think this makes it cleaner
-		FileMount.CreateDirectories("addons");
-		FileMount.CreateDirectories("lua\\autorun\\client");
-		FileMount.CreateDirectories("lua\\autorun\\server");
-		FileMount.CreateDirectories("lua\\autorun\\shared");
-
-		LuaAddonManager.initialize();
 
 		if (event.getSide() == Side.CLIENT) {
 			LuaClient luaState = new LuaClient();

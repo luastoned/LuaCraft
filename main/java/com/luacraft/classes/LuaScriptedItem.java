@@ -1,5 +1,7 @@
 package com.luacraft.classes;
 
+import com.luacraft.LuaCraft;
+import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
@@ -7,6 +9,8 @@ import com.naef.jnlua.LuaType;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +29,7 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	private LuaState l;
 
 	public LuaScriptedItem(LuaState l) {
+		super();
 		this.l = l;
 	}
 
@@ -39,18 +44,32 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	public static JavaFunction Register = new JavaFunction() {
 		public int invoke(LuaState l) {
 			l.checkType(1, LuaType.TABLE);
-			String classname = l.checkString(2);
+			String resourceDomain = l.checkString(2, LuaCraft.DEFAULT_RESOURCEPACK);
+
+			String className, resourcePath;
+
+			l.getField(1, "Name");
+			className = l.checkString(-1, "null");
+			l.pop(1);
+
+			l.getField(1, "ResourcePath");
+			resourcePath = l.checkString(-1, "null");
+			l.pop(1);
 
 			LuaScriptedItem item = new LuaScriptedItem(l);
-			item.setUnlocalizedName(classname);
+			item.setUnlocalizedName(className);
+
+			l.getField(1, "CreativeTab");
+			int index = l.checkInteger(-1, 4);
+			l.pop(1);
+			item.setCreativeTab(CreativeTabs.creativeTabArray[index]);
 
 			l.newMetatable("ScriptedItemsRegistry");
 			l.pushString(item.getUnlocalizedName());
 			l.pushValue(1);
 			l.setTable(-3);
 
-			//GameRegistry.registerItem(item, classname);
-			GameRegistry.register(item, new ResourceLocation(classname)); // TODO: Inspect, this is most likely not going to work
+			GameRegistry.register(item, new ResourceLocation(resourceDomain, resourcePath));
 			return 0;
 		}
 	};
@@ -105,6 +124,31 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 		l.pushInteger(EnumActionResult.FAIL.ordinal());
 		l.setGlobal("ACTION_RESULT_FAIL");
 
+		l.pushInteger(0);
+		l.setGlobal("TAB_BUILDING");
+		l.pushInteger(1);
+		l.setGlobal("TAB_DECORATIONS");
+		l.pushInteger(2);
+		l.setGlobal("TAB_REDSTONE");
+		l.pushInteger(3);
+		l.setGlobal("TAB_TRANSPORTATION");
+		l.pushInteger(4);
+		l.setGlobal("TAB_MISC");
+		l.pushInteger(5);
+		l.setGlobal("TAB_ALL");
+		l.pushInteger(6);
+		l.setGlobal("TAB_FOOD");
+		l.pushInteger(7);
+		l.setGlobal("TAB_TOOLS");
+		l.pushInteger(8);
+		l.setGlobal("TAB_COMBAT");
+		l.pushInteger(9);
+		l.setGlobal("TAB_BREWING");
+		l.pushInteger(10);
+		l.setGlobal("TAB_MATERIALS");
+		l.pushInteger(11);
+		l.setGlobal("TAB_INVENTORY");
+
 		l.newMetatable("ScriptedItem");
 		{
 			l.pushJavaFunction(__tostring);
@@ -122,6 +166,8 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			l.setField(-2, "Rarity");
 			l.pushInteger(6000);
 			l.setField(-2, "Lifespan");
+			l.pushInteger(4);
+			l.setField(-2, "CreativeTab");
 
 			l.pushJavaFunction(dummyFunc);
 			l.setField(-2, "GetMaxDamage");
@@ -268,7 +314,6 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 				l.pushUserdataWithMeta(new Vector(hitX, hitZ, hitY), "Vector");
 			}
 			l.call(7, 1);
-			boolean ret = l.toBoolean(1);
 			int action = l.toInteger(1);
 			l.setTop(0);
 			return EnumActionResult.values()[action];

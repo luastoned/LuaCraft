@@ -2,6 +2,7 @@ package com.luacraft.console;
 
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
+import com.luacraft.classes.FileMount;
 import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
@@ -11,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -205,6 +207,11 @@ public class ConsoleFrame extends JFrame
             String command = input.substring(1);
             if(command.equals("hide")) {
                 setVisible(false);
+            } else if(command.equals("mounted")) {
+                addTextToCurrentSelection("Mounted folders:", Color.WHITE);
+                for(File file : FileMount.GetMountedDirectories()) {
+                    addTextToCurrentSelection(String.format("\t%s", file.getName()), Color.WHITE);
+                }
             }
         } else {
             LuaCraftState state = getSelectedLuaState();

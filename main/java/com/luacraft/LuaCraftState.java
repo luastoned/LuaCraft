@@ -105,6 +105,17 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		ConsoleManager.get(getActualSide()).onWarning(str);
 	}
 
+	public String getCallSource() {
+		getGlobal("debug");
+		getField(-1, "getinfo");
+		pushInteger(2);
+		call(1, 1);
+		getField(-1, "source");
+		String ret = checkString(-1);
+		pop(1);
+		return ret;
+	}
+
 	/**
 	 * @author Jake
 	 * @function lua.error
@@ -193,15 +204,54 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		}
 	}
 
+	/**
+	 * -- So fancy --
+	 * pls dont read the code below
+	 */
+	public void printStack() {printStack("");}
+	public void printStack(String mark) {
+		String stackContents = "";
+		for(int i = 1; i <= getTop(); i++) {
+			String info = "";
+			switch(type(i)) {
+				case NIL:
+					info += "nil";
+					break;
+				case NUMBER:
+					info += String.format("%f", checkNumber(i));
+					break;
+				case BOOLEAN:
+					info += String.format("%s", checkBoolean(i) ? "true" : "false");
+					break;
+				case STRING:
+					info += checkString(i);
+					break;
+				case TABLE:
+				case FUNCTION:
+				case USERDATA:
+				case LIGHTUSERDATA:
+				default:
+					info += String.format("%s", typeName(i));
+			}
+			info += String.format(":%s", Long.toHexString(toPointer(i)));
+			stackContents += String.format("%20s| %s\n",
+					String.format("%d <> %d", i, -1 * ((getTop() + 1) - i)),
+					info);
+		}
+		System.out.printf(String.format("%-20s| %s\n", mark + "INDEX", "VALUE"));
+		System.out.printf(stackContents + "\n");
+	}
+
+
+
 	public void autorun() {
 		autorun("");
 	}
 
 	public void autorun(String side) {
-		String path;
-		ArrayList<File> files = FileMount.GetFilesIn(path = "lua\\autorun\\" + side);
+		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side + "/*.lua");
 		if(reloader != null) {
-			reloader.register(new File(FileMount.GetMountedRoot(), path).getPath());
+			reloader.register(new File(FileMount.GetRoot(), "lua/autorun/" + side).getPath());
 		}
 
 		for (File file : files)
@@ -209,14 +259,14 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void includeDirectory(String base) {
-		ArrayList<File> files = FileMount.GetFilesIn("lua\\" + base);
+		ArrayList<File> files = FileMount.GetFilesIn("lua/" + base + "/*.lua");
 
 		for (File file : files)
 			includeFiles(file);
 	}
 
 	public void includeFile(String f) {
-		File file = FileMount.GetFile("lua\\" + f);
+		File file = FileMount.GetFile("lua/" + f);
 		includeFile(file);
 	}
 
@@ -245,6 +295,10 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void includeFile(File file) {
+		includeFile(file, true);
+	}
+
+	public void includeFile(File file, boolean shouldCall) {
 		if (!file.isFile())
 			return;
 
@@ -254,7 +308,7 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		InputStream in = null;
 		try {
 			in = new FileInputStream(file);
-			includeFileStream(in, FileMount.CleanPath(file));
+			includeFileStream(in, FileMount.CleanPath(file), shouldCall);
 		} catch (IOException e) {
 			throw new LuaRuntimeException("Cannot open " + FileMount.CleanPath(file) + ": No such file or directory");
 		} catch (LuaRuntimeException e) {
@@ -269,9 +323,13 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void includeFileStream(InputStream in, String file) throws IOException {
+		includeFileStream(in, file, true);
+	}
+
+	public void includeFileStream(InputStream in, String file, boolean shouldCall) throws IOException {
 		print("Loading: " + file);
 		load(in, file);
-		call(0, 0);
+		if(shouldCall) call(0, 0);
 	}
 
 	@Override

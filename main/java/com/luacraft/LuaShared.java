@@ -1,5 +1,6 @@
 package com.luacraft;
 
+import com.luacraft.classes.FileMount;
 import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
 import com.luacraft.library.LuaLibHTTP;
@@ -30,9 +31,13 @@ import com.luacraft.meta.LuaSQLQuery;
 import com.luacraft.meta.LuaThread;
 import com.luacraft.meta.LuaVector;
 import com.luacraft.meta.LuaWorld;
+import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
 import net.minecraftforge.common.MinecraftForge;
+
+import java.io.File;
+import java.util.List;
 
 public class LuaShared extends LuaCraftState {
 	private LuaEventManager luaEvent;
@@ -58,6 +63,16 @@ public class LuaShared extends LuaCraftState {
 		print("Loading autorun");
 		autorun(); // Load all files within autorun
 		autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
+
+		try {
+			// Load items
+			List<File> files = FileMount.GetFilesIn("lua/items/*/shared.lua");
+			for (File file : files) {
+				LuaScriptLoader.loadItemScript(this, file);
+			}
+		} catch(LuaRuntimeException e) {
+			handleLuaError(e);
+		}
 	}
 
 	public void close() {
