@@ -311,6 +311,13 @@ public class LuaGlobals {
 		}
 	};
 
+	public static JavaFunction nanotime = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushNumber(System.nanoTime());
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaState l) {
 		l.pushJavaFunction(Angle);
 		l.setGlobal("Angle");
@@ -394,6 +401,9 @@ public class LuaGlobals {
 		l.setGlobal("include");
 		l.pushJavaFunction(loadfile);
 		l.setGlobal("loadfile");
+
+		l.pushJavaFunction(nanotime);
+		l.setGlobal("nanotime");
 
 		/*
 		 * @enum WORLD_NETHER
