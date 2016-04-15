@@ -6,6 +6,8 @@ import com.luacraft.library.server.LuaLibGame;
 import com.luacraft.meta.server.LuaByteBuf;
 import com.luacraft.meta.server.LuaPlayer;
 import com.luacraft.meta.server.LuaPropertyManager;
+import com.naef.jnlua.LuaRuntimeException;
+import com.naef.jnlua.LuaSyntaxException;
 
 public class LuaServer extends LuaShared {
 
@@ -17,7 +19,14 @@ public class LuaServer extends LuaShared {
 	public void runScripts() {
 		runSharedScripts();
 		print("Loading autorun/server");
-		autorun("server"); // Load all files within autorun/server
+		try {
+			autorun("server"); // Load all files within autorun/server
+		} catch(LuaRuntimeException e) {
+			handleLuaError(e);
+		} catch(LuaSyntaxException e) {
+			e.printStackTrace();
+			error(e.getMessage());
+		}
 	}
 
 	private void loadLibraries() {

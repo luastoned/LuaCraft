@@ -34,6 +34,7 @@ import com.luacraft.meta.LuaWorld;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
+import com.naef.jnlua.LuaSyntaxException;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
@@ -61,17 +62,14 @@ public class LuaShared extends LuaCraftState {
 
 	public void runSharedScripts() {
 		print("Loading autorun");
-		autorun(); // Load all files within autorun
-		autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
-
 		try {
-			// Load items
-			List<File> files = FileMount.GetFilesIn("lua/items/*/shared.lua");
-			for (File file : files) {
-				LuaScriptLoader.loadItemScript(this, file);
-			}
+			autorun(); // Load all files within autorun
+			autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
 		} catch(LuaRuntimeException e) {
 			handleLuaError(e);
+		} catch(LuaSyntaxException e) {
+			e.printStackTrace();
+			error(e.getMessage());
 		}
 	}
 
