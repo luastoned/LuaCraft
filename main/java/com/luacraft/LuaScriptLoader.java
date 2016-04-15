@@ -47,7 +47,7 @@ public class LuaScriptLoader {
             l.getField(-1, "Register");
 
             // arg 1 = ITEM
-            l.getField(1, "ITEM");
+            l.getField(-3, "ITEM");
             // arg 2 = resource name
             if(addon != null)
                 l.pushString(addon.getResourcename());
