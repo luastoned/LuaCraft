@@ -1,6 +1,14 @@
 package com.luacraft;
 
+import com.luacraft.classes.Vector;
 import com.luacraft.console.ConsoleManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -22,12 +30,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
-import net.minecraftforge.event.entity.player.PlayerPickupXpEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -1086,6 +1088,51 @@ public class LuaEventManager {
 	}
 
 	/**
+	 * @author fr1kin
+	 * @function player.blockharvestdrops
+	 * @info Called when a player breaks a block and it is about to drop items
+	 * @arguments [[Player]]:harvester, [[Vector]]:pos, [[number]]:drop chance, [[number]]:fortune level, [[table]]:drops
+	 * @return [[number]]:set drop amount
+	 */
+	@SubscribeEvent
+	public void onBlockHarvestDrop(BlockEvent.HarvestDropsEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.blockharvestdrops");
+				LuaUserdata.PushUserdata(l, event.getHarvester());
+				Vector vec = new Vector(event.getPos());
+				vec.push(l);
+				l.pushNumber(event.getDropChance());
+				if(event.isSilkTouching())
+					l.pushInteger(-1); // Pushes -1 if it is silk touch
+				else
+					l.pushInteger(event.getFortuneLevel());
+				l.newTable();
+				{
+					for(int i = 0; i < event.getDrops().size(); i++) {
+						l.pushInteger(i + 1);
+						LuaUserdata.PushUserdata(l, event.getDrops().get(i));
+						l.setTable(-3);
+					}
+				}
+				l.call(6, 1);
+
+				if (!l.isNil(-1))
+					event.setDropChance((float) l.toNumber(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
 	 * @author Jake
 	 * @function player.opencontainer
 	 * @info Called when a player attempts to open a container such as a chest
@@ -1149,9 +1196,239 @@ public class LuaEventManager {
 		}
 	}
 
-	// TODO: PlayerSleepInBedEvent
+	/**
+	 * @author fr1kin
+	 * @function player.onsleep
+	 * @info Called when a player attempts to sleep in a bed
+	 * @arguments [[Player]]:player, [[number]]:status, [[Vector]]:bedpos
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onPlayerSleepInBed(PlayerSleepInBedEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.onsleep");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushInteger(event.getResultStatus().ordinal());
+				Vector vec = new Vector(event.getPos());
+				vec.push(l);
+				l.call(4, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 
 	// TODO: PlayerUseItemEvent.Start / Stop / Finish / Tick
 
-	// TODO: UseHoeEvent
+	/**
+	 * @author fr1kin
+	 * @function player.onusehoe
+	 * @info Called when a player uses a hoe
+	 * @arguments [[Player]]:player, [[World]]:world, [[ItemStack]]:stack, [[Vector]]:blockpos
+	 * @return [[Boolean]]:cancel
+	 */
+	@SubscribeEvent
+	public void onUseHoe(UseHoeEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.onusehoe");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				LuaUserdata.PushUserdata(l, event.getCurrent());
+				Vector vec = new Vector(event.getPos());
+				vec.push(l);
+				l.call(5, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function chunk.load
+	 * @info Called when a chunk is loaded
+	 * @arguments [[Chunk]]:chunk
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onChunkEventLoad(ChunkEvent.Load event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("chunk.load");
+				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
+				l.call(2, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function chunk.unload
+	 * @info Called when a chunk is unloaded
+	 * @arguments [[Chunk]]:chunk
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onChunkEventUnload(ChunkEvent.Unload event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("chunk.unload");
+				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
+				l.call(2, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function chunk.loadfromdisk
+	 * @info Called when a chunk is loaded
+	 * @arguments [[Chunk]]:chunk
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onChunkDataEventLoad(ChunkDataEvent.Load event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("chunk.loadfromdisk");
+				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
+				l.call(2, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function chunk.savetodisk
+	 * @info Called when a chunk is saved
+	 * @arguments [[Chunk]]:chunk
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onChunkDataEventSave(ChunkDataEvent.Save event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("chunk.savetodisk");
+				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
+				l.call(2, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function block.preexplode
+	 * @info Called when a block explodes
+	 * @arguments [[World]]:world, [[Explosion]]:explosion
+	 * @return [[boolean]]:cancel explosion
+	 */
+	@SubscribeEvent
+	public void onExplosionEventStart(ExplosionEvent.Start event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("block.preexplode");
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				l.pushUserdataWithMeta(event.getExplosion(), "Explosion");
+				l.call(3, 1);
+
+				if (!l.isNil(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function block.postexplode
+	 * @info Called when a block explodes
+	 * @arguments [[World]]:world, [[Explosion]]:explosion, [[table]]:affected entities
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onExplosionEventDetnoate(ExplosionEvent.Detonate event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("explosion.postexplode");
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				l.pushUserdataWithMeta(event.getExplosion(), "Explosion");
+				l.newTable();
+				{
+					for(int i = 0; i < event.getAffectedEntities().size(); i++) {
+						l.pushInteger(i + 1);
+						LuaUserdata.PushUserdata(l, event.getAffectedEntities().get(i));
+						l.setTable(-3);
+					}
+				}
+				l.call(4, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
 }

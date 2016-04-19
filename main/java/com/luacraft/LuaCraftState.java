@@ -204,6 +204,41 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		}
 	}
 
+	public String luaDataToString(int index) {
+		return luaDataToString(new StringBuilder(), index).toString();
+	}
+	public StringBuilder luaDataToString(StringBuilder buffer, int index) {
+		if(isNone(index)) {
+			buffer.append("none");
+			return buffer;
+		}
+		switch (type(index)) {
+			case NIL:
+				buffer.append("nil");
+				break;
+			case BOOLEAN:
+				buffer.append(checkBoolean(index));
+				break;
+			case NUMBER:
+				buffer.append(checkNumber(index));
+				break;
+			case STRING:
+				buffer.append(checkString(index));
+				break;
+			default:
+			case LIGHTUSERDATA:
+			case TABLE:
+			case FUNCTION:
+			case USERDATA:
+			case THREAD:
+				buffer.append(typeName(index));
+				buffer.append(":");
+				buffer.append(Long.toHexString(toPointer(index)));
+				break;
+		}
+		return buffer;
+	}
+
 	/**
 	 * -- So fancy --
 	 * pls dont read the code below
@@ -212,34 +247,13 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	public void printStack(String mark) {
 		String stackContents = "";
 		for(int i = 1; i <= getTop(); i++) {
-			String info = "";
-			switch(type(i)) {
-				case NIL:
-					info += "nil";
-					break;
-				case NUMBER:
-					info += String.format("%f", checkNumber(i));
-					break;
-				case BOOLEAN:
-					info += String.format("%s", checkBoolean(i) ? "true" : "false");
-					break;
-				case STRING:
-					info += checkString(i);
-					break;
-				case TABLE:
-				case FUNCTION:
-				case USERDATA:
-				case LIGHTUSERDATA:
-				default:
-					info += String.format("%s", typeName(i));
-			}
-			info += String.format(":%s", Long.toHexString(toPointer(i)));
 			stackContents += String.format("%20s| %s\n",
 					String.format("%d <> %d", i, -1 * ((getTop() + 1) - i)),
-					info);
+					luaDataToString(i));
 		}
-		System.out.printf(String.format("%-20s| %s\n", mark + "INDEX", "VALUE"));
-		System.out.printf(stackContents + "\n");
+		String output;
+		System.out.printf(output = String.format("%-20s| %s\n%s\n", mark + "INDEX", "VALUE", stackContents));
+		print(output);
 	}
 
 
@@ -249,9 +263,11 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void autorun(String side) {
-		ArrayList<File> files = FileMount.GetFilesIn("lua/autorun/" + side + "/*.lua");
+		String path = "lua/autorun";
+		if(!side.isEmpty()) path += "/" + side;
+		ArrayList<File> files = FileMount.GetFilesIn(path + "/*.lua");
 		if(reloader != null) {
-			reloader.register(new File(FileMount.GetRoot(), "lua/autorun/" + side).getPath());
+			reloader.register(new File(FileMount.GetRoot(), path).getPath());
 		}
 
 		for (File file : files)

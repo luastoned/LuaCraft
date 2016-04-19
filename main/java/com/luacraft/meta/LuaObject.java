@@ -19,7 +19,9 @@ import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public class LuaObject {
 
@@ -281,6 +283,34 @@ public class LuaObject {
 		}
 	};
 
+	/**
+	 * @author fr1kin
+	 * @function IsExplosion
+	 * @info Check if the object is an explosion
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:explosion
+	 */
+	public static JavaFunction IsExplosion = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, Explosion.class));
+			return 1;
+		}
+	};
+
+	/**
+	 * @author fr1kin
+	 * @function IsExplosion
+	 * @info Check if the object is an explosion
+	 * @arguments [[Object]]:object
+	 * @return [[Boolean]]:explosion
+	 */
+	public static JavaFunction IsChunk = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(l.isUserdata(1, Chunk.class));
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		l.newMetatable("Object");
 		{
@@ -321,6 +351,10 @@ public class LuaObject {
 			l.setField(-2, "IsWorld");
 			l.pushJavaFunction(IsVector);
 			l.setField(-2, "IsVector");
+			l.pushJavaFunction(IsExplosion);
+			l.setField(-2, "IsExplosion");
+			l.pushJavaFunction(IsChunk);
+			l.setField(-2, "IsChunk");
 		}
 		l.pop(1);
 	}

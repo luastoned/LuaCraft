@@ -4,6 +4,7 @@ import com.luacraft.LuaCraft;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.awt.*;
+import java.io.PrintStream;
 
 /**
  * Save your eyes and don't look below
