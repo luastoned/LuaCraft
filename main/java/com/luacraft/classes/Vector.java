@@ -3,6 +3,7 @@ package com.luacraft.classes;
 import com.naef.jnlua.LuaState;
 import com.naef.jnlua.LuaUserdata;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class Vector implements LuaUserdata {
@@ -26,6 +27,12 @@ public class Vector implements LuaUserdata {
 		x = vec.xCoord;
 		y = vec.zCoord;
 		z = vec.yCoord;
+	}
+
+	public Vector(BlockPos vec) {
+		x = vec.getX();
+		y = vec.getZ();
+		z = vec.getY();
 	}
 
 	public Vector copy() {
