@@ -7,12 +7,7 @@ import com.luacraft.library.client.LuaLibInput;
 import com.luacraft.library.client.LuaLibProfiler;
 import com.luacraft.library.client.LuaLibRender;
 import com.luacraft.library.client.LuaLibSurface;
-import com.luacraft.meta.client.LuaByteBuf;
-import com.luacraft.meta.client.LuaEntity;
-import com.luacraft.meta.client.LuaFont;
-import com.luacraft.meta.client.LuaLivingBase;
-import com.luacraft.meta.client.LuaModelResource;
-import com.luacraft.meta.client.LuaVector;
+import com.luacraft.meta.client.*;
 
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaSyntaxException;
@@ -79,6 +74,7 @@ public class LuaClient extends LuaShared {
 		LuaFont.Init(this);
 		LuaLivingBase.Init(this);
 		LuaModelResource.Init(this);
+		LuaRenderLivingBase.Init(this);
 		LuaVector.Init(this);
 
 		pushBoolean(true);

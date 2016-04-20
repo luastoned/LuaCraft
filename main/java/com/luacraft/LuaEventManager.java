@@ -1,15 +1,20 @@
 package com.luacraft;
 
 import com.luacraft.classes.Vector;
-import com.luacraft.console.ConsoleManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
+import net.minecraftforge.event.brewing.PotionBrewEvent;
+import net.minecraftforge.event.entity.*;
+import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.minecart.MinecartCollisionEvent;
+import net.minecraftforge.event.entity.minecart.MinecartInteractEvent;
+import net.minecraftforge.event.entity.minecart.MinecartUpdateEvent;
 import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.ChunkDataEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.ExplosionEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.event.terraingen.BiomeEvent;
+import net.minecraftforge.event.world.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -19,17 +24,10 @@ import com.naef.jnlua.LuaRuntimeException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.PlaceEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -49,10 +47,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
 public class LuaEventManager {
-	LuaCraftState l = null;
+	public final LuaCraftState l;
 
 	public LuaEventManager(LuaCraftState state) {
 		l = state;
+	}
+
+	private static boolean isValidResult(int pos) {
+		return pos > -1 && pos < Result.values().length;
 	}
 
 	// FML Bus
@@ -838,12 +840,6 @@ public class LuaEventManager {
 
 	// Player Events
 
-	// TODO: ArrowLooseEvent
-
-	// TODO: ArrowNockEvent
-
-	// TODO: AttackEntityEvent (covered by living?)
-
 	@SubscribeEvent
 	public void onPlayerBonemeal(BonemealEvent event) {
 		synchronized (l) {
@@ -871,48 +867,6 @@ public class LuaEventManager {
 
 	/**
 	 * @author Jake
-	 * @function player.interact
-	 * @info Called when a player attempts to interact with another entity
-	 * @arguments [[Player]]:player, [[Entity]]:entity
-	 * @return [[Boolean]]:cancel
-	 */
-
-	/* dead
-	@SubscribeEvent
-	public void onEntityInteract(EntityInteractEvent event) {
-		synchronized (l) {
-			if (!l.isOpen())
-				return;
-
-			try {
-				l.pushHookCall();
-				l.pushString("player.interact");
-				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
-				LuaUserdata.PushUserdata(l, event.getTarget());
-				l.call(3, 1);
-
-				if (!l.isNil(-1))
-					event.setCanceled(l.toBoolean(-1));
-
-			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
-			} finally {
-				l.setTop(0);
-			}
-		}
-	}
-	*/
-
-	// TODO: EntityItemPickupEvent
-
-	// TODO: FillBucketEvent
-
-	// TODO: HarvestCheck
-
-	// TODO: ItemTooltipEvent
-
-	/**
-	 * @author Jake
 	 * @function player.destroyitem
 	 * @info Called when a player destroys an item in their inventory, normally when completing an action
 	 * @arguments [[Player]]:player, [[ItemStack]]:original
@@ -929,7 +883,8 @@ public class LuaEventManager {
 				l.pushString("player.destroyitem");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
 				l.pushUserdataWithMeta(event.getOriginal(), "ItemStack");
-				l.call(3, 1);
+				l.pushInteger(event.getHand().ordinal());
+				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
 			}
@@ -1027,7 +982,7 @@ public class LuaEventManager {
 	 * @function player.mineblock
 	 * @info Called when a player breaks a block
 	 * @arguments [[Player]]:player, [[Block]]:block, [[Number]]:exp
-	 * @return [[Boolean]]:cancel
+	 * @return [[Boolean]]:cancel or [[Number]]:exp
 	 */
 
 	@SubscribeEvent
@@ -1040,12 +995,14 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.mineblock");
 				LuaUserdata.PushUserdata(l, event.getPlayer());
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getPlayer().worldObj, event.getPos()));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getWorld(), event.getPos()));
 				l.pushNumber(event.getExpToDrop());
 				l.call(4, 1);
 
-				if (!l.isNil(-1))
+				if (l.isBoolean(-1))
 					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setExpToDrop(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -1073,7 +1030,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.placeblock");
 				LuaUserdata.PushUserdata(l, event.getPlayer());
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getPlayer().worldObj, event.getPos()));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getWorld(), event.getPos()));
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -1089,9 +1046,9 @@ public class LuaEventManager {
 
 	/**
 	 * @author fr1kin
-	 * @function player.blockharvestdrops
+	 * @function player.harvestblock
 	 * @info Called when a player breaks a block and it is about to drop items
-	 * @arguments [[Player]]:harvester, [[Vector]]:pos, [[number]]:drop chance, [[number]]:fortune level, [[table]]:drops
+	 * @arguments [[Player]]:harvester, [[Block]]:harvested, [[number]]:drop chance, [[bool]]:silk touch, [[number]]:fortune level, [[table]]:drops
 	 * @return [[number]]:set drop amount
 	 */
 	@SubscribeEvent
@@ -1102,26 +1059,21 @@ public class LuaEventManager {
 
 			try {
 				l.pushHookCall();
-				l.pushString("player.blockharvestdrops");
+				l.pushString("player.harvestblock");
 				LuaUserdata.PushUserdata(l, event.getHarvester());
-				Vector vec = new Vector(event.getPos());
-				vec.push(l);
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getWorld(), event.getPos()));
 				l.pushNumber(event.getDropChance());
-				if(event.isSilkTouching())
-					l.pushInteger(-1); // Pushes -1 if it is silk touch
-				else
-					l.pushInteger(event.getFortuneLevel());
+				l.pushBoolean(event.isSilkTouching());
+				l.pushInteger(event.getFortuneLevel());
 				l.newTable();
-				{
-					for(int i = 0; i < event.getDrops().size(); i++) {
-						l.pushInteger(i + 1);
-						LuaUserdata.PushUserdata(l, event.getDrops().get(i));
-						l.setTable(-3);
-					}
+				for(int i = 0; i < event.getDrops().size(); i++) {
+					l.pushInteger(i + 1);
+					LuaUserdata.PushUserdata(l, event.getDrops().get(i));
+					l.setTable(-3);
 				}
-				l.call(6, 1);
+				l.call(7, 1);
 
-				if (!l.isNil(-1))
+				if (l.isNumber(-1))
 					event.setDropChance((float) l.toNumber(-1));
 
 			} catch (LuaRuntimeException e) {
@@ -1226,8 +1178,6 @@ public class LuaEventManager {
 		}
 	}
 
-	// TODO: PlayerUseItemEvent.Start / Stop / Finish / Tick
-
 	/**
 	 * @author fr1kin
 	 * @function player.onusehoe
@@ -1253,6 +1203,431 @@ public class LuaEventManager {
 
 				if (!l.isNil(-1))
 					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.achievment
+	 * @info Called when a player earns an achievement
+	 * @arguments [[Player]]:player, [[string]]:description
+	 * @return [[Boolean]]:cancel
+	 */
+	@SubscribeEvent
+	public void onAchievement(AchievementEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.achievment");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushString(event.getAchievement().getDescription());
+				l.call(3, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.anvilrepair
+	 * @info Called when a player repairs an anvil
+	 * @arguments [[Player]]:player, [[ItemStack]]:left, [[ItemStack]]:right, [[ItemStack]]:output, [[number]]:break chance
+	 * @return [[number]]:new break chance
+	 */
+	@SubscribeEvent
+	public void onAnvilRepair(AnvilRepairEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.anvilrepair");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getLeft());
+				LuaUserdata.PushUserdata(l, event.getRight());
+				LuaUserdata.PushUserdata(l, event.getOutput());
+				l.pushNumber(event.getBreakChance());
+				l.call(6, 1);
+
+				if(l.isNumber(-1))
+					event.setBreakChance((float) l.toNumber(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.arrowloose
+	 * @info Called when a player stops using a bow
+	 * @arguments [[Player]]:player, [[World]]:world, [[ItemStack]]:bow, [[number]]:charge, [[bool]]:has ammo
+	 * @return [[Boolean]]:cancel or [[number]]:new charge
+	 */
+	@SubscribeEvent
+	public void onArrowLoose(ArrowLooseEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.arrowloose");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				LuaUserdata.PushUserdata(l, event.getBow());
+				l.pushInteger(event.getCharge());
+				l.pushBoolean(event.hasAmmo());
+				l.call(6, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setCharge(l.toInteger(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.arrownock
+	 * @info Called when a player begins to use a bow
+	 * @arguments [[Player]]:player, [[World]]:world, [[ItemStack]]:bow, [[number]]:hand, [[number]]:action, [[bool]]:has ammo
+	 * @return [[number]]:action
+	 */
+	@SubscribeEvent
+	public void onArrowNock(ArrowNockEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.arrownock");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				LuaUserdata.PushUserdata(l, event.getBow());
+				l.pushInteger(event.getHand().ordinal());
+				l.pushInteger(event.getAction().getType().ordinal());
+				l.pushBoolean(event.hasAmmo());
+				l.call(7, 1);
+
+				if(l.isNumber(-1)) {
+					int index = l.toInteger(-1);
+					if(index > -1 && index < EnumActionResult.values().length)
+						event.setAction(ActionResult.newResult(EnumActionResult.values()[index], event.getAction().getResult()));
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.attackentity
+	 * @info Called when a player attacks an entity
+	 * @arguments [[Player]]:player, [[Entity]]:target
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onAttackEntity(AttackEntityEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.attackentity");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getTarget());
+				l.call(3, 1);
+
+				if(l.toBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.itempickup
+	 * @info Called when a player picks up an item on the ground
+	 * @arguments [[Player]]:player, [[ItemStack]]:item
+	 * @return [[bool]]:cancel or [[number]]:result
+	 */
+	@SubscribeEvent
+	public void onEntitiyItemPickup(EntityItemPickupEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.itempickup");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.call(3, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1) && isValidResult(l.toInteger(-1)))
+					event.setResult(Result.values()[l.toInteger(-1)]);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.fillbucket
+	 * @info Called when a player picks up an item on the ground
+	 * @arguments [[Player]]:player, [[World]]:world, [[ItemStack]]:emptybucket, [[ItemStack]]:filledbucket, [[table]]:trace
+	 * @return [[bool]]:cancel or [[number]]:result
+	 */
+	@SubscribeEvent
+	public void onFillBucket(FillBucketEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.fillbucket");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				LuaUserdata.PushUserdata(l, event.getEmptyBucket());
+				LuaUserdata.PushUserdata(l, event.getFilledBucket());
+				l.newTable();
+				{
+					Vector vec = new Vector(event.getTarget().hitVec);
+					vec.push(l);
+					l.setField(-2, "HitPos");
+
+					LuaUserdata.PushUserdata(l, event.getTarget().entityHit);
+					l.setField(-2, "HitEntity");
+
+					l.pushInteger(event.getTarget().sideHit.ordinal());
+					l.setField(-2, "SideHit");
+
+					LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getWorld(), event.getTarget().getBlockPos()));
+					l.setField(-2, "HitBlock");
+				}
+				l.call(6, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1) && isValidResult(l.toInteger(-1)))
+					event.setResult(Result.values()[l.toInteger(-1)]);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.tooltip
+	 * @info Called when the items tool tip is requested
+	 * @arguments [[Player]]:player, [[ItemStack]]:item, [[bool]]:advancedtip, [[table]]:tip
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.tooltip");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				LuaUserdata.PushUserdata(l, event.getItemStack());
+				l.pushBoolean(event.isShowAdvancedItemTooltips());
+				l.newTable();
+				{
+					for(int i = 0; i < event.getToolTip().size(); i++) {
+						l.pushInteger(i + 1);
+						l.pushString(event.getToolTip().get(i));
+						l.setTable(-3);
+					}
+				}
+				l.call(5, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.flyablefall
+	 * @info Called when a player falls but can fly
+	 * @arguments [[Player]]:player, [[number]]:distance, [[number]]:multiplier
+	 * @return [[table]]:{distance=[[number]]:new distance, multiplier=[[number]]:new multiplier}
+	 */
+	@SubscribeEvent
+	public void onPlayerFlyableFall(PlayerFlyableFallEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.flyablefall");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushNumber(event.getDistance());
+				l.pushNumber(event.getMultiplier());
+				l.call(4, 1);
+
+				if(l.isTable(-1)) {
+					l.getField(-1, "distance");
+					if(l.isNumber(-1))
+						event.setDistance((float)l.toNumber(-1));
+					l.pop(1);
+					l.getField(-1, "multiplier");
+					if(l.isNumber(-1))
+						event.setMultiplier((float)l.toNumber(-1));
+					l.pop(1);
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.setspawn
+	 * @info Called before a players spawn point is changed
+	 * @arguments [[Player]]:player, [[bool]]:isforced, [[Vector]]:newpos
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onPlayerSetSpawn(PlayerSetSpawnEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.setspawn");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushBoolean(event.isForced());
+				Vector vec = new Vector(event.getNewSpawn());
+				vec.push(l);
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.wakeup
+	 * @info Called when a player wakes up
+	 * @arguments [[Player]]:player, [[bool]]:immediate wakeup, [[bool]]:update world, [[bool]]:should set spawn
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onPlayerWakeUp(PlayerWakeUpEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.wakeup");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				l.pushBoolean(event.wakeImmediately());
+				l.pushBoolean(event.updateWorld());
+				l.pushBoolean(event.shouldSetSpawn());
+				l.call(5, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function player.wakeup
+	 * @info Called when game checks if the player is still in the bed
+	 * @arguments [[Player]]:player, [[Vector]]:sleep pos
+	 * @return [[number]]:result
+	 */
+	@SubscribeEvent
+	public void onSleepingLocationCheck(SleepingLocationCheckEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("player.sleepingcheck");
+				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
+				Vector vec = new Vector(event.getSleepingLocation());
+				vec.push(l);
+				l.call(3, 1);
+
+				if(l.isNumber(-1) && isValidResult(l.toInteger(-1)))
+					event.setResult(Result.values()[l.toInteger(-1)]);
 
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
@@ -1424,6 +1799,764 @@ public class LuaEventManager {
 					}
 				}
 				l.call(4, 0);
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function item.prebrew
+	 * @info Called before brewing takes place
+	 * @arguments [[table]]:brew items
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onPotionBrewPre(PotionBrewEvent.Pre event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("item.prebrew");
+				l.newTable();
+				{
+					for(int i = 0; i < event.getLength(); i++) {
+						l.pushInteger(i + 1);
+						LuaUserdata.PushUserdata(l, event.getItem(i));
+						l.setTable(-3);
+					}
+				}
+				l.call(2, 1);
+
+				if (l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function item.postbrew
+	 * @info Called after brewing takes place
+	 * @arguments [[table]]:brew items
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onPotionBrewPost(PotionBrewEvent.Post event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("item.postbrew");
+				l.newTable();
+				{
+					for(int i = 0; i < event.getLength(); i++) {
+						l.pushInteger(i + 1);
+						LuaUserdata.PushUserdata(l, event.getItem(i));
+						l.setTable(-3);
+					}
+				}
+				l.call(2, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.enderteleport
+	 * @info Called when ender teleport is used
+	 * @arguments [[Entity]]:entity, [[Vector]]:targetpos, [[number]]:attack dmg
+	 * @return [[bool]]:cancel or [[table]]:{newpos=[[Vector]]:new tp pos, damage=[[number]]:attack dmg}
+	 */
+	@SubscribeEvent
+	public void onEnderTeleport(EnderTeleportEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.enderteleport");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				Vector vec = new Vector(event.getTargetX(), event.getTargetY(), event.getTargetZ());
+				vec.push(l);
+				l.pushNumber(event.getAttackDamage());
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isTable(-1)) {
+					l.getField(-1, "newpos");
+					if(l.isUserdata(-1, Vector.class)) {
+						Vector newPos = (Vector)l.toUserdata(-1);
+						event.setTargetX(newPos.x);
+						event.setTargetY(newPos.z);
+						event.setTargetZ(newPos.y);
+					}
+					l.pop(1);
+					l.getField(-1, "damage");
+					if(l.isNumber(-1))
+						event.setAttackDamage((float)l.toNumber(-1));
+					l.pop(1);
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.startuseitem
+	 * @info Called when entity starts using an item
+	 * @arguments [[Entity]]:entity, [[ItemStack]]:item using, [[number]]:duration
+	 * @return [[bool]]:cancel or [[number]]:new duration
+	 */
+	@SubscribeEvent
+	public void onLivingEntityUseItemStart(LivingEntityUseItemEvent.Start event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.startuseitem");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.pushInteger(event.getDuration());
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setDuration(l.toInteger(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.useitemtick
+	 * @info Called while entity is using an item
+	 * @arguments [[Entity]]:entity, [[ItemStack]]:item using, [[number]]:duration
+	 * @return [[bool]]:cancel or [[number]]:new duration
+	 */
+	@SubscribeEvent
+	public void onLivingEntityUseItemTick(LivingEntityUseItemEvent.Tick event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.useitemtick");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.pushInteger(event.getDuration());
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setDuration(l.toInteger(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.stopuseitem
+	 * @info Called when a entity stops using an item before duration is up
+	 * @arguments [[Entity]]:entity, [[ItemStack]]:item using, [[number]]:duration
+	 * @return [[bool]]:cancel or [[number]]:new duration
+	 */
+	@SubscribeEvent
+	public void onLivingEntityUseItemStop(LivingEntityUseItemEvent.Stop event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.stopuseitem");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.pushInteger(event.getDuration());
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setDuration(l.toInteger(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.finisheduseitem
+	 * @info Called when a entity uses an item
+	 * @arguments [[Entity]]:entity, [[ItemStack]]:item using, [[number]]:duration, [[ItemStack]]:result stack
+	 * @return [[ItemStack]]:new result stack
+	 */
+	@SubscribeEvent
+	public void onLivingEntityUseItemFinish(LivingEntityUseItemEvent.Finish event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.finisheduseitem");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.pushInteger(event.getDuration());
+				LuaUserdata.PushUserdata(l, event.getResultStack());
+				l.call(5, 1);
+
+				if(l.isUserdata(-1, ItemStack.class))
+					event.setResultStack((ItemStack) l.toUserdata(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.heal
+	 * @info Called when a entity heals
+	 * @arguments [[Entity]]:entity, [[number]]:amount
+	 * @return [[bool]]:cancel or [[number]]:new amount
+	 */
+	@SubscribeEvent
+	public void onLivingHealEvent(LivingHealEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.heal");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				l.pushNumber(event.getAmount());
+				l.call(3, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setAmount((float)l.toNumber(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.hurt
+	 * @info Called when a entity hurts
+	 * @arguments [[Entity]]:entity, [[number]]:amount, [[DamageSource]]:source
+	 * @return [[bool]]:cancel or [[number]]:new amount
+	 */
+	@SubscribeEvent
+	 public void onLivingHurtEvent(LivingHurtEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.hurt");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				l.pushNumber(event.getAmount());
+				l.pushUserdataWithMeta(event.getSource(), "DamageSource");
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isNumber(-1))
+					event.setAmount((float) l.toNumber(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.packsize
+	 * @info Called when spawner determines the max amount of entities to spawn
+	 * @arguments [[Entity]]:entity, [[number]]:max size
+	 * @return [[table]]:{maxsize=[[number]]:new max size, result=[[number]]:result}
+	 */
+	@SubscribeEvent
+	public void onLivingPackSize(LivingPackSizeEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.packsize");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				l.pushInteger(event.getMaxPackSize());
+				l.call(3, 1);
+
+				if(l.isTable(-1)) {
+					l.getField(-1, "maxsize");
+					if(l.isNumber(-1))
+						event.setMaxPackSize(l.toInteger(-1));
+					l.pop(1);
+					l.getField(-1, "result");
+					if(l.isNumber(-1) && isValidResult(l.toInteger(-1)))
+						event.setResult(Result.values()[l.toInteger(-1)]);
+					l.pop(1);
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.settarget
+	 * @info Called when a entity sets its attack target
+	 * @arguments [[Entity]]:entity, [[Entity]]:target
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onLivingSetAttackTarget(LivingSetAttackTargetEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.settarget");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getTarget());
+				l.call(3, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.specialspawn
+	 * @info Called when a entity spawns from a mob spawner
+	 * @arguments [[Entity]]:entity, [[World]]:world, [[Vector]]:spawn pos
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onLivingSpawnSpecial(LivingSpawnEvent.SpecialSpawn event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.specialspawn");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				Vector vec = new Vector(event.getX(), event.getZ(), event.getY());
+				vec.push(l);
+				l.call(4, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * TODO: test this
+	 * @author fr1kin
+	 * @function entity.summonaid
+	 * @info Called when a zombie attempts to summon other zombies into the world
+	 * @arguments [[Entity]]:entity, [[World]]:world, [[Entity]]:summoner, [[Entity]]:custom summoner, [[Entity]]:attacker, [[Vector]]:summoning pos
+	 * @return [[table]]:{custom_summoner=[[Entity]]:new summoner, result=[[number]]:result}
+	 */
+	@SubscribeEvent
+	public void onZombieSummonAid(ZombieEvent.SummonAidEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.summonaid");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				LuaUserdata.PushUserdata(l, event.getSummoner());
+				LuaUserdata.PushUserdata(l, event.getCustomSummonedAid());
+				LuaUserdata.PushUserdata(l, event.getAttacker());
+				Vector vec = new Vector(event.getX(), event.getZ(), event.getY());
+				vec.push(l);
+				l.pushNumber(event.getSummonChance());
+				l.call(8, 1);
+
+				if(l.isTable(-1)) {
+					l.getField(-1, "custom_summoner");
+					if(l.isUserdata(-1, EntityLiving.class))
+						event.setCustomSummonedAid((EntityZombie)l.toUserdata(-1));
+					l.pop(1);
+					l.getField(-1, "result");
+					if(l.isNumber(-1) && isValidResult(l.toInteger(-1)))
+						event.setResult(Result.values()[l.toInteger(-1)]);
+					l.pop(1);
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function minecart.collision
+	 * @info Called when a minecart collides with a entity
+	 * @arguments [[Entity]]:minecart, [[Entity]]:collider
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onMinecartCollision(MinecartCollisionEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("minecart.collision");
+				LuaUserdata.PushUserdata(l, event.getMinecart());
+				LuaUserdata.PushUserdata(l, event.getCollider());
+				l.call(3, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function minecart.interact
+	 * @info Called when a player interacts with a minecart
+	 * @arguments [[Entity]]:minecart, [[Player]]:player, [[ItemStack]]:item, [[number]]:hand
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onMinecartInteract(MinecartInteractEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("minecart.interact");
+				LuaUserdata.PushUserdata(l, event.getMinecart());
+				LuaUserdata.PushUserdata(l, event.getPlayer());
+				LuaUserdata.PushUserdata(l, event.getItem());
+				l.pushInteger(event.getHand().ordinal());
+				l.call(5, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function minecart.update
+	 * @info Called when a minecart is updated
+	 * @arguments [[Entity]]:minecart, [[Vector]]:minecart pos
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onMinecartUpdate(MinecartUpdateEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("minecart.update");
+				LuaUserdata.PushUserdata(l, event.getMinecart());
+				Vector vec = new Vector(event.getPos());
+				vec.push(l);
+				l.call(3, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.mount
+	 * @info Called when a entity attempts to mount another entity
+	 * @arguments [[Entity]]:entity, [[World]]:world, [[Entity]]:mounting, [[Entity]]:mounted, [[bool]]:is mounting, [[bool]]:is dismounting
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onEntityMount(EntityMountEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.mount");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				LuaUserdata.PushUserdata(l, event.getWorldObj());
+				LuaUserdata.PushUserdata(l, event.getEntityMounting());
+				LuaUserdata.PushUserdata(l, event.getEntityBeingMounted());
+				l.pushBoolean(event.isMounting());
+				l.pushBoolean(event.isDismounting());
+				l.call(7, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.traveltodimension
+	 * @info Called when a entity attempts to travel to another dimension
+	 * @arguments [[Entity]]:entity, [[number]]:dimension ID
+	 * @return [[bool]]:cancel
+	 */
+	@SubscribeEvent
+	public void onEntityTravelToDimension(EntityTravelToDimensionEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.traveltodimension");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				l.pushInteger(event.getDimension());
+				l.call(3, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function entity.playsound
+	 * @info Fired when a sound is being played at an entity
+	 * @arguments [[Entity]]:entity, [[string]]:sound name, [[string]]:sound category name, [[number]]:default volume, [[number]]:default pitch, [[number]]:volume, [[number]]:pitch
+	 * @return [[bool]]:cancel or [[table]]:{sound=[[String]]:new sound, category=[[string]]:new category, volume=[[number]]:new volume, pitch=[[number]]:new pitch}
+	 */
+	@SubscribeEvent
+	public void onPlaySoundAtEntity(PlaySoundAtEntityEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("entity.playsound");
+				LuaUserdata.PushUserdata(l, event.getEntity());
+				l.pushString(event.getSound().getSoundName().toString());
+				l.pushString(event.getCategory().getName());
+				l.pushNumber(event.getDefaultVolume());
+				l.pushNumber(event.getDefaultPitch());
+				l.pushNumber(event.getVolume());
+				l.pushNumber(event.getPitch());
+				l.call(8, 1);
+
+				if(l.isBoolean(-1))
+					event.setCanceled(l.toBoolean(-1));
+				else if(l.isTable(-1)) {
+					l.getField(-1, "sound");
+					if(l.isString(-1))
+						event.setSound(new SoundEvent(new ResourceLocation(l.toString(-1))));
+					l.pop(1);
+					l.getField(-1, "category");
+					if(l.isString(-1))
+						if(SoundCategory.getSoundCategoryNames().contains(l.toString(-1)))
+							event.setCategory(SoundCategory.getByName(l.toString(-1)));
+					l.pop(1);
+					l.getField(-1, "volume");
+					if(l.isNumber(-1))
+						event.setVolume((float)l.toNumber(-1));
+					l.pop(1);
+					l.getField(-1, "pitch");
+					if(l.isNumber(-1))
+						event.setPitch((float)l.toNumber(-1));
+					l.pop(1);
+				}
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function world.load
+	 * @info Called when a world is loaded
+	 * @arguments [[World]]:world
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("world.load");
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				l.call(2, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function world.unload
+	 * @info Called when a world is unloaded
+	 * @arguments [[World]]:world
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onWorldUnload(WorldEvent.Unload event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("world.unload");
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				l.call(2, 0);
+
+			} catch (LuaRuntimeException e) {
+				l.handleLuaError(e);
+			} finally {
+				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author fr1kin
+	 * @function world.save
+	 * @info Called when a world is saved
+	 * @arguments [[World]]:world
+	 * @return
+	 */
+	@SubscribeEvent
+	public void onWorldSave(WorldEvent.Save event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			try {
+				l.pushHookCall();
+				l.pushString("world.save");
+				LuaUserdata.PushUserdata(l, event.getWorld());
+				l.call(2, 0);
+
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
 			} finally {

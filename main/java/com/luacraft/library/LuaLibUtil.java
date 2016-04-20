@@ -174,6 +174,24 @@ public class LuaLibUtil {
 		}
 	}
 
+	public static void pushRayTrace(LuaCraftState l, World world, RayTraceResult trace) {
+		l.newTable();
+
+		l.pushBoolean(true);
+		l.setField(-2, "Hit");
+
+		LuaJavaBlock thisBlock = new LuaJavaBlock(world, trace.getBlockPos());
+		LuaUserdata.PushUserdata(l, thisBlock);
+		l.setField(-2, "HitBlock");
+
+		Vector hitpos = new Vector(trace.hitVec);
+		hitpos.push(l);
+		l.setField(-2, "HitPos");
+
+		l.pushFace(trace.sideHit);
+		l.setField(-2, "HitNormal");
+	}
+
 	/**
 	 * @author Jake
 	 * @library util

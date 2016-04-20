@@ -322,6 +322,13 @@ public class LuaGlobals {
 		}
 	};
 
+	public static JavaFunction print_lua_stack = new JavaFunction() {
+		public int invoke(LuaState l) {
+			((LuaCraftState)l).printStack();
+			return 0;
+		}
+	};
+
 	public static void Init(final LuaState l) {
 		l.pushJavaFunction(Angle);
 		l.setGlobal("Angle");
@@ -399,6 +406,8 @@ public class LuaGlobals {
 		l.setGlobal("IsChunk");
 		l.pushJavaFunction(LuaObject.IsExplosion);
 		l.setGlobal("IsExplosion");
+		l.pushJavaFunction(LuaObject.IsBiomeGenBase);
+		l.setGlobal("IsBiomeGenBase");
 
 		l.pushJavaFunction(FindMetaTable);
 		l.setGlobal("FindMetaTable");
@@ -412,6 +421,9 @@ public class LuaGlobals {
 
 		l.pushJavaFunction(nanotime);
 		l.setGlobal("nanotime");
+
+		l.pushJavaFunction(print_lua_stack);
+		l.setGlobal("print_lua_stack");
 
 		/*
 		 * @enum WORLD_NETHER

@@ -131,6 +131,7 @@ public class LuaShared extends LuaCraftState {
 
 		// Meta
 		LuaAngle.Init(this);
+		LuaBiomeGenBase.Init(this);
 		LuaBlock.Init(this);
 		LuaByteBuf.Init(this);
 		LuaChannel.Init(this);
