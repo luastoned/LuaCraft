@@ -369,6 +369,10 @@ public class LuaLiving {
 			l.setField(-2, "GetEnterDoors");
 			l.pushJavaFunction(SetEnterDoors);
 			l.setField(-2, "SetEnterDoors");
+			l.pushJavaFunction(GetMovementSpeed);
+			l.setField(-2, "GetMovementSpeed");
+			l.pushJavaFunction(SetMovementSpeed);
+			l.setField(-2, "SetMovementSpeed");
 			l.pushJavaFunction(MoveTo);
 			l.setField(-2, "MoveTo");
 			l.pushJavaFunction(MoveToEntity);
