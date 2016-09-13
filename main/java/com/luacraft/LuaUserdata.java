@@ -93,7 +93,11 @@ public class LuaUserdata {
 				l.pop(1);
 				l.pushNumber(index);
 				l.newTable();
+					l.pushValue(2); // Push the given key
+					l.pushValue(3); // Push the given value
+					l.setTable(-3);
 				l.setTable(-3);
+				return 0;
 			}
 
 			l.pushValue(2); // Push the given key
