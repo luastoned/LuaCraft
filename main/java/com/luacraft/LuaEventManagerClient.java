@@ -6,7 +6,9 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.gui.GuiMainMenu;
 
 public class LuaEventManagerClient {
 	LuaCraftState l = null;
@@ -152,6 +154,32 @@ public class LuaEventManagerClient {
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
 				l.handleLuaError(e);
+			}
+		}
+	}
+
+	/**
+	 * @author CapsAdmin
+	 * @function mainmenu.init
+	 * @info Called when the main menu is initialized
+	 * @arguments nil
+	 * @return nil
+	 */
+
+	@SubscribeEvent
+	public void onGuiOpenEvent(GuiOpenEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			if (event.gui instanceof GuiMainMenu) {
+				try {
+					l.pushHookCall();
+					l.pushString("mainmenu.init");
+					l.call(1, 0);
+				} catch (LuaRuntimeException e) {
+					l.handleLuaError(e);
+				}
 			}
 		}
 	}
