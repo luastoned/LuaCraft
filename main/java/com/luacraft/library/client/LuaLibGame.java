@@ -144,6 +144,22 @@ public class LuaLibGame {
 			return 0;
 		}
 	};
+	
+	/**
+	 * @author CapsAdmin
+	 * @library game
+	 * @function JoinServer
+	 * @info Attempts to join a server
+	 * @arguments [[String]]:ip, [[Number]]:port
+	 * @return nil
+	 */
+
+	public static JavaFunction JoinServer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaCraft.getForgeClient().connectToServerAtStartup(l.checkString(1), l.checkInteger(2, 25565));
+			return 0;
+		}
+	};
 
 	public static void Init(final LuaCraftState l) {
 		l.newTable();
@@ -160,6 +176,8 @@ public class LuaLibGame {
 			l.setField(-2, "Say");
 			l.pushJavaFunction(ChatPrint);
 			l.setField(-2, "ChatPrint");
+			l.pushJavaFunction(JoinServer);
+			l.setField(-2, "JoinServer");
 		}
 		l.setGlobal("game");
 	}
