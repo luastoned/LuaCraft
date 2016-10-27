@@ -285,8 +285,8 @@ public class LuaBlock {
 
 			l.newTable();
 
-			for (int i = 0; i < tile.signText.length; i++) {
-				l.pushInteger(i + 1);
+			for (int i = 1; i < tile.signText.length; i++) {
+				l.pushInteger(i);
 				l.pushString(tile.signText[i].getUnformattedTextForChat());
 				l.setTable(-3);
 			}
