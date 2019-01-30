@@ -18,7 +18,7 @@ public class LuaServer extends LuaShared {
 
 	public void runScripts() {
 		runSharedScripts();
-		print("Loading autorun/server/*.lua");
+		print("Loading lua/autorun/server/*.lua");
 		try {
 			autorun("server"); // Load all files within autorun/server
 		} catch(LuaRuntimeException e) {

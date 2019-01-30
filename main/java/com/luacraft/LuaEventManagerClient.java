@@ -126,8 +126,10 @@ public class LuaEventManagerClient {
 					case SUBTITLES:
 						l.pushString("render.gameoverlay.subtitles");
 						break;
-					default:
 					case ALL:
+						l.pushString("render.gameoverlay.all");
+						break;
+					default:
 						l.pushString("render.gameoverlay");
 						break;
 				}

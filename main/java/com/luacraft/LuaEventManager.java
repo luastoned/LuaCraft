@@ -1229,7 +1229,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.achievment");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
-				l.pushString(event.getAdvancement().getDisplay().getTitle().getFormattedText());
+				l.pushString(event.getAdvancement().getId().toString());
 				l.call(3, 1);
 
 				if(l.isBoolean(-1))

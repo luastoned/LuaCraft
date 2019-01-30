@@ -20,20 +20,20 @@ public class LuaClient extends LuaShared {
 	private LuaEventManagerClient luaClientEvent;
 
 	public void initialize(boolean hooks) {
-		initializeShared(hooks);
-		loadLibraries();
-
 		if (hooks) {
 			luaClientEvent = new LuaEventManagerClient(this);
-			print("Registering client event manager");
+			msg("Registering client event manager");
 			MinecraftForge.EVENT_BUS.register(luaClientEvent);
 		}
+		
+		initializeShared(hooks);
+		loadLibraries();
 	}
 
 	public void runScripts() {
 		runSharedScripts();
 		try {
-			print("Loading autorun/client/*.lua");
+			print("Loading lua/autorun/client/*.lua");
 			autorun("client"); // Load all files within autorun/client
 			// Load items
 			print("Loading lua/items/*/shared.lua");
@@ -52,7 +52,7 @@ public class LuaClient extends LuaShared {
 	public void close() {
 		super.close();
 		if (luaClientEvent != null) {
-			print("Unregistering client event manager");
+			msg("Unregistering client event manager");
 			MinecraftForge.EVENT_BUS.unregister(luaClientEvent);
 			luaClientEvent = null;
 		}

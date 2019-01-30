@@ -115,11 +115,11 @@ processResources
 }
 
 jar {
-	manifest {
-		attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
-		attributes 'FMLCorePluginContainsFMLMod' : 'true'
+    manifest {
+        attributes 'FMLCorePlugin': 'com.luacraft.asm.LuaCraftLoader'
+        attributes 'FMLCorePluginContainsFMLMod' : 'true'
         attributes 'Class-Path' : 'libs/'
-	}
+    }
 }
 
 println 'Building LuaCraft - version ' + project.version + " for Minecraft " + project.minecraft.version

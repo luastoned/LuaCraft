@@ -91,7 +91,7 @@ public class LuaFont {
 			else
 				self.drawString(text, x, y, LuaLibSurface.drawColor.getRGBA());
 
-			GlStateManager.disableBlend();
+			//GlStateManager.enableBlend();
 			return 0;
 		}
 	};

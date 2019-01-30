@@ -7,7 +7,7 @@
 		"mcversion": "${mcversion}",
 		"url": "http://luacraft.com",
 		"updateUrl": "",
-		"authorList": ["LuaStoned", "BlackAwps", "iRzilla", "Skooch"],
+		"authorList": ["LuaStoned", "Bkacjios", "iRzilla", "Skooch"],
 		"credits": "http://www.famfamfam.com/ http://www.lua.org/ ",
 		"logoFile": "assets/luacraft/logo.png",
 		"screenshots": [],

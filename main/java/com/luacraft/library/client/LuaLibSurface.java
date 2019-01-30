@@ -133,7 +133,24 @@ public class LuaLibSurface {
 			int y = l.checkInteger(2);
 			int w = l.checkInteger(3);
 			int h = l.checkInteger(4);
+			
+			/*Tessellator tessellator = Tessellator.getInstance();
+			BufferBuilder bufferbuilder = tessellator.getBuffer();
+			GlStateManager.enableBlend();
+			GlStateManager.disableTexture2D();
+			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+			GlStateManager.color(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
+			bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+			bufferbuilder.pos(x + w, y, 0.0D).endVertex();
+			bufferbuilder.pos(x, y, 0.0D).endVertex();
+			bufferbuilder.pos(x, y + h, 0.0D).endVertex();
+			bufferbuilder.pos(x + w, y + h, 0.0D).endVertex();
+			tessellator.draw();
+			GlStateManager.enableTexture2D();
+			GlStateManager.disableBlend();*/
+			
 			Gui.drawRect(x, y, x + w, y + h, drawColor.getRGBA());
+			GlStateManager.enableBlend();
 			return 0;
 		}
 	};
@@ -157,13 +174,14 @@ public class LuaLibSurface {
 			Color fadeColor = (Color) l.checkUserdata(5, Color.class, "Color");
 
 			GlStateManager.disableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableAlpha();
-			GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+	        GlStateManager.enableBlend();
+	        GlStateManager.disableAlpha();
+	        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder worldrenderer = tessellator.getBuffer();
+			
 			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 			worldrenderer.pos(x + w, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			worldrenderer.pos(x, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
@@ -172,9 +190,6 @@ public class LuaLibSurface {
 			tessellator.draw();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
-			GlStateManager.disableBlend();
-			GlStateManager.enableAlpha();
-			GlStateManager.enableTexture2D();
 			return 0;
 		}
 	};
@@ -215,18 +230,23 @@ public class LuaLibSurface {
 			int h = l.checkInteger(4);
 
 			GlStateManager.enableTexture2D();
+			GlStateManager.enableAlpha();
+			
 			GlStateManager.color(drawColor.r / 255, drawColor.g / 255, drawColor.b / 255, drawColor.a / 255);
 
 			client.renderEngine.bindTexture(currentTexture);
 
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder worldrenderer = tessellator.getBuffer();
+			
 			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			worldrenderer.pos(x + w, y, 0.0D).tex(1.D, 0.D).endVertex();
 			worldrenderer.pos(x, y, 0.0D).tex(0.D, 0.D).endVertex();
 			worldrenderer.pos(x, y + h, 0.0D).tex(0.D, 1.D).endVertex();
 			worldrenderer.pos(x + w, y + h, 0.0D).tex(1.D, 1.D).endVertex();
 			tessellator.draw();
+			
+			GlStateManager.enableBlend();
 			return 0;
 		}
 	};
