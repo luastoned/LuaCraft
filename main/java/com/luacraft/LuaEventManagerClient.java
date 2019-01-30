@@ -4,14 +4,14 @@ import com.luacraft.classes.Color;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.LuaRuntimeException;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.GuiMainMenu;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LuaEventManagerClient {
 	private final LuaCraftState l;
