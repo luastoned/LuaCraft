@@ -72,6 +72,9 @@ public class LuaEventManagerClient {
 			try {
 				l.pushHookCall();
 				switch(event.getType()) {
+					case ALL:
+						l.pushString("render.gameoverlay.all");
+						break;
 					case HELMET:
 						l.pushString("render.gameoverlay.helmet");
 						break;
@@ -83,6 +86,9 @@ public class LuaEventManagerClient {
 						break;
 					case BOSSHEALTH:
 						l.pushString("render.gameoverlay.bosshealth");
+						break;
+					case BOSSINFO:
+						l.pushString("render.gameoverlay.bossinfo");
 						break;
 					case ARMOR:
 						l.pushString("render.gameoverlay.armor");
@@ -126,15 +132,19 @@ public class LuaEventManagerClient {
 					case SUBTITLES:
 						l.pushString("render.gameoverlay.subtitles");
 						break;
-					case ALL:
-						l.pushString("render.gameoverlay.all");
+					case FPS_GRAPH:
+						l.pushString("render.gameoverlay.fpsgraph");
+						break;
+					case VIGNETTE:
+						l.pushString("render.gameoverlay.vignette");
 						break;
 					default:
 						l.pushString("render.gameoverlay");
 						break;
 				}
 				l.pushNumber(event.getPartialTicks());
-				l.call(2, event.isCancelable() ? 1 : 0);
+				l.pushNumber(event.getType().ordinal());
+				l.call(3, event.isCancelable() ? 1 : 0);
 
 				if(event.isCancelable() && l.isBoolean(-1))
 					event.setCanceled(l.toBoolean(-1));
