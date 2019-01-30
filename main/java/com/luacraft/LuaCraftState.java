@@ -360,7 +360,7 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	}
 
 	public void includeFileStream(InputStream in, String file, boolean shouldCall) throws IOException {
-		print("Loading: " + file);
+		print("Loading " + file);
 		load(in, file);
 		if(shouldCall) call(0, 0);
 	}

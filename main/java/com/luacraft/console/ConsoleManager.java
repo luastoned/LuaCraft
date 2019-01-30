@@ -94,7 +94,7 @@ public class ConsoleManager
         {
 			@Override
 			public void addText(String text) {
-				console.addClientText(text, SERVER);
+				console.addServerText(text, SERVER);
 			}
 			
             @Override

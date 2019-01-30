@@ -40,7 +40,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	public void runSharedScripts() {
-		print("Loading lua/autorun/*.lua");
+		info("Loading lua/autorun/*.lua");
 		try {
 			autorun(); // Load all files within autorun
 			autorun("shared"); // Failsafe, incase someone thinks they need a shared folder

@@ -15,6 +15,8 @@ import java.util.HashMap;
 import com.luacraft.classes.FileMount;
 import com.luacraft.console.ConsoleManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Config;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
