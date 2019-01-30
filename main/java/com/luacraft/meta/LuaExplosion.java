@@ -17,9 +17,9 @@ public class LuaExplosion {
         public int invoke(LuaState l) {
             Explosion self = (Explosion) l.checkUserdata(1, Explosion.class, "Explosion");
             l.pushString(String.format("Explosion [%.2f, %.2f, %.2f]",
-                    self.getPosition().xCoord,
-                    self.getPosition().zCoord,
-                    self.getPosition().yCoord));
+                    self.getPosition().x,
+                    self.getPosition().z,
+                    self.getPosition().y));
             return 1;
         }
     };
@@ -49,7 +49,7 @@ public class LuaExplosion {
             {
                 for(Map.Entry<EntityPlayer, Vec3d> entry : self.getPlayerKnockbackMap().entrySet()) {
                     LuaUserdata.PushUserdata(l, entry.getKey());
-                    Vector vec = new Vector(entry.getValue().xCoord, entry.getValue().zCoord, entry.getValue().yCoord);
+                    Vector vec = new Vector(entry.getValue().x, entry.getValue().z, entry.getValue().y);
                     vec.push(l);
                     l.setTable(-3);
                 }
@@ -78,7 +78,7 @@ public class LuaExplosion {
     public static JavaFunction GetPos = new JavaFunction() {
         public int invoke(LuaState l) {
             Explosion self = (Explosion) l.checkUserdata(1, Explosion.class, "Explosion");
-            Vector vec = new Vector(self.getPosition().xCoord, self.getPosition().zCoord, self.getPosition().yCoord);
+            Vector vec = new Vector(self.getPosition().x, self.getPosition().z, self.getPosition().y);
             vec.push(l);
             return 1;
         }

@@ -36,7 +36,7 @@ public class LuaGlobals {
 				z = (int) Math.floor(l.checkNumber(3, 0));
 			}
 
-			LuaJavaBlock thisBlock = new LuaJavaBlock(client.theWorld, x, z, y);
+			LuaJavaBlock thisBlock = new LuaJavaBlock(client.world, x, z, y);
 			LuaUserdata.PushUserdata(l, thisBlock);
 			return 1;
 		}
@@ -52,7 +52,7 @@ public class LuaGlobals {
 
 	public static JavaFunction World = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaUserdata.PushUserdata(l, client.theWorld);
+			LuaUserdata.PushUserdata(l, client.world);
 			return 1;
 		}
 	};
@@ -67,7 +67,7 @@ public class LuaGlobals {
 
 	public static JavaFunction LocalPlayer = new JavaFunction() {
 		public int invoke(LuaState l) {
-			LuaUserdata.PushUserdata(l, client.thePlayer);
+			LuaUserdata.PushUserdata(l, client.player);
 			return 1;
 		}
 	};

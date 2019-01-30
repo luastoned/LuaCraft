@@ -1,6 +1,5 @@
 package com.luacraft.library.client;
 
-import net.minecraft.client.renderer.VertexBuffer;
 import org.lwjgl.opengl.GL11;
 
 import com.luacraft.LuaCraft;
@@ -13,6 +12,7 @@ import com.naef.jnlua.LuaState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -50,7 +50,7 @@ public class LuaLibSurface {
 
 	public static JavaFunction GetDefaultFont = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushUserdataWithMeta(client.fontRendererObj, "Font");
+			l.pushUserdataWithMeta(client.fontRenderer, "Font");
 			return 1;
 		}
 	};
@@ -163,7 +163,7 @@ public class LuaLibSurface {
 			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer worldrenderer = tessellator.getBuffer();
+			BufferBuilder worldrenderer = tessellator.getBuffer();
 			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 			worldrenderer.pos(x + w, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
 			worldrenderer.pos(x, y, 0.0D).color(drawColor.r, drawColor.g, drawColor.b, drawColor.a).endVertex();
@@ -220,7 +220,7 @@ public class LuaLibSurface {
 			client.renderEngine.bindTexture(currentTexture);
 
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer worldrenderer = tessellator.getBuffer();
+			BufferBuilder worldrenderer = tessellator.getBuffer();
 			worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			worldrenderer.pos(x + w, y, 0.0D).tex(1.D, 0.D).endVertex();
 			worldrenderer.pos(x, y, 0.0D).tex(0.D, 0.D).endVertex();

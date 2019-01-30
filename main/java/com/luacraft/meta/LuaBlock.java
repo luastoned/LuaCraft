@@ -209,7 +209,7 @@ public class LuaBlock {
 	public static JavaFunction GetBiome = new JavaFunction() {
 		public int invoke(LuaState l) {
 			LuaJavaBlock self = (LuaJavaBlock) l.checkUserdata(1, LuaJavaBlock.class, "Block");
-			l.pushString(self.blockWorld.getBiomeGenForCoords(self.getPos()).getBiomeName());
+			l.pushString(self.blockWorld.getBiomeForCoordsBody(self.getPos()).getBiomeName());
 			return 1;
 		}
 	};
@@ -285,9 +285,9 @@ public class LuaBlock {
 
 			l.newTable();
 
-			for (int i = 0; i < tile.signText.length; i++) {
-				l.pushInteger(i + 1);
-				l.pushString(tile.signText[i].getUnformattedTextForChat());
+			for (int i = 1; i < tile.signText.length; i++) {
+				l.pushInteger(i);
+				l.pushString(tile.signText[i].getUnformattedText());
 				l.setTable(-3);
 			}
 			return 1;

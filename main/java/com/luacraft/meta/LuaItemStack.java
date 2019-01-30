@@ -71,7 +71,8 @@ public class LuaItemStack {
 	public static JavaFunction SetID = new JavaFunction() {
 		public int invoke(LuaState l) {
 			ItemStack self = (ItemStack) l.checkUserdata(1, ItemStack.class, "ItemStack");
-			self.setItem(Item.getItemById(l.checkInteger(2, 1)));
+			//self.item = Item.getItemById(l.checkInteger(2, 1));
+			((LuaCraftState) l).depricated();
 			return 0;
 		}
 	};

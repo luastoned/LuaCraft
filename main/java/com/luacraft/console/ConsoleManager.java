@@ -19,6 +19,9 @@ public class ConsoleManager
     private final static Color INFO = new Color(163, 73, 164);
     private final static Color WARNING = new Color(200, 100, 0);
 
+    private final static Color CLIENT = new Color(255, 201, 14);
+    private final static Color SERVER = new Color(153, 217, 234);
+
     private static ConsoleFrame console;
 
     public static void create()
@@ -54,9 +57,10 @@ public class ConsoleManager
 
     public static abstract class MessageCallbacks
     {
+        public abstract void addText(String text);
         public abstract void addText(String text, Color color);
 
-        public void onPrint(String text)
+		public void onPrint(String text)
         {
             addText(text, PRINT);
         }
@@ -76,6 +80,11 @@ public class ConsoleManager
         public static class ClientMessageCallBacks extends MessageCallbacks
         {
             @Override
+        	public void addText(String text) {
+        		console.addClientText(text, CLIENT);
+        	}
+        	
+            @Override
             public void addText(String text, Color color) {
                 console.addClientText(text, color);
             }
@@ -83,6 +92,11 @@ public class ConsoleManager
 
         public static class ServerMessageCallBacks extends MessageCallbacks
         {
+			@Override
+			public void addText(String text) {
+				console.addClientText(text, SERVER);
+			}
+			
             @Override
             public void addText(String text, Color color) {
                 console.addServerText(text, color);

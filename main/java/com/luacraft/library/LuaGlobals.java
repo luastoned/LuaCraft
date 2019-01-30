@@ -31,7 +31,7 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.WorldSettings.GameType;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
 public class LuaGlobals {
@@ -406,8 +406,8 @@ public class LuaGlobals {
 		l.setGlobal("IsChunk");
 		l.pushJavaFunction(LuaObject.IsExplosion);
 		l.setGlobal("IsExplosion");
-		l.pushJavaFunction(LuaObject.IsBiomeGenBase);
-		l.setGlobal("IsBiomeGenBase");
+		l.pushJavaFunction(LuaObject.IsBiome);
+		l.setGlobal("IsBiome");
 
 		l.pushJavaFunction(FindMetaTable);
 		l.setGlobal("FindMetaTable");

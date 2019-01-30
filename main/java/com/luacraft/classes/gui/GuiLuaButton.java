@@ -13,14 +13,14 @@ public class GuiLuaButton extends GuiButton {
 		l = new LuaGuiHandler(luaState);
 	}
 
-	public void drawButton(Minecraft client, int par1, int par2) {
+	public void drawButton(Minecraft client, int par1, int par2, int zLevel) {
 		l.pushField("Paint");
 		l.pushInteger(par1);
 		l.pushInteger(par2);
 		l.call(2, 1);
 
 		if (l.isNoneOrNil(1))
-			super.drawButton(client, par1, par2);
+			super.drawButton(client, par1, par2, zLevel);
 
 		l.setTop(0);
 	}

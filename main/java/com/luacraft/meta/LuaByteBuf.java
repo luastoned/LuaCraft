@@ -495,7 +495,7 @@ public class LuaByteBuf {
 	public static JavaFunction WriteNBTTag = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			self.writeNBTTagCompoundToBuffer((NBTTagCompound) l.checkUserdata(2, NBTTagCompound.class, "NBTTag"));
+			self.writeCompoundTag((NBTTagCompound) l.checkUserdata(2, NBTTagCompound.class, "NBTTag"));
 			return 0;
 		}
 	};
@@ -512,7 +512,7 @@ public class LuaByteBuf {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
 			try {
-				l.pushUserdataWithMeta(self.readNBTTagCompoundFromBuffer(), "NBTTag");
+				l.pushUserdataWithMeta(self.readCompoundTag(), "NBTTag");
 			} catch (IOException e) {
 				throw new LuaRuntimeException(e);
 			}
@@ -531,7 +531,7 @@ public class LuaByteBuf {
 	public static JavaFunction WriteItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			self.writeItemStackToBuffer((ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack"));
+			self.writeItemStack((ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack"));
 			return 0;
 		}
 	};
@@ -548,7 +548,7 @@ public class LuaByteBuf {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
 			try {
-				l.pushUserdataWithMeta(self.readItemStackFromBuffer(), "ItemStack");
+				l.pushUserdataWithMeta(self.readItemStack(), "ItemStack");
 			} catch (IOException e) {
 				throw new LuaRuntimeException(e);
 			}
@@ -583,7 +583,7 @@ public class LuaByteBuf {
 	public static JavaFunction ReadString = new JavaFunction() {
 		public int invoke(LuaState l) {
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
-			l.pushString(self.readStringFromBuffer((int) l.checkNumber(2, 32767)));
+			l.pushString(self.readString((int) l.checkNumber(2, 32767)));
 			return 1;
 		}
 	};

@@ -28,7 +28,7 @@ public class LuaLibGame {
 
 	public static JavaFunction GetPlayers = new JavaFunction() {
 		public int invoke(LuaState l) {
-			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayers();
 
 			l.newTable();
 			int i = 1;
@@ -53,7 +53,7 @@ public class LuaLibGame {
 	public static JavaFunction GetPlayerByName = new JavaFunction() {
 		public int invoke(LuaState l) {
 			String search = l.checkString(1);
-			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayers();
 
 			for (EntityPlayer player : playerList) {
 				String playerName = player.getDisplayNameString().toLowerCase();
@@ -77,11 +77,11 @@ public class LuaLibGame {
 
 	public static JavaFunction ChatPrint = new JavaFunction() {
 		public int invoke(LuaState l) {
-			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayerList();
+			List<EntityPlayerMP> playerList = server.getPlayerList().getPlayers();
 
 			String chatMsg = LuaLibUtil.toChat(l, 1);
 			for (EntityPlayerMP player : playerList)
-				player.addChatMessage(new TextComponentString(chatMsg));
+				player.sendMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};

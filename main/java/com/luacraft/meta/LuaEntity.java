@@ -9,6 +9,7 @@ import com.naef.jnlua.LuaState;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -380,7 +381,8 @@ public class LuaEntity {
 	public static JavaFunction GetFireResistance = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			l.pushInteger(self.fireResistance);
+			l.pushInteger(1); //self.getFireImmuneTicks();
+			((LuaCraftState) l).depricated();
 			return 1;
 		}
 	};
@@ -396,7 +398,8 @@ public class LuaEntity {
 	public static JavaFunction SetFireResistance = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.fireResistance = l.checkInteger(2);
+			//self.fireResistance = l.checkInteger(2);
+			((LuaCraftState) l).depricated();
 			return 0;
 		}
 	};
@@ -644,7 +647,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			World world = (World) l.checkUserdata(2, World.class, "World");
-			self.worldObj = world;
+			self.world = world;
 			return 0;
 		}
 	};
@@ -660,7 +663,7 @@ public class LuaEntity {
 	public static JavaFunction GetWorld = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			LuaUserdata.PushUserdata(l, self.worldObj);
+			LuaUserdata.PushUserdata(l, self.world);
 			return 1;
 		}
 	};
@@ -758,7 +761,7 @@ public class LuaEntity {
 	public static JavaFunction Explode = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.worldObj.createExplosion(self, self.posX, self.posY, self.posZ, (float) l.checkNumber(2, 5),
+			self.world.createExplosion(self, self.posX, self.posY, self.posZ, (float) l.checkNumber(2, 5),
 					l.checkBoolean(3, false));
 			return 0;
 		}
@@ -848,7 +851,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.moveEntity(pos.x, pos.z, pos.y);
+			self.move(MoverType.SELF, pos.x, pos.z, pos.y);
 			return 0;
 		}
 	};
@@ -884,7 +887,7 @@ public class LuaEntity {
 	public static JavaFunction GetItem = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
-			l.pushUserdataWithMeta(self.getEntityItem(), "ItemStack");
+			l.pushUserdataWithMeta(self.getItem(), "ItemStack");
 			return 1;
 		}
 	};
@@ -901,7 +904,7 @@ public class LuaEntity {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
 			self.forceSpawn = l.checkBoolean(2, false);
-			l.pushBoolean(self.worldObj.spawnEntityInWorld(self));
+			l.pushBoolean(self.world.spawnEntity(self));
 			return 1;
 		}
 	};
@@ -917,7 +920,7 @@ public class LuaEntity {
 	public static JavaFunction Remove = new JavaFunction() {
 		public int invoke(LuaState l) {
 			Entity self = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.worldObj.removeEntity(self);
+			self.world.removeEntity(self);
 			return 0;
 		}
 	};

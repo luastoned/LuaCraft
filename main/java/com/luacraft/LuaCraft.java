@@ -23,6 +23,7 @@ import com.luacraft.classes.LuaJavaRunCommand;
 import com.naef.jnlua.NativeSupport;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +38,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod(modid = LuaCraft.MODID,
 		name = LuaCraft.MODNAME,
@@ -47,7 +49,7 @@ public class LuaCraft {
 	public static final String MODID = "luacraft";
 	public static final String VERSION = "1.2";
 	public static final String DEFAULT_RESOURCEPACK = "luacraftassets";
-
+	
 	public static HashMap<String, LuaJavaChannel> threadChannels = new HashMap<String, LuaJavaChannel>();
 
 	public static String luaDir = "lua" + File.separator;
@@ -64,8 +66,9 @@ public class LuaCraft {
 	public static FMLClientHandler getForgeClient() {
 		return FMLClientHandler.instance();
 	}
-
-	public static Minecraft getClient() {
+	
+	@SideOnly(Side.CLIENT)
+	public static net.minecraft.client.Minecraft getClient() {
 		return getForgeClient().getClient();
 	}
 

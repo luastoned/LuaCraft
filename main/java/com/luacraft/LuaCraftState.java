@@ -1,5 +1,6 @@
 package com.luacraft;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -84,6 +85,16 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	public void getLoadedAddons() {
 		// TODO: Addon list
 	}
+	
+	public void msg(String str) {
+		LuaCraft.getLogger().info(str);
+		ConsoleManager.get(getActualSide()).addText(str);
+	}
+	
+	public void msg(String str, Color color) {
+		LuaCraft.getLogger().info(str);
+		ConsoleManager.get(getActualSide()).addText(str, color);
+	}
 
 	public void print(String str) {
 		LuaCraft.getLogger().info(str);
@@ -103,6 +114,12 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	public void warning(String str) {
 		LuaCraft.getLogger().warn(str);
 		ConsoleManager.get(getActualSide()).onWarning(str);
+	}
+	
+	public void depricated() {
+		String msg = "Function " + getCallSource() + " is depricated and no longer functions correctly";
+		LuaCraft.getLogger().warn(msg);
+		ConsoleManager.get(getActualSide()).onWarning(msg);
 	}
 
 	public String getCallSource() {

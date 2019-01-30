@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.gui.GuiMainMenu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class LuaEventManagerClient {
 			if (!l.isOpen())
 				return;
 
-			if (l.getMinecraft().thePlayer == null)
+			if (l.getMinecraft().player == null)
 				return;
 
 			try {
@@ -62,7 +63,7 @@ public class LuaEventManagerClient {
 	@SubscribeEvent
 	public void onRenderGameOverlay(RenderGameOverlayEvent event) {
 		synchronized (l) {
-			if (l.getMinecraft().thePlayer == null)
+			if (l.getMinecraft().player == null)
 				return;
 
 			if (!l.isOpen())
@@ -158,7 +159,7 @@ public class LuaEventManagerClient {
 			if (!l.isOpen())
 				return;
 
-			if (l.getMinecraft().thePlayer == null)
+			if (l.getMinecraft().player == null)
 				return;
 
 			try {
@@ -289,6 +290,32 @@ public class LuaEventManagerClient {
 				l.handleLuaError(e);
 			} finally {
 				l.setTop(0);
+			}
+		}
+	}
+
+	/**
+	 * @author CapsAdmin
+	 * @function mainmenu.init
+	 * @info Called when the main menu is initialized
+	 * @arguments nil
+	 * @return nil
+	 */
+
+	@SubscribeEvent
+	public void onGuiOpenEvent(GuiOpenEvent event) {
+		synchronized (l) {
+			if (!l.isOpen())
+				return;
+
+			if (event.getGui() instanceof GuiMainMenu) {
+				try {
+					l.pushHookCall();
+					l.pushString("mainmenu.init");
+					l.call(1, 0);
+				} catch (LuaRuntimeException e) {
+					l.handleLuaError(e);
+				}
 			}
 		}
 	}

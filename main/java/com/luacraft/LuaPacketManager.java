@@ -27,11 +27,11 @@ public class LuaPacketManager {
 				PacketBuffer buffer = new PacketBuffer(event.getPacket().payload());
 
 				// Peek into the packet
-				String func = buffer.readStringFromBuffer(32767);
+				String func = buffer.readString(32767);
 
 				// If it's a LuaFile handle it internally
 				if (func.equals("LuaFile")) {
-					String file = buffer.readStringFromBuffer(32767);
+					String file = buffer.readString(32767);
 					byte[] data = buffer.readByteArray();
 					l.downloadLuaFile(file, data);
 					return;
@@ -55,7 +55,7 @@ public class LuaPacketManager {
 
 			try {
 				PacketBuffer buffer = new PacketBuffer(event.getPacket().payload());
-				EntityPlayerMP player = ((NetHandlerPlayServer) event.getHandler()).playerEntity;
+				EntityPlayerMP player = ((NetHandlerPlayServer) event.getHandler()).player;
 				l.pushIncomingNet();
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.pushUserdataWithMeta(player, "Player");

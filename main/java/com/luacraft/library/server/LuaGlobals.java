@@ -42,7 +42,7 @@ public class LuaGlobals {
 
 	public static JavaFunction World = new JavaFunction() {
 		public int invoke(LuaState l) {
-			World world = server.worldServers[l.checkInteger(1, 0)];
+			World world = server.worlds[l.checkInteger(1, 0)];
 			LuaUserdata.PushUserdata(l, world);
 			return 1;
 		}

@@ -42,7 +42,7 @@ public class LuaLivingBase {
 			List<Entity> filter = new ArrayList<Entity>();
 			filter.add(self);
 
-			LuaLibUtil.pushTrace((LuaCraftState) l, self.worldObj, start, endpos, true, filter);
+			LuaLibUtil.pushTrace((LuaCraftState) l, self.world, start, endpos, true, filter);
 			return 1;
 		}
 	};

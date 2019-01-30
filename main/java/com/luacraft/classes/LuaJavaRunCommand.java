@@ -43,11 +43,11 @@ public class LuaJavaRunCommand extends CommandBase {
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "lua";
 	}
 
-	public String getCommandUsage(ICommandSender iCommandSender) {
+	public String getUsage(ICommandSender iCommandSender) {
 		return "commands.lua.usage";
 	}
 
@@ -73,9 +73,9 @@ public class LuaJavaRunCommand extends CommandBase {
 
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		if (args.length <= 0) {
-			TextComponentTranslation usage = new TextComponentTranslation(getCommandUsage(sender));
-			usage.getChatStyle().setColor(TextFormatting.RED);
-			sender.addChatMessage(usage);
+			TextComponentTranslation usage = new TextComponentTranslation(getUsage(sender));
+			usage.getStyle().setColor(TextFormatting.RED);
+			sender.sendMessage(usage);
 			return;
 		}
 
@@ -88,8 +88,8 @@ public class LuaJavaRunCommand extends CommandBase {
 				runState = Side.SERVER;
 
 			TextComponentTranslation chatCT = new TextComponentTranslation("luacraft.state.changed", getSideChatName());
-			chatCT.getChatStyle().setColor(getSideChatColor());
-			sender.addChatMessage(chatCT);
+			chatCT.getStyle().setColor(getSideChatColor());
+			sender.sendMessage(chatCT);
 			return;
 		} else if (args[0].equalsIgnoreCase("reload")) {
 			if (args.length < 2) {
@@ -108,8 +108,8 @@ public class LuaJavaRunCommand extends CommandBase {
 		synchronized (l) {
 			if (l == null) {
 				TextComponentTranslation noLua = new TextComponentTranslation("luacraft.state.notinit");
-				noLua.getChatStyle().setColor(TextFormatting.RED);
-				sender.addChatMessage(noLua);
+				noLua.getStyle().setColor(TextFormatting.RED);
+				sender.sendMessage(noLua);
 				return;
 			}
 
@@ -125,8 +125,8 @@ public class LuaJavaRunCommand extends CommandBase {
 				l.call(0, 0);
 			} catch (LuaException e) {
 				TextComponentString chatCT = new TextComponentString(e.getMessage());
-				chatCT.getChatStyle().setColor(TextFormatting.RED);
-				sender.addChatMessage(chatCT);
+				chatCT.getStyle().setColor(TextFormatting.RED);
+				sender.sendMessage(chatCT);
 			}
 		}
 	}

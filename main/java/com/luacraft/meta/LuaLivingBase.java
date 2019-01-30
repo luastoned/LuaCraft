@@ -61,7 +61,7 @@ public class LuaLivingBase {
 			float health = (float) l.checkNumber(2);
 
 			if (health <= 0)
-				self.attackEntityFrom(DamageSource.generic, self.getHealth());
+				self.attackEntityFrom(DamageSource.GENERIC, self.getHealth());
 
 			self.setHealth(health);
 			return 0;
@@ -79,7 +79,7 @@ public class LuaLivingBase {
 	public static JavaFunction Kill = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityLivingBase self = (EntityLivingBase) l.checkUserdata(1, EntityLivingBase.class, "Living");
-			self.attackEntityFrom(DamageSource.generic, self.getHealth());
+			self.attackEntityFrom(DamageSource.GENERIC, self.getHealth());
 			return 0;
 		}
 	};
@@ -144,7 +144,7 @@ public class LuaLivingBase {
 	public static JavaFunction GetAge = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityLivingBase self = (EntityLivingBase) l.checkUserdata(1, EntityLivingBase.class, "Living");
-			l.pushInteger(self.getAge());
+			l.pushInteger(self.getIdleTime());
 			return 1;
 		}
 	};
@@ -168,7 +168,7 @@ public class LuaLivingBase {
 			List<Entity> filter = new ArrayList<Entity>();
 			filter.add(self);
 
-			LuaLibUtil.pushTrace((LuaCraftState) l, self.worldObj, start, endpos, true, filter);
+			LuaLibUtil.pushTrace((LuaCraftState) l, self.world, start, endpos, true, filter);
 			return 1;
 		}
 	};

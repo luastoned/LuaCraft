@@ -32,10 +32,11 @@ public class LuaClient extends LuaShared {
 
 	public void runScripts() {
 		runSharedScripts();
-		print("Loading autorun/client");
 		try {
+			print("Loading autorun/client/*.lua");
 			autorun("client"); // Load all files within autorun/client
 			// Load items
+			print("Loading lua/items/*/shared.lua");
 			List<File> files = FileMount.GetFilesIn("lua/items/*/shared.lua");
 			for (File file : files) {
 				LuaScriptLoader.loadItemScript(this, file);
@@ -58,7 +59,7 @@ public class LuaClient extends LuaShared {
 	}
 
 	private void loadLibraries() {
-		print("Loading client Lua...");
+		msg("Loading client libraries..");
 
 		// Libs
 		LuaGlobals.Init(this);

@@ -51,12 +51,12 @@ public class LuaVector {
 
 			Vec3d viewNormal = view.getLook(client.timer.renderPartialTicks).normalize();
 
-			Vec3d camPos = ActiveRenderInfo.getPosition();
+			Vec3d camPos = ActiveRenderInfo.getCameraPosition();
 			Vec3d eyePos = ActiveRenderInfo.projectViewFromEntity(view, client.timer.renderPartialTicks);
 
-			float vecX = (float) ((camPos.xCoord + eyePos.xCoord) - self.x);
-			float vecY = (float) ((camPos.yCoord + eyePos.yCoord) - self.z);
-			float vecZ = (float) ((camPos.zCoord + eyePos.zCoord) - self.y);
+			float vecX = (float) ((camPos.x + eyePos.x) - self.x);
+			float vecY = (float) ((camPos.y + eyePos.y) - self.z);
+			float vecZ = (float) ((camPos.z + eyePos.z) - self.y);
 
 			Vector3f pos = new Vector3f(vecX, vecY, vecZ);
 
@@ -72,7 +72,7 @@ public class LuaVector {
 
 			boolean bVisible = false;
 
-			double dot = viewNormal.xCoord * vecX + viewNormal.yCoord * vecY + viewNormal.zCoord * vecZ;
+			double dot = viewNormal.x * vecX + viewNormal.y * vecY + viewNormal.z * vecZ;
 
 			if (dot < 0) // We only want vectors that are in front of the player
 				bVisible = true;

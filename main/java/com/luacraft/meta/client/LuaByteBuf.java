@@ -23,12 +23,12 @@ public class LuaByteBuf {
 
 	public static JavaFunction SendToServer = new JavaFunction() {
 		public int invoke(LuaState l) {
-			if (client.thePlayer == null)
+			if (client.player == null)
 				return 0;
 
 			PacketBuffer self = (PacketBuffer) l.checkUserdata(1, PacketBuffer.class, "ByteBuf");
 			CPacketCustomPayload packet = new CPacketCustomPayload("LuaCraft", self);
-			client.thePlayer.sendQueue.addToSendQueue(packet);
+			client.player.connection.sendPacket(packet);
 			return 0;
 		}
 	};

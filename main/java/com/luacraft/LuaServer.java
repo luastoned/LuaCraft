@@ -18,7 +18,7 @@ public class LuaServer extends LuaShared {
 
 	public void runScripts() {
 		runSharedScripts();
-		print("Loading autorun/server");
+		print("Loading autorun/server/*.lua");
 		try {
 			autorun("server"); // Load all files within autorun/server
 		} catch(LuaRuntimeException e) {
@@ -30,7 +30,7 @@ public class LuaServer extends LuaShared {
 	}
 
 	private void loadLibraries() {
-		print("Loading server Lua...");
+		msg("Loading server libraries..");
 
 		// Libs
 		LuaGlobals.Init(this);

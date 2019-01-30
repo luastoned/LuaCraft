@@ -293,7 +293,7 @@ public class LuaDataWatcher {
 		public int invoke(LuaState l) {
 			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
 			//self.addObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
-			self.register(new DataParameter<>((int)l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK), Optional.of((ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack")));
+			self.register(new DataParameter<ItemStack>((int)l.checkUserdata(2), DataSerializers.ITEM_STACK), (ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack"));
 			return 0;
 		}
 	};
@@ -310,7 +310,7 @@ public class LuaDataWatcher {
 		public int invoke(LuaState l) {
 			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
 			//self.updateObject(l.checkInteger(2), l.checkUserdata(3, ItemStack.class, "ItemStack"));
-			self.set(new DataParameter<>((int) l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK), Optional.of((ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack")));
+			self.set(new DataParameter<ItemStack>(l.checkInteger(2), DataSerializers.ITEM_STACK), (ItemStack) l.checkUserdata(3, ItemStack.class, "ItemStack"));
 			return 0;
 		}
 	};
@@ -328,7 +328,7 @@ public class LuaDataWatcher {
 			EntityDataManager self = (EntityDataManager) l.checkUserdata(1, EntityDataManager.class, "DataWatcher");
 			//ItemStack item = self.getWatchableObjectItemStack(l.checkInteger(2));
 			//l.pushUserdataWithMeta(item, "ItemStack");
-			l.pushUserdataWithMeta(self.get(new DataParameter<>((int)l.checkInteger(2), DataSerializers.OPTIONAL_ITEM_STACK)), "ItemStack");
+			l.pushUserdataWithMeta(self.get(new DataParameter<>((int)l.checkInteger(2), DataSerializers.ITEM_STACK)), "ItemStack");
 			return 1;
 		}
 	};
@@ -409,6 +409,11 @@ public class LuaDataWatcher {
 			public DataParameter<Short> createKey(int id)
 			{
 				return new DataParameter(id, this);
+			}
+			@Override
+			public Short copyValue(Short value) {
+				// TODO Auto-generated method stub
+				return null;
 			}
 		};
 	}

@@ -21,8 +21,8 @@ public class LuaLiving {
 	public static JavaFunction LookAt = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			Entity other = (Entity) l.checkUserdata(1, Entity.class, "Entity");
-			self.faceEntity(other, (float) l.checkNumber(2, 10), (float) l.checkNumber(3, 40));
+			Entity other = (Entity) l.checkUserdata(2, Entity.class, "Entity");
+			self.faceEntity(other, (float) l.checkNumber(3, 10), (float) l.checkNumber(3, 40));
 			return 0;
 		}
 	};
@@ -304,7 +304,7 @@ public class LuaLiving {
 	public static JavaFunction MoveTo = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityLiving self = (EntityLiving) l.checkUserdata(1, EntityLiving.class, "Living");
-			Vector pos = (Vector) l.checkUserdata(1, Vector.class, "Vector");
+			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			self.getNavigator().tryMoveToXYZ(pos.x, pos.z, pos.y, self.getNavigator().speed);
 			return 0;
 		}
@@ -369,6 +369,10 @@ public class LuaLiving {
 			l.setField(-2, "GetEnterDoors");
 			l.pushJavaFunction(SetEnterDoors);
 			l.setField(-2, "SetEnterDoors");
+			l.pushJavaFunction(GetMovementSpeed);
+			l.setField(-2, "GetMovementSpeed");
+			l.pushJavaFunction(SetMovementSpeed);
+			l.setField(-2, "SetMovementSpeed");
 			l.pushJavaFunction(MoveTo);
 			l.setField(-2, "MoveTo");
 			l.pushJavaFunction(MoveToEntity);

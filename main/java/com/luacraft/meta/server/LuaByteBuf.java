@@ -29,14 +29,14 @@ public class LuaByteBuf {
 			for (int i = 2; i <= l.getTop(); i++) {
 				if (l.isUserdata(i, EntityPlayerMP.class)) {
 					EntityPlayerMP player = (EntityPlayerMP) l.checkUserdata(i, EntityPlayerMP.class, "Player");
-					player.playerNetServerHandler.sendPacket(packet);
+					player.connection.sendPacket(packet);
 				} else if (l.isTable(i)) {
 					l.pushNil();
 					while (l.next(i)) {
 						if (l.isUserdata(-1, EntityPlayerMP.class)) {
 							EntityPlayerMP player = (EntityPlayerMP) l.checkUserdata(-1, EntityPlayerMP.class,
 									"Player");
-							player.playerNetServerHandler.sendPacket(packet);
+							player.connection.sendPacket(packet);
 						}
 						l.pop(1);
 					}

@@ -35,7 +35,7 @@ public class LuaChunk {
     public static JavaFunction GetPos = new JavaFunction() {
         public int invoke(LuaState l) {
             Chunk self = (Chunk) l.checkUserdata(1, Chunk.class, "Chunk");
-            Vector vec = new Vector(self.xPosition, self.zPosition, 0);
+            Vector vec = new Vector(self.x, self.z, 0);
             vec.push(l);
             return 1;
         }

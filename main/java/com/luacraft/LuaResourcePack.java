@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
-import net.minecraft.client.resources.data.IMetadataSerializer;
+import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -328,6 +328,7 @@ public class LuaResourcePack implements IResourcePack {
             JarFile jar = new JarFile(jarFile);
             JarEntry entry = jar.getJarEntry(resourceLocationToPathString(location));
             exists = (entry != null);
+            jar.close();
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -350,8 +351,9 @@ public class LuaResourcePack implements IResourcePack {
     }
 
     @Override
-    public <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException {
-        InputStream input = getResourceFromJar("pack.mcmeta");
+    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer,
+			String metadataSectionName) throws IOException {
+    	InputStream input = getResourceFromJar("pack.mcmeta");
         JsonObject json = null;
         BufferedReader reader = null;
         try {

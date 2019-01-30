@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
 public class LuaObject {
@@ -314,14 +314,14 @@ public class LuaObject {
 
 	/**
 	 * @author fr1kin
-	 * @function IsExplosion
-	 * @info Check if the object is an explosion
+	 * @function IsBiome
+	 * @info Check if the object is a biome
 	 * @arguments [[Object]]:object
-	 * @return [[Boolean]]:explosion
+	 * @return [[Boolean]]:biome
 	 */
-	public static JavaFunction IsBiomeGenBase = new JavaFunction() {
+	public static JavaFunction IsBiome = new JavaFunction() {
 		public int invoke(LuaState l) {
-			l.pushBoolean(l.isUserdata(1, BiomeGenBase.class));
+			l.pushBoolean(l.isUserdata(1, Biome.class));
 			return 1;
 		}
 	};
@@ -370,8 +370,8 @@ public class LuaObject {
 			l.setField(-2, "IsExplosion");
 			l.pushJavaFunction(IsChunk);
 			l.setField(-2, "IsChunk");
-			l.pushJavaFunction(IsBiomeGenBase);
-			l.setField(-2, "IsBiomeGenBase");
+			l.pushJavaFunction(IsBiome);
+			l.setField(-2, "IsBiome");
 		}
 		l.pop(1);
 	}

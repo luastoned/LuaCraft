@@ -38,11 +38,11 @@ public class LuaJavaCommand extends CommandBase {
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return commandName;
 	}
 
-	public String getCommandUsage(ICommandSender iCommandSender) {
+	public String getUsage(ICommandSender iCommandSender) {
 		return commandUsage;
 	}
 

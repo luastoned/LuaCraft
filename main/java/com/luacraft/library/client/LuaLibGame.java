@@ -30,10 +30,10 @@ public class LuaLibGame {
 
 	public static JavaFunction MaxPlayers = new JavaFunction() {
 		public int invoke(LuaState l) {
-			if (client.thePlayer == null)
+			if (client.player == null)
 				return 0;
 
-			l.pushNumber(client.thePlayer.sendQueue.currentServerMaxPlayers);
+			l.pushNumber(client.player.connection.currentServerMaxPlayers);
 			return 1;
 		}
 	};
@@ -65,10 +65,10 @@ public class LuaLibGame {
 
 	public static JavaFunction PlayerInfo = new JavaFunction() {
 		public int invoke(LuaState l) {
-			if (client.thePlayer == null)
+			if (client.player == null)
 				return 0;
 
-			NetHandlerPlayClient net = client.thePlayer.sendQueue;
+			NetHandlerPlayClient net = client.player.connection;
 			Collection playerInfo = net.getPlayerInfoMap();
 			Iterator iterator = playerInfo.iterator();
 
@@ -117,10 +117,10 @@ public class LuaLibGame {
 
 	public static JavaFunction Say = new JavaFunction() {
 		public int invoke(LuaState l) {
-			if (client.thePlayer == null)
+			if (client.player == null)
 				return 0;
 
-			client.thePlayer.sendChatMessage(l.checkString(1));
+			client.player.sendChatMessage(l.checkString(1));
 			return 0;
 		}
 	};
@@ -136,11 +136,27 @@ public class LuaLibGame {
 
 	public static JavaFunction ChatPrint = new JavaFunction() {
 		public int invoke(LuaState l) {
-			if (client.thePlayer == null)
+			if (client.player == null)
 				return 0;
 
 			String chatMsg = LuaLibUtil.toChat(l, 1);
-			client.thePlayer.addChatMessage(new TextComponentString(chatMsg));
+			client.player.sendMessage(new TextComponentString(chatMsg));
+			return 0;
+		}
+	};
+	
+	/**
+	 * @author CapsAdmin
+	 * @library game
+	 * @function JoinServer
+	 * @info Attempts to join a server
+	 * @arguments [[String]]:ip, [[Number]]:port
+	 * @return nil
+	 */
+
+	public static JavaFunction JoinServer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			LuaCraft.getForgeClient().connectToServerAtStartup(l.checkString(1), l.checkInteger(2, 25565));
 			return 0;
 		}
 	};
@@ -160,6 +176,8 @@ public class LuaLibGame {
 			l.setField(-2, "Say");
 			l.pushJavaFunction(ChatPrint);
 			l.setField(-2, "ChatPrint");
+			l.pushJavaFunction(JoinServer);
+			l.setField(-2, "JoinServer");
 		}
 		l.setGlobal("game");
 	}

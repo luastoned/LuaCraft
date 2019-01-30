@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,14 +63,15 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 			l.getField(1, "CreativeTab");
 			int index = l.checkInteger(-1, 4);
 			l.pop(1);
-			item.setCreativeTab(CreativeTabs.creativeTabArray[index]);
+			item.setCreativeTab(CreativeTabs.CREATIVE_TAB_ARRAY[index]);
 
 			l.newMetatable("ScriptedItemsRegistry");
 			l.pushString(item.getUnlocalizedName());
 			l.pushValue(1);
 			l.setTable(-3);
-
-			GameRegistry.register(item, new ResourceLocation(resourceDomain, resourcePath));
+			
+			ForgeRegistries.ITEMS.register(item);
+			//GameRegistry.register(item, new ResourceLocation(resourceDomain, resourcePath));
 			return 0;
 		}
 	};
@@ -298,16 +300,17 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	*/
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemUse(stack, playerIn, worldIn, pos, hand, facing, hitX, hitY, hitZ);
-
+				return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+			
 			pushValue("OnItemUse");
 			{
 				pushSelf();
-				l.pushUserdataWithMeta(stack, "ItemStack");
-				LuaUserdata.PushUserdata(l, playerIn);
+				l.pushUserdataWithMeta(player.getHeldItem(hand), "ItemStack");
+				LuaUserdata.PushUserdata(l, player);
 				LuaUserdata.PushUserdata(l, worldIn);
 				LuaUserdata.PushUserdata(l, new LuaJavaBlock(worldIn, pos));
 				l.pushInteger(facing.ordinal());
@@ -346,10 +349,12 @@ public class LuaScriptedItem extends Item implements com.naef.jnlua.LuaUserdata 
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		synchronized (l) {
 			if (!l.isOpen())
-				return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+				return super.onItemRightClick(worldIn, playerIn, handIn);
+			
+			ItemStack itemStackIn = playerIn.getHeldItem(handIn);
 
 			pushValue("OnItemRightClick");
 			{

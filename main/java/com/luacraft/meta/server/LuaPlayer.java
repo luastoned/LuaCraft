@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListBansEntry;
+import net.minecraft.util.text.TextComponentString;
 
 public class LuaPlayer {
 	public static MinecraftServer server = null;
@@ -29,7 +30,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			try {
-				l.pushBoolean(self.worldObj.getScoreboard().addPlayerToTeam(self.getName(), l.checkString(2)));
+				l.pushBoolean(self.world.getScoreboard().addPlayerToTeam(self.getName(), l.checkString(2)));
 				return 1;
 			} catch (IllegalArgumentException e) {
 				l.pushBoolean(false);
@@ -67,7 +68,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 
-			String ip = self.playerNetServerHandler.netManager.getRemoteAddress().toString();
+			String ip = self.connection.netManager.getRemoteAddress().toString();
 			ip = ip.substring(ip.indexOf("/") + 1);
 			ip = ip.substring(0, ip.indexOf(":"));
 			l.pushString(ip);
@@ -87,7 +88,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
-			self.playerNetServerHandler.setPlayerLocation(pos.x, pos.z, pos.y, self.rotationYaw, self.rotationPitch);
+			self.connection.setPlayerLocation(pos.x, pos.z, pos.y, self.rotationYaw, self.rotationPitch);
 			return 0;
 		}
 	};
@@ -103,7 +104,7 @@ public class LuaPlayer {
 	public static JavaFunction Remove = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
-			self.playerNetServerHandler.kickPlayerFromServer("You were removed");
+			self.connection.disconnect(new TextComponentString("You were removed"));
 			return 0;
 		}
 	};
@@ -160,7 +161,7 @@ public class LuaPlayer {
 	public static JavaFunction Kick = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
-			self.playerNetServerHandler.kickPlayerFromServer(l.checkString(2, "You have been kicked."));
+			self.connection.disconnect(new TextComponentString(l.checkString(2, "You have been kicked.")));
 			return 0;
 		}
 	};
@@ -193,7 +194,7 @@ public class LuaPlayer {
 			UserListBansEntry banEntry = new UserListBansEntry(self.getGameProfile(), date, banner,
 					cal != null ? cal.getTime() : null, reason);
 
-			self.playerNetServerHandler.kickPlayerFromServer(reason);
+			self.connection.disconnect(new TextComponentString(reason));
 			server.getPlayerList().getBannedPlayers().addEntry(banEntry);
 			return 0;
 		}

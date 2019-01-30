@@ -84,7 +84,7 @@ public class LuaEventManager {
 				else
 					l.pushNil();
 
-				l.pushString(event.getCommand().getCommandName());
+				l.pushString(event.getCommand().getName());
 				l.newTable();
 
 				for (int i = 0; i < event.getParameters().length; i++) {
@@ -409,7 +409,7 @@ public class LuaEventManager {
 			if (!l.isOpen())
 				return;
 
-			if (l.getMinecraft().thePlayer == null)
+			if (l.getMinecraft().player == null)
 				return;
 
 			try {
@@ -851,7 +851,7 @@ public class LuaEventManager {
 				l.pushString("player.bonemeal");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
 				LuaUserdata.PushUserdata(l, event.getWorld());
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getEntityPlayer().worldObj, event.getPos()));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getEntityPlayer().world, event.getPos()));
 				l.call(4, 1);
 
 				if (!l.isNil(-1))
@@ -962,7 +962,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
-				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getEntityPlayer().worldObj, event.getPos()));
+				LuaUserdata.PushUserdata(l, new LuaJavaBlock(event.getEntityPlayer().world, event.getPos()));
 				l.pushFace(event.getFace());
 				l.call(3, 1);
 
@@ -1093,7 +1093,7 @@ public class LuaEventManager {
 	 */
 
 	@SubscribeEvent
-	public void onPlayerOpenContainer(PlayerOpenContainerEvent event) {
+	public void onPlayerOpenContainer(PlayerContainerEvent event) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
@@ -1102,7 +1102,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.opencontainer");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
-				l.pushBoolean(event.isCanInteractWith());
+				l.pushBoolean(event.getContainer().canInteractWith(event.getEntityPlayer()));
 				l.call(3, 1);
 
 				if (!l.isNil(-1))
@@ -1220,7 +1220,7 @@ public class LuaEventManager {
 	 * @return [[Boolean]]:cancel
 	 */
 	@SubscribeEvent
-	public void onAchievement(AchievementEvent event) {
+	public void onAchievement(AdvancementEvent event) {
 		synchronized (l) {
 			if (!l.isOpen())
 				return;
@@ -1229,7 +1229,7 @@ public class LuaEventManager {
 				l.pushHookCall();
 				l.pushString("player.achievment");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
-				l.pushString(event.getAchievement().getDescription());
+				l.pushString(event.getAdvancement().getDisplay().getTitle().getFormattedText());
 				l.call(3, 1);
 
 				if(l.isBoolean(-1))
@@ -1483,7 +1483,7 @@ public class LuaEventManager {
 				l.pushString("player.tooltip");
 				LuaUserdata.PushUserdata(l, event.getEntityPlayer());
 				LuaUserdata.PushUserdata(l, event.getItemStack());
-				l.pushBoolean(event.isShowAdvancedItemTooltips());
+				l.pushBoolean(event.getFlags().isAdvanced());
 				l.newTable();
 				{
 					for(int i = 0; i < event.getToolTip().size(); i++) {

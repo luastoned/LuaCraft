@@ -6,6 +6,7 @@ import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 
 public class LuaDamageSource {
 
@@ -35,16 +36,34 @@ public class LuaDamageSource {
 
 	/**
 	 * @author Jake
-	 * @function GetEntity
-	 * @info Return the [[Entity]] that received the damage
+	 * @function GetImmediateSource
+	 * @info Retrieves the immediate causer of the damage, e.g. the arrow entity, not its shooter
 	 * @arguments nil
 	 * @return [[Entity]]:target
 	 */
 
-	public static JavaFunction GetEntity = new JavaFunction() {
+	public static JavaFunction GetImmediateSource = new JavaFunction() {
 		public int invoke(LuaState l) {
-			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdata.PushUserdata(l, self.getEntity());
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
+			LuaUserdata.PushUserdata(l, self.getImmediateSource());
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function GetTrueSource
+	 * @info Retrieves the true causer of the damage, e.g. the player who fired an arrow, the shulker who fired the bullet, etc.
+	 * @arguments nil
+	 * @return [[Entity]]:source
+	 */
+
+	public static JavaFunction GetTrueSource = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityDamageSource self = (EntityDamageSource) l.checkUserdata(1, EntityDamageSource.class,
+					"EntityDamageSource");
+			LuaUserdata.PushUserdata(l, self.getTrueSource());
 			return 1;
 		}
 	};
@@ -76,7 +95,7 @@ public class LuaDamageSource {
 	public static JavaFunction GetSource = new JavaFunction() {
 		public int invoke(LuaState l) {
 			DamageSource self = (DamageSource) l.checkUserdata(1, DamageSource.class, "DamageSource");
-			LuaUserdata.PushUserdata(l, self.getSourceOfDamage());
+			LuaUserdata.PushUserdata(l, self.getTrueSource());
 			return 1;
 		}
 	};
@@ -335,8 +354,10 @@ public class LuaDamageSource {
 
 			l.pushJavaFunction(GetDamageType);
 			l.setField(-2, "GetDamageType");
-			l.pushJavaFunction(GetEntity);
-			l.setField(-2, "GetEntity");
+			l.pushJavaFunction(GetImmediateSource);
+			l.setField(-2, "GetImmediateSource");
+			l.pushJavaFunction(GetTrueSource);
+			l.setField(-2, "GetTrueSource");
 			l.pushJavaFunction(GetHungerDamage);
 			l.setField(-2, "GetHungerDamage");
 			l.pushJavaFunction(GetSource);

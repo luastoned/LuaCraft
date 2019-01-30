@@ -617,7 +617,10 @@ public class LuaState {
 
 	public void pushUserdata(Object object) {
 		check();
-		lua_pushuserdata(object);
+		if (object == null)
+			lua_pushnil();
+		else
+			lua_pushuserdata(object);
 	}
 
 	public void pushUserdataWithMeta(Object object, String metaTable) {

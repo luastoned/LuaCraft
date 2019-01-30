@@ -13,6 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.FoodStats;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -196,10 +197,10 @@ public class LuaPlayer {
 
 			l.newTable();
 
-			ItemStack[] inventory = self.inventory.armorInventory;
+			NonNullList<ItemStack> inventory = self.inventory.armorInventory;
 
-			for (int i = 0; i < inventory.length; i++) {
-				ItemStack item = inventory[i];
+			for (int i = 0; i < inventory.size(); i++) {
+				ItemStack item = inventory.get(i);
 				if (item != null) {
 					l.pushInteger(i + 1);
 					l.pushUserdataWithMeta(item, "ItemStack");
@@ -635,7 +636,7 @@ public class LuaPlayer {
 		public int invoke(LuaState l) {
 			EntityPlayer self = (EntityPlayer) l.checkUserdata(1, EntityPlayerMP.class, "Player");
 			String chatMsg = LuaLibUtil.toChat(l, 2);
-			self.addChatMessage(new TextComponentString(chatMsg));
+			self.sendMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};

@@ -39,7 +39,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	public void runSharedScripts() {
-		print("Loading autorun");
+		print("Loading autorun/*.lua");
 		try {
 			autorun(); // Load all files within autorun
 			autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
@@ -67,7 +67,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	private void loadExtensions() {
-		print("Loading extensions");
+		print("Loading extensions..");
 
 		// Load all packed modules from our Jar
 		includePackedFile("lua/modules/hook.lua");
@@ -83,7 +83,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	private void loadLibraries() {
-		print("Loading shared Lua...");
+		print("Loading shared libraries..");
 
 		openLib(Library.BASE);
 		openLib(Library.PACKAGE);

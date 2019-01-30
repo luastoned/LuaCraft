@@ -24,9 +24,9 @@ public class Vector implements LuaUserdata {
 	}
 
 	public Vector(Vec3d vec) {
-		x = vec.xCoord;
-		y = vec.zCoord;
-		z = vec.yCoord;
+		x = vec.x;
+		y = vec.z;
+		z = vec.y;
 	}
 
 	public Vector(BlockPos vec) {

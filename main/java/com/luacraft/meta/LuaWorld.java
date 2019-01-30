@@ -23,6 +23,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.GameType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.storage.WorldInfo;
@@ -119,7 +120,7 @@ public class LuaWorld {
 			String chatMsg = LuaLibUtil.toChat(l, 1);
 
 			for (EntityPlayer player : playerList)
-				player.addChatMessage(new TextComponentString(chatMsg));
+				player.sendMessage(new TextComponentString(chatMsg));
 			return 0;
 		}
 	};
@@ -269,7 +270,7 @@ public class LuaWorld {
 			else if (l.isNumber(2))
 				ent = EntityList.createEntityByID(l.toInteger(2), self);
 			else
-				ent = EntityList.createEntityByName(l.checkString(2), self);
+				ent = EntityList.createEntityByIDFromName(new ResourceLocation(l.checkString(2)), self);
 
 			LuaUserdata.PushUserdata(l, ent);
 			return 1;
@@ -563,7 +564,7 @@ public class LuaWorld {
 	public static JavaFunction SetGamemode = new JavaFunction() {
 		public int invoke(LuaState l) {
 			World self = (World) l.checkUserdata(1, World.class, "World");
-			self.getWorldInfo().setGameType(WorldSettings.GameType.getByID(l.checkInteger(2)));
+			self.getWorldInfo().setGameType(GameType.getByID(l.checkInteger(2)));
 			return 0;
 		}
 	};
@@ -648,7 +649,7 @@ public class LuaWorld {
 			World self = (World) l.checkUserdata(1, World.class, "World");
 			Vector pos = (Vector) l.checkUserdata(2, Vector.class, "Vector");
 			// TODO: I think this will work
-			l.pushString(self.getBiomeGenForCoords(new BlockPos(pos.toVec3d())).getBiomeName());
+			l.pushString(self.getBiomeForCoordsBody(new BlockPos(pos.toVec3d())).getBiomeName());
 			return 1;
 		}
 	};

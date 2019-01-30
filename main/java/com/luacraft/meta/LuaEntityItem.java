@@ -21,7 +21,7 @@ public class LuaEntityItem {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
 			ItemStack item = (ItemStack) l.checkUserdata(2, ItemStack.class, "ItemStack");
-			self.setEntityItemStack(item);
+			self.setItem(item);
 			return 0;
 		}
 	};
@@ -37,7 +37,7 @@ public class LuaEntityItem {
 	public static JavaFunction GetItemStack = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
-			l.pushUserdataWithMeta(self.getEntityItem(), "ItemStack");
+			l.pushUserdataWithMeta(self.getItem(), "ItemStack");
 			return 1;
 		}
 	};
@@ -85,7 +85,7 @@ public class LuaEntityItem {
 	public static JavaFunction SetPickupDelay = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
-			self.delayBeforeCanPickup = l.checkInteger(2);
+			self.pickupDelay = l.checkInteger(2);
 			return 0;
 		}
 	};
@@ -101,7 +101,7 @@ public class LuaEntityItem {
 	public static JavaFunction GetPickupDelay = new JavaFunction() {
 		public int invoke(LuaState l) {
 			EntityItem self = (EntityItem) l.checkUserdata(1, EntityItem.class, "EntityItem");
-			l.pushInteger(self.delayBeforeCanPickup);
+			l.pushInteger(self.pickupDelay);
 			return 1;
 		}
 	};
