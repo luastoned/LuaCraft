@@ -1,6 +1,6 @@
 # Paths
-JDK_DIR=C:\Program Files\Java\jdk1.7.0_79
-LUA_DIR=D:\Documents\Developer\Java\LuaJIT-2.0.4\src
+JDK_DIR=C:\Program Files\Java\jdk1.8.0_201
+LUA_DIR=D:\Developer\JitJat\src
 VERSION=51
 
 # Tools

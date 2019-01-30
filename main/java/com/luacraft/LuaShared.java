@@ -2,6 +2,7 @@ package com.luacraft;
 
 import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
+import com.luacraft.library.LuaLibConsole;
 import com.luacraft.library.LuaLibHTTP;
 import com.luacraft.library.LuaLibLanguage;
 import com.luacraft.library.LuaLibSQL;
@@ -146,6 +147,7 @@ public class LuaShared extends LuaCraftState {
 		// Libs
 		LuaGlobals.Init(this);
 		LuaLibHTTP.Init(this);
+		LuaLibConsole.Init(this);
 		LuaLibLanguage.Init(this);
 		LuaLibSQL.Init(this);
 		LuaLibThread.Init(this);
