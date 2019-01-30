@@ -1,6 +1,5 @@
 package com.luacraft.meta.client;
 
-import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -14,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 public class LuaVector {
 	private static Minecraft client = LuaCraft.getClient();

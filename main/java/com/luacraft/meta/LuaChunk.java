@@ -5,6 +5,7 @@ import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
 import net.minecraft.world.chunk.Chunk;
 
 public class LuaChunk {

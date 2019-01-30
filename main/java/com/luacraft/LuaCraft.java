@@ -12,18 +12,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
-import com.luacraft.classes.FileMount;
-import com.luacraft.console.ConsoleManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Config;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.luacraft.classes.FileMount;
 import com.luacraft.classes.LuaJavaChannel;
 import com.luacraft.classes.LuaJavaRunCommand;
+import com.luacraft.console.ConsoleManager;
 import com.naef.jnlua.NativeSupport;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;

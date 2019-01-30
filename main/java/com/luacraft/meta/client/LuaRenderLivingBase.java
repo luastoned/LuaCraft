@@ -5,8 +5,8 @@ import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 public class LuaRenderLivingBase {

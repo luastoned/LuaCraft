@@ -1,6 +1,5 @@
 package com.luacraft.library.client;
 
-import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Cylinder;
 import org.lwjgl.util.glu.Disk;
@@ -25,6 +24,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3d;
 
 public class LuaLibRender {
 	private static Minecraft client = LuaCraft.getClient();

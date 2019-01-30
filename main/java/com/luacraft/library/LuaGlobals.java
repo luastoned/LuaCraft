@@ -6,13 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.Angle;
 import com.luacraft.classes.Color;
 import com.luacraft.classes.FileMount;
 import com.luacraft.classes.Vector;
-import com.luacraft.console.ConsoleManager;
 import com.luacraft.meta.LuaObject;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaException;
@@ -20,7 +18,6 @@ import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

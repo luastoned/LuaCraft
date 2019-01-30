@@ -1,10 +1,10 @@
 package com.luacraft.console;
 
-import com.luacraft.LuaCraft;
-import net.minecraftforge.fml.relauncher.Side;
+import java.awt.Color;
 
-import java.awt.*;
-import java.io.PrintStream;
+import com.luacraft.LuaCraft;
+
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Save your eyes and don't look below

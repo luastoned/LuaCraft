@@ -1,6 +1,5 @@
 package com.luacraft;
 
-import com.luacraft.classes.FileMount;
 import com.luacraft.classes.LuaScriptedItem;
 import com.luacraft.library.LuaGlobals;
 import com.luacraft.library.LuaLibHTTP;
@@ -8,15 +7,37 @@ import com.luacraft.library.LuaLibLanguage;
 import com.luacraft.library.LuaLibSQL;
 import com.luacraft.library.LuaLibThread;
 import com.luacraft.library.LuaLibUtil;
-import com.luacraft.meta.*;
+import com.luacraft.meta.LuaAngle;
+import com.luacraft.meta.LuaBiomeGenBase;
+import com.luacraft.meta.LuaBlock;
+import com.luacraft.meta.LuaByteBuf;
+import com.luacraft.meta.LuaChannel;
+import com.luacraft.meta.LuaChunk;
+import com.luacraft.meta.LuaColor;
+import com.luacraft.meta.LuaContainer;
+import com.luacraft.meta.LuaDamageSource;
+import com.luacraft.meta.LuaDataWatcher;
+import com.luacraft.meta.LuaEntity;
+import com.luacraft.meta.LuaEntityDamageSource;
+import com.luacraft.meta.LuaEntityItem;
+import com.luacraft.meta.LuaExplosion;
+import com.luacraft.meta.LuaItemStack;
+import com.luacraft.meta.LuaLiving;
+import com.luacraft.meta.LuaLivingBase;
+import com.luacraft.meta.LuaNBTTag;
+import com.luacraft.meta.LuaObject;
+import com.luacraft.meta.LuaPlayer;
+import com.luacraft.meta.LuaResource;
+import com.luacraft.meta.LuaSQLDatabase;
+import com.luacraft.meta.LuaSQLQuery;
+import com.luacraft.meta.LuaThread;
+import com.luacraft.meta.LuaVector;
+import com.luacraft.meta.LuaWorld;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
-
 import com.naef.jnlua.LuaSyntaxException;
-import net.minecraftforge.common.MinecraftForge;
 
-import java.io.File;
-import java.util.List;
+import net.minecraftforge.common.MinecraftForge;
 
 public class LuaShared extends LuaCraftState {
 	private LuaEventManager luaEvent;

@@ -1,13 +1,14 @@
 package com.luacraft;
 
+import java.io.File;
+
 import com.luacraft.console.ConsoleManager;
+
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.io.File;
 
 public class LuaConfig
 {

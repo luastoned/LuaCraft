@@ -1,5 +1,8 @@
 package com.luacraft;
 
+import java.io.File;
+import java.util.List;
+
 import com.luacraft.classes.FileMount;
 import com.luacraft.library.client.LuaGlobals;
 import com.luacraft.library.client.LuaLibGame;
@@ -7,14 +10,17 @@ import com.luacraft.library.client.LuaLibInput;
 import com.luacraft.library.client.LuaLibProfiler;
 import com.luacraft.library.client.LuaLibRender;
 import com.luacraft.library.client.LuaLibSurface;
-import com.luacraft.meta.client.*;
-
+import com.luacraft.meta.client.LuaByteBuf;
+import com.luacraft.meta.client.LuaEntity;
+import com.luacraft.meta.client.LuaFont;
+import com.luacraft.meta.client.LuaLivingBase;
+import com.luacraft.meta.client.LuaModelResource;
+import com.luacraft.meta.client.LuaRenderLivingBase;
+import com.luacraft.meta.client.LuaVector;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaSyntaxException;
-import net.minecraftforge.common.MinecraftForge;
 
-import java.io.File;
-import java.util.List;
+import net.minecraftforge.common.MinecraftForge;
 
 public class LuaClient extends LuaShared {
 	private LuaEventManagerClient luaClientEvent;

@@ -1,16 +1,17 @@
 package com.luacraft.meta;
 
+import java.util.Map;
+
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
 import com.luacraft.classes.Vector;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
-
-import java.util.Map;
 
 public class LuaExplosion {
     public static JavaFunction __tostring = new JavaFunction() {

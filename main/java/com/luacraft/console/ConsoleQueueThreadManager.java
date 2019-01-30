@@ -1,8 +1,9 @@
 package com.luacraft.console;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.SwingUtilities;
 
 /**
  * Makes it so I only need to run 1 thread

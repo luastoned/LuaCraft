@@ -1,23 +1,34 @@
 package com.luacraft.console;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.HashMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import com.luacraft.LuaCraft;
 import com.luacraft.LuaCraftState;
 import com.luacraft.classes.FileMount;
 import com.naef.jnlua.LuaException;
 import com.naef.jnlua.LuaRuntimeException;
 import com.naef.jnlua.LuaState;
-import net.minecraftforge.fml.relauncher.Side;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class ConsoleFrame extends JFrame
 {

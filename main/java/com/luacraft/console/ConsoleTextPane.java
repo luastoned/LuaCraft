@@ -1,11 +1,12 @@
 package com.luacraft.console;
 
-import javax.swing.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.Color;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.swing.JTextPane;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 
 /**
  * When modifying a TextPane, Swing requires that you use a thread

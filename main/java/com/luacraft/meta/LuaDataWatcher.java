@@ -1,13 +1,10 @@
 package com.luacraft.meta;
 
-import com.google.common.base.Optional;
 import com.luacraft.LuaCraftState;
 import com.luacraft.LuaUserdata;
 import com.naef.jnlua.JavaFunction;
 import com.naef.jnlua.LuaState;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;

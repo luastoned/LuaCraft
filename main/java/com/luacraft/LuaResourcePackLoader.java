@@ -1,11 +1,11 @@
 package com.luacraft;
 
-import com.luacraft.classes.FileMount;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.luacraft.classes.FileMount;
 
 /**
  * This will find all custom assets and mount them to a dummy LuaCraft
