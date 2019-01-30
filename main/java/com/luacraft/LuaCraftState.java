@@ -86,14 +86,16 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		// TODO: Addon list
 	}
 	
-	public void msg(String str) {
-		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getActualSide()).addText(str);
+	public void msg(String text) {
+		ConsoleManager.get(getActualSide()).msg(text);
 	}
 	
-	public void msg(String str, Color color) {
-		LuaCraft.getLogger().info(str);
-		ConsoleManager.get(getActualSide()).addText(str, color);
+	public void msg(Color color, String text) {
+		ConsoleManager.get(getActualSide()).msg(color, text);
+	}
+	
+	public void printSide(String str) {
+		ConsoleManager.get(getActualSide()).print(str);
 	}
 
 	public void print(String str) {

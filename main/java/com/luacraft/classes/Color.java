@@ -8,6 +8,13 @@ public class Color implements LuaUserdata {
 	public int g;
 	public int b;
 	public int a;
+	
+	public Color(java.awt.Color color) {
+		r = color.getRed();
+		g = color.getGreen();
+		b = color.getBlue();
+		a = color.getAlpha();
+	}
 
 	public Color(int red, int green, int blue, int alpha) {
 		r = red;
@@ -90,6 +97,10 @@ public class Color implements LuaUserdata {
 		int blue = (int) (b * (1 - frac) + other.b * frac);
 		int alpha = (int) (a * (1 - frac) + other.a * frac);
 		return new Color(red, green, blue, alpha);
+	}
+	
+	public java.awt.Color toJavaColor() {
+		return new java.awt.Color(r, g, b, a);
 	}
 
 	public String toString() {

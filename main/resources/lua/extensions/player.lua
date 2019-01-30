@@ -32,6 +32,8 @@ if pdata then
 		query:SetString( 2, name )
 		query:Start()
 	end
+else
+    console.warn( ("Failed to open to sqlite:%s.sb, PData will be unavailable"):format( SERVER and "sv" or "cl" ) )
 end
 
 if SERVER then	

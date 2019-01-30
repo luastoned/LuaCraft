@@ -50,9 +50,9 @@ public class LuaShared extends LuaCraftState {
 			packet = new LuaPacketManager(this);
 			luaEvent = new LuaEventManager(this);
 
-			msg("Registering packet manager");
+			printSide("Registering packet manager");
 			LuaCraft.channel.register(packet);
-			msg("Registering shared event manager");
+			printSide("Registering shared event manager");
 			MinecraftForge.EVENT_BUS.register(luaEvent);
 		}
 		
@@ -75,12 +75,12 @@ public class LuaShared extends LuaCraftState {
 
 	public void close() {
 		if (packet != null) {
-			msg("Unregistering packet manager");
+			printSide("Unregistering packet manager");
 			LuaCraft.channel.unregister(packet);
 			packet = null;
 		}
 		if (luaEvent != null) {
-			msg("Unregistering shared event manager");
+			printSide("Unregistering shared event manager");
 			MinecraftForge.EVENT_BUS.unregister(luaEvent);
 			luaEvent = null;
 		}
@@ -89,7 +89,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	private void loadExtensions() {
-		msg("Loading extensions..");
+		printSide("Loading extensions..");
 
 		// Load all packed modules from our Jar
 		includePackedFile("lua/modules/hook.lua");
@@ -105,7 +105,7 @@ public class LuaShared extends LuaCraftState {
 	}
 
 	private void loadLibraries() {
-		msg("Loading shared libraries..");
+		printSide("Loading shared libraries..");
 
 		openLib(Library.BASE);
 		openLib(Library.PACKAGE);

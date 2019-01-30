@@ -59,7 +59,7 @@ public class LuaLibSQL {
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
-			l.warning("Failed to load sqlite");
+			l.warning("Failed to load sqlite extension for JDBC");
 		}
 
 		l.newTable();

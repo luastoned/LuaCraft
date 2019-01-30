@@ -1,7 +1,7 @@
 package com.luacraft;
 
-import com.luacraft.library.LuaLibCommand;
 import com.luacraft.library.server.LuaGlobals;
+import com.luacraft.library.server.LuaLibCommand;
 import com.luacraft.library.server.LuaLibGame;
 import com.luacraft.meta.server.LuaByteBuf;
 import com.luacraft.meta.server.LuaPlayer;
@@ -30,7 +30,7 @@ public class LuaServer extends LuaShared {
 	}
 
 	private void loadLibraries() {
-		msg("Loading server libraries..");
+		printSide("Loading server libraries..");
 
 		// Libs
 		LuaGlobals.Init(this);

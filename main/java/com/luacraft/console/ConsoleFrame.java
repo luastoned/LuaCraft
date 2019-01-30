@@ -259,22 +259,38 @@ public class ConsoleFrame extends JFrame
     {
         switch (getSelectedTabSide()) {
             case CLIENT:
-                addClientText(text, color);
+            	clientPrint(color, text);
                 break;
             case SERVER:
-                addServerText(text, color);
+            	serverPrint(color, text);
         }
     }
-
-    public void addClientText(String text, Color color)
-    {
-        if(!text.endsWith("\n")) text += "\n";
-        clientOutputPane.appendText(text, color);
+    
+    public void clientMsg(String text) {
+        clientOutputPane.appendText(text);
+    }
+    
+    public void clientMsg(Color color, String text) {
+        clientOutputPane.appendText(color, text);
+    }
+    
+    public void serverMsg(String text) {
+    	serverOutputPane.appendText(text);
+    }
+    
+    public void serverMsg(Color color, String text) {
+    	serverOutputPane.appendText(color, text);
     }
 
-    public void addServerText(String text, Color color)
+    public void clientPrint(Color color, String text)
     {
         if(!text.endsWith("\n")) text += "\n";
-        serverOutputPane.appendText(text, color);
+        clientMsg(color, text);
+    }
+
+    public void serverPrint(Color color, String text)
+    {
+        if(!text.endsWith("\n")) text += "\n";
+        serverMsg(color, text);
     }
 }

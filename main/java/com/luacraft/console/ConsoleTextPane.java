@@ -90,9 +90,18 @@ public class ConsoleTextPane extends JTextPane
     /**
      * Append text to the panel
      * @param text text to append
+     */
+    public void appendText(String text)
+    {
+        queue.add(text);
+    }
+
+    /**
+     * Append text to the panel
+     * @param text text to append
      * @param color color of the text
      */
-    public void appendText(String text, Color color)
+    public void appendText(Color color, String text)
     {
         setTextColor(color);
         queue.add(text);
