@@ -48,10 +48,10 @@ public class LuaClient extends LuaShared {
 				LuaScriptLoader.loadItemScript(this, file);
 			}
 		} catch(LuaRuntimeException e) {
-			handleLuaError(e);
+			handleLuaRuntimeError(e);
 		} catch(LuaSyntaxException e) {
-			e.printStackTrace();
 			error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

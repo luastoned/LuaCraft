@@ -1,6 +1,7 @@
 package com.luacraft.classes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.luacraft.LuaCraftState;
@@ -16,8 +17,13 @@ import net.minecraft.util.math.BlockPos;
 
 public class LuaJavaCommand extends CommandBase {
 	private LuaCraftState l;
+	
 	private String commandName;
 	private String commandUsage;
+	
+	private int usageLevel;
+	
+	private List<String> aliases;
 
 	private void pushCommandFunc(String command) {
 		l.newMetatable("CommandCallbacks");
@@ -30,11 +36,33 @@ public class LuaJavaCommand extends CommandBase {
 		l.getField(-1, command);
 		l.remove(-2);
 	}
-
-	public LuaJavaCommand(LuaCraftState state, String command, String usage) {
-		l = state;
-		commandName = command;
+	
+	public void setName(String name) {
+		commandName = name;
+	}
+	
+	public void setUsage(String usage) {
 		commandUsage = usage;
+	}
+	
+	public void addAlias(String alias) {
+		aliases.add(alias);
+	}
+	
+	public void setUsageLevel(int level) {
+		usageLevel = level;
+	}
+	
+	public boolean canSenderUseCommand(ICommandSender sender) {
+		return sender.canUseCommand(getRequiredPermissionLevel(), getName());
+	}
+
+	public LuaJavaCommand(LuaCraftState state, String name, String usage) {
+		l = state;
+		commandName = name;
+		commandUsage = usage;
+		usageLevel = 4;
+		aliases = Collections.<String>emptyList();
 	}
 
 	@Override
@@ -42,15 +70,36 @@ public class LuaJavaCommand extends CommandBase {
 		return commandName;
 	}
 
+	@Override
 	public String getUsage(ICommandSender iCommandSender) {
 		return commandUsage;
 	}
+	
+	@Override
+    public int getRequiredPermissionLevel() {
+        return usageLevel;
+    }
 
-	public boolean canCommandSenderUseCommand(ICommandSender iCommandSender) {
-		return true; // The command callback should be checking whether or not the command can be ran
+	@Override
+	public List<String> getAliases() {
+		return aliases;
 	}
 
-	public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return true; // The command callback should be checking whether or not the command can be ran
+		//return sender.canUseCommand(this.getRequiredPermissionLevel(), this.getName());
+	}
+
+	@Override
+	public boolean isUsernameIndex(String[] args, int index) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args,
+			BlockPos targetPos) {
 		synchronized (l) {
 			try {
 				pushAutoCompleteFunc(commandName);
@@ -90,7 +139,7 @@ public class LuaJavaCommand extends CommandBase {
 
 				return options;
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -128,7 +177,7 @@ public class LuaJavaCommand extends CommandBase {
 				l.pushString(rawString.toString());
 				l.call(4, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}

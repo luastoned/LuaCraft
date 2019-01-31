@@ -235,12 +235,9 @@ public class ConsoleFrame extends JFrame
                     state.load(input, "console");
                     state.call(0, LuaState.MULTRET);
                 } catch (LuaRuntimeException e) {
-                    state.handleLuaError(e);
-                    e.printLuaStackTrace();
-                    e.printStackTrace();
+                    state.handleLuaRuntimeError(e);
                 } catch (LuaException e) {
                     state.error(e.toString());
-                    e.printStackTrace();
                 }
             }
         }

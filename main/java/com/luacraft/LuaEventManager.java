@@ -135,7 +135,7 @@ public class LuaEventManager {
 
 				l.call(4, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class LuaEventManager {
 				l.pushBoolean(Keyboard.isRepeatEvent());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class LuaEventManager {
 				l.pushNumber(Mouse.getEventButton());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -223,7 +223,7 @@ public class LuaEventManager {
 
 				l.setTop(0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -286,7 +286,7 @@ public class LuaEventManager {
 
 				l.setTop(0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -317,7 +317,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -344,7 +344,7 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -369,7 +369,7 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -394,7 +394,7 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, event.player);
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -416,7 +416,7 @@ public class LuaEventManager {
 				l.pushString("game.tick");
 				l.call(1, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -435,7 +435,7 @@ public class LuaEventManager {
 				l.pushString("game.tick");
 				l.call(1, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -459,7 +459,7 @@ public class LuaEventManager {
 				l.pushNumber(event.phase.ordinal());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -491,7 +491,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -528,7 +528,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -560,7 +560,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -594,7 +594,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -618,7 +618,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -651,7 +651,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -682,7 +682,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -715,7 +715,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -749,7 +749,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -789,7 +789,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -821,7 +821,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -848,7 +848,7 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, event.getEntity());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -873,7 +873,7 @@ public class LuaEventManager {
 				LuaUserdata.PushUserdata(l, event.getEntity());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -898,7 +898,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -926,7 +926,7 @@ public class LuaEventManager {
 				l.pushInteger(event.getHand().ordinal());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -964,7 +964,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1010,7 +1010,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1045,7 +1045,7 @@ public class LuaEventManager {
 					event.setExpToDrop(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1077,7 +1077,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1117,7 +1117,7 @@ public class LuaEventManager {
 					event.setDropChance((float) l.toNumber(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1149,7 +1149,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.checkInteger(-1, Result.DEFAULT.ordinal())]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1181,7 +1181,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1211,7 +1211,7 @@ public class LuaEventManager {
 				l.call(4, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1245,7 +1245,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1276,7 +1276,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1310,7 +1310,7 @@ public class LuaEventManager {
 					event.setBreakChance((float) l.toNumber(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1346,7 +1346,7 @@ public class LuaEventManager {
 					event.setCharge(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1384,7 +1384,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1415,7 +1415,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1448,7 +1448,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.toInteger(-1)]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1498,7 +1498,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.toInteger(-1)]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1535,7 +1535,7 @@ public class LuaEventManager {
 				l.call(5, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1575,7 +1575,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1608,7 +1608,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1638,7 +1638,7 @@ public class LuaEventManager {
 				l.call(5, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1670,7 +1670,7 @@ public class LuaEventManager {
 					event.setResult(Result.values()[l.toInteger(-1)]);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1696,7 +1696,7 @@ public class LuaEventManager {
 				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1722,7 +1722,7 @@ public class LuaEventManager {
 				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1748,7 +1748,7 @@ public class LuaEventManager {
 				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1774,7 +1774,7 @@ public class LuaEventManager {
 				l.pushUserdataWithMeta(event.getChunk(), "Chunk");
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1805,7 +1805,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1840,7 +1840,7 @@ public class LuaEventManager {
 				}
 				l.call(4, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1877,7 +1877,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1911,7 +1911,7 @@ public class LuaEventManager {
 				l.call(2, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1958,7 +1958,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -1992,7 +1992,7 @@ public class LuaEventManager {
 					event.setDuration(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2026,7 +2026,7 @@ public class LuaEventManager {
 					event.setDuration(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2060,7 +2060,7 @@ public class LuaEventManager {
 					event.setDuration(l.toInteger(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2093,7 +2093,7 @@ public class LuaEventManager {
 					event.setResultStack((ItemStack) l.toUserdata(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2126,7 +2126,7 @@ public class LuaEventManager {
 					event.setAmount((float)l.toNumber(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2160,7 +2160,7 @@ public class LuaEventManager {
 					event.setAmount((float) l.toNumber(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2199,7 +2199,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2227,7 +2227,7 @@ public class LuaEventManager {
 				l.call(3, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2260,7 +2260,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2306,7 +2306,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2334,7 +2334,7 @@ public class LuaEventManager {
 				l.call(3, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2367,7 +2367,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2396,7 +2396,7 @@ public class LuaEventManager {
 				l.call(3, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2431,7 +2431,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2462,7 +2462,7 @@ public class LuaEventManager {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2517,7 +2517,7 @@ public class LuaEventManager {
 				}
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2544,7 +2544,7 @@ public class LuaEventManager {
 				l.call(2, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2571,7 +2571,7 @@ public class LuaEventManager {
 				l.call(2, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -2598,7 +2598,7 @@ public class LuaEventManager {
 				l.call(2, 0);
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}

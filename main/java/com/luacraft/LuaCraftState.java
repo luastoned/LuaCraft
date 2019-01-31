@@ -143,7 +143,7 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 	 * @return [[Boolean]]:print
 	 */
 
-	public void handleLuaError(LuaRuntimeException e) {
+	public void handleLuaRuntimeError(LuaRuntimeException e) {
 		StringBuilder msg = new StringBuilder();
 
 		msg.append(e.getMessage());
@@ -181,7 +181,7 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 
 		if (printError)
 			error(msg.toString());
-
+		
 		e.printStackTrace();
 	}
 
@@ -347,7 +347,7 @@ public class LuaCraftState extends LuaState implements ILuaReloader {
 		} catch (IOException e) {
 			throw new LuaRuntimeException("Cannot open " + FileMount.CleanPath(file) + ": No such file or directory");
 		} catch (LuaRuntimeException e) {
-			handleLuaError(e);
+			handleLuaRuntimeError(e);
 		} finally {
 			try {
 				in.close();

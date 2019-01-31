@@ -13,7 +13,7 @@ command.Add("hello", function(ply, cmd, args)
 	if target then
 		target:ChatPrint(ply:GetName(), " says hello!")
 	end
-end)
+end):SetUsage("/hello <player>")
 
 command.AutoComplete("hello", function(ply, cmd, args)
 	return searchPlayer(args[1])

@@ -389,7 +389,7 @@ public class DefaultJavaReflector implements JavaReflector {
 				if (!luaState.isJavaObject(3, componentType)) {
 					throw new LuaRuntimeException(
 							String.format("attempt to write array of %s at index %d with %s value",
-									componentType.getCanonicalName(), luaState.typeName(3)));
+									componentType.getCanonicalName(), index, luaState.typeName(3)));
 				}
 				Object value = luaState.toJavaObject(3, componentType);
 				Array.set(object, index - 1, value);

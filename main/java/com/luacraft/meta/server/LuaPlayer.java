@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.PlayerList;
 import net.minecraft.server.management.UserListBansEntry;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.GameType;
 
 public class LuaPlayer {
 	public static MinecraftServer server = null;
@@ -37,6 +38,38 @@ public class LuaPlayer {
 				l.pushString(e.getMessage());
 				return 2;
 			}
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function SetGamemode
+	 * @info Set the players gamemode
+	 * @arguments [[Number]]:gamemode
+	 * @return nil
+	 */
+
+	public static JavaFunction SetGamemode = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			self.setGameType(GameType.getByID(l.checkInteger(2)));
+			return 0;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @function GetGamemode
+	 * @info Get the players gamemode
+	 * @arguments nil
+	 * @return [[Number]]:gamemode
+	 */
+
+	public static JavaFunction GetGamemode = new JavaFunction() {
+		public int invoke(LuaState l) {
+			EntityPlayerMP self = (EntityPlayerMP) l.checkUserdata(1, EntityPlayerMP.class, "Player");
+			l.pushNumber(self.interactionManager.getGameType().ordinal());
+			return 1;
 		}
 	};
 
@@ -205,6 +238,12 @@ public class LuaPlayer {
 
 		l.newMetatable("Player");
 		{
+			l.pushJavaFunction(SetTeam);
+			l.setField(-2, "SetTeam");
+			l.pushJavaFunction(SetGamemode);
+			l.setField(-2, "SetGamemode");
+			l.pushJavaFunction(GetGamemode);
+			l.setField(-2, "GetGamemode");
 			l.pushJavaFunction(GetPing);
 			l.setField(-2, "GetPing");
 			l.pushJavaFunction(GetIP);

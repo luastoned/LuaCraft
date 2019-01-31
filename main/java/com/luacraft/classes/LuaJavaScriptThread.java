@@ -35,7 +35,7 @@ public class LuaJavaScriptThread extends LuaJavaThread {
 				try {
 					l.includeFile(file);
 				} catch (LuaRuntimeException e) {
-					l.handleLuaError(e);
+					l.handleLuaRuntimeError(e);
 				} finally {
 					l.close();
 				}

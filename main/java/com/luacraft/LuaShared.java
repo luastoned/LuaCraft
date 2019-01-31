@@ -67,10 +67,10 @@ public class LuaShared extends LuaCraftState {
 			autorun(); // Load all files within autorun
 			autorun("shared"); // Failsafe, incase someone thinks they need a shared folder
 		} catch(LuaRuntimeException e) {
-			handleLuaError(e);
+			handleLuaRuntimeError(e);
 		} catch(LuaSyntaxException e) {
-			e.printStackTrace();
 			error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

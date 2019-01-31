@@ -22,10 +22,10 @@ public class LuaServer extends LuaShared {
 		try {
 			autorun("server"); // Load all files within autorun/server
 		} catch(LuaRuntimeException e) {
-			handleLuaError(e);
+			handleLuaRuntimeError(e);
 		} catch(LuaSyntaxException e) {
-			e.printStackTrace();
 			error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

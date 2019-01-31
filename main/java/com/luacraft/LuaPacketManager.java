@@ -42,7 +42,7 @@ public class LuaPacketManager {
 				l.pushUserdataWithMeta(buffer, "ByteBuf");
 				l.call(1, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}
@@ -61,7 +61,7 @@ public class LuaPacketManager {
 				l.pushUserdataWithMeta(player, "Player");
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			}
 		}
 	}

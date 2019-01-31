@@ -44,7 +44,7 @@ public class LuaEventManagerClient {
 				l.pushNumber(event.getY());
 				l.call(4, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -55,7 +55,7 @@ public class LuaEventManagerClient {
 	 * @author Jake
 	 * @function render.gameoverlay.*
 	 * @info Calls whenever a frame is drawn Used for rendering 2D text, textures, etc.
-	 * @arguments [[Number]]:ticks, [[Number]]:x, [[Number]]:y
+	 * @arguments [[Number]]:ticks, [[Number]]:type
 	 * @return nil
 	 */
 
@@ -138,7 +138,7 @@ public class LuaEventManagerClient {
 						l.pushString("render.gameoverlay.vignette");
 						break;
 					default:
-						l.pushString("render.gameoverlay");
+						l.pushString("render.gameoverlay.unimplemented");
 						break;
 				}
 				l.pushNumber(event.getPartialTicks());
@@ -149,7 +149,7 @@ public class LuaEventManagerClient {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -179,7 +179,7 @@ public class LuaEventManagerClient {
 				l.pushNumber(event.getPartialTicks());
 				l.call(2, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -207,7 +207,7 @@ public class LuaEventManagerClient {
 				l.pushNumber(event.getPartialRenderTick());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -235,7 +235,7 @@ public class LuaEventManagerClient {
 				l.pushNumber(event.getPartialRenderTick());
 				l.call(3, 0);
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -268,7 +268,7 @@ public class LuaEventManagerClient {
 					event.setCanceled(l.toBoolean(-1));
 
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -296,9 +296,8 @@ public class LuaEventManagerClient {
 				Vector vec = new Vector(event.getX(), event.getZ(), event.getY());
 				vec.push(l);
 				l.call(4, 0);
-
 			} catch (LuaRuntimeException e) {
-				l.handleLuaError(e);
+				l.handleLuaRuntimeError(e);
 			} finally {
 				l.setTop(0);
 			}
@@ -325,7 +324,7 @@ public class LuaEventManagerClient {
 					l.pushString("mainmenu.init");
 					l.call(1, 0);
 				} catch (LuaRuntimeException e) {
-					l.handleLuaError(e);
+					l.handleLuaRuntimeError(e);
 				}
 			}
 		}

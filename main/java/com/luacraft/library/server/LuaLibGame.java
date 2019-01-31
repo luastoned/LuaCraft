@@ -393,6 +393,38 @@ public class LuaLibGame {
 		}
 	};
 
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function IsSinglePlayer
+	 * @info Returns true if the server is running in singleplayer mode
+	 * @arguments nil
+	 * @return [[Boolean]]:singleplayer
+	 */
+
+	public static JavaFunction IsSinglePlayer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(server.isSinglePlayer());
+			return 1;
+		}
+	};
+
+	/**
+	 * @author Jake
+	 * @library game
+	 * @function IsMultiPlayer
+	 * @info Returns true if the server is running in online mode
+	 * @arguments nil
+	 * @return [[Boolean]]:multiplayer
+	 */
+
+	public static JavaFunction IsMultiPlayer = new JavaFunction() {
+		public int invoke(LuaState l) {
+			l.pushBoolean(server.isServerInOnlineMode());
+			return 1;
+		}
+	};
+
 	public static void Init(final LuaCraftState l) {
 		server = l.getServer();
 
@@ -442,6 +474,10 @@ public class LuaLibGame {
 			l.setField(-2, "ConCommand");
 			l.pushJavaFunction(GetViewDistance);
 			l.setField(-2, "GetViewDistance");
+			l.pushJavaFunction(IsSinglePlayer);
+			l.setField(-2, "IsSinglePlayer");
+			l.pushJavaFunction(IsMultiPlayer);
+			l.setField(-2, "IsMultiPlayer");
 		}
 		l.setGlobal("game");
 	}
